@@ -5,6 +5,24 @@ import Particles from "../components/Particles";
 import { useContent, useApi } from "../lib/useContent";
 import { c, DEFAULTS } from "../lib/defaults";
 
+// ── Shared style tokens ────────────────────────────────────
+const T = {
+  eyebrow: {
+    fontSize: "0.65rem", letterSpacing: "0.28em", textTransform: "uppercase" as const,
+    color: "#C9961A", marginBottom: 14, display: "block",
+  } as React.CSSProperties,
+  h2: {
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 300, lineHeight: 1.15,
+    color: "#FDF8EF", marginBottom: 16,
+  } as React.CSSProperties,
+  em: { fontStyle: "italic", color: "#E8B84B" } as React.CSSProperties,
+  sub: {
+    fontSize: "0.88rem", color: "#C4A97A", lineHeight: 1.8,
+    maxWidth: 560, marginBottom: 0,
+  } as React.CSSProperties,
+};
+
 export default function Index() {
   const { content, loading } = useContent();
   const { data: properties } = useApi<any[]>("/api/properties");
@@ -15,7 +33,6 @@ export default function Index() {
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [tab, setTab] = useState("Buy");
 
-  // Visit tracking — fire and forget
   useEffect(() => {
     const _API = import.meta.env.VITE_API_URL || "";
     fetch(`${_API}/api/track`, {
@@ -25,14 +42,15 @@ export default function Index() {
     }).catch(() => {});
   }, []);
 
-  // Reveal
   useEffect(() => {
-    const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }), { threshold: 0.1 });
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }),
+      { threshold: 0.08 }
+    );
     document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
     return () => obs.disconnect();
   }, [loading, properties, testimonialsList]);
 
-  // Stats counter
   useEffect(() => {
     if (!statsRef.current || statsAnimated || loading) return;
     const obs = new IntersectionObserver(([entry]) => {
@@ -45,11 +63,7 @@ export default function Index() {
         const end = parseInt(raw.replace(/\D/g, "")) || 0;
         const suffix = raw.replace(/[0-9]/g, "");
         let s = 0;
-        const step = () => {
-          s += end / 80;
-          (el as HTMLElement).textContent = Math.min(Math.floor(s), end) + suffix;
-          if (s < end) requestAnimationFrame(step);
-        };
+        const step = () => { s += end / 80; (el as HTMLElement).textContent = Math.min(Math.floor(s), end) + suffix; if (s < end) requestAnimationFrame(step); };
         requestAnimationFrame(step);
       });
     }, { threshold: 0.5 });
@@ -58,178 +72,239 @@ export default function Index() {
   }, [loading, statsAnimated]);
 
   const marqueeItems = (() => {
-    try { return JSON.parse(c(content, "marquee_items")); } catch { return DEFAULTS.marquee_items ? JSON.parse(DEFAULTS.marquee_items) : []; }
+    try { return JSON.parse(c(content, "marquee_items")); }
+    catch { return DEFAULTS.marquee_items ? JSON.parse(DEFAULTS.marquee_items) : []; }
   })();
 
-  const getEmbedUrl = (v: any) => {
-    if (v.video_type === "youtube") {
-      const id = v.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)?.[1];
-      return id ? `https://www.youtube.com/embed/${id}?autoplay=1` : v.video_url;
-    }
-    if (v.video_type === "vimeo") {
-      const id = v.video_url.match(/vimeo\.com\/(\d+)/)?.[1];
-      return id ? `https://player.vimeo.com/video/${id}?autoplay=1` : v.video_url;
-    }
-    return v.video_url;
-  };
-
   return (
-    <div style={{ background: "#3D0A0A", color: "#FDF8EF", minHeight: "100vh", overflowX: "hidden", width: "100%" }}>
+    <div style={{ background: "#0E0101", color: "#FDF8EF", minHeight: "100vh", overflowX: "hidden" }}>
       <Particles />
       <Nav content={content} />
 
-      {/* ── HERO ── */}
-      <section style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      {/* ══════════════════════════════════════════════
+          HERO — luxury real estate Nairobi Kenya
+      ══════════════════════════════════════════════ */}
+      <section
+        aria-label="Aeton Homes — Luxury Real Estate Kenya"
+        style={{ position: "relative", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}
+      >
+        {/* BG */}
         <div style={{
           position: "absolute", inset: 0, zIndex: 1,
-          background: `radial-gradient(ellipse at 20% 50%, rgba(20,2,2,0.72) 0%, transparent 70%),
-            linear-gradient(to bottom, rgba(10,1,1,0.55) 0%, rgba(30,4,4,0.75) 60%, rgba(10,1,1,0.95) 100%),
+          background: `radial-gradient(ellipse at 20% 50%, rgba(10,1,1,0.75) 0%, transparent 65%),
+            linear-gradient(to bottom, rgba(10,1,1,0.5) 0%, rgba(20,3,3,0.7) 55%, rgba(8,0,0,0.97) 100%),
             url('https://jewelbookstore.neocities.org/property%208.jpeg') center/cover no-repeat`,
         }} />
         <div style={{
           position: "absolute", inset: 0, zIndex: 1,
-          backgroundImage: "linear-gradient(rgba(201,150,26,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(201,150,26,0.05) 1px,transparent 1px)",
-          backgroundSize: "80px 80px", animation: "gridShift 20s linear infinite",
+          backgroundImage: "linear-gradient(rgba(201,150,26,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,150,26,0.04) 1px,transparent 1px)",
+          backgroundSize: "80px 80px", animation: "gridShift 24s linear infinite",
         }} />
-        <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 5%", maxWidth: 920 }}>
+
+        <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 5%", maxWidth: 960 }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(201,150,26,0.12)", border: "1px solid rgba(201,150,26,0.3)",
-            padding: "6px 18px", borderRadius: 50, fontSize: "0.72rem",
-            letterSpacing: "0.2em", textTransform: "uppercase", color: "#E8B84B",
-            marginBottom: 28, animation: "fadeInDown 0.8s ease forwards",
+            background: "rgba(201,150,26,0.1)", border: "1px solid rgba(201,150,26,0.28)",
+            padding: "6px 20px", borderRadius: 50, fontSize: "0.65rem",
+            letterSpacing: "0.24em", textTransform: "uppercase", color: "#E8B84B",
+            marginBottom: 32, animation: "fadeInDown 0.8s ease forwards",
           }}>
-            <span style={{ width: 6, height: 6, background: "#C9961A", borderRadius: "50%", animation: "pulse 2s infinite" }} />
+            <span style={{ width: 5, height: 5, background: "#C9961A", borderRadius: "50%", animation: "pulse 2s infinite" }} />
             {c(content, "hero_badge")}
           </div>
+
+          {/* H1 with SEO keywords embedded naturally */}
           <h1 style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: "clamp(3rem, 8vw, 6.5rem)", fontWeight: 300, lineHeight: 1.05,
-            color: "#FDF8EF", animation: "fadeInUp 0.9s 0.2s ease both",
+            fontSize: "clamp(2.8rem, 7.5vw, 6rem)", fontWeight: 300, lineHeight: 1.08,
+            color: "#FDF8EF", animation: "fadeInUp 0.9s 0.2s ease both", letterSpacing: "-0.01em",
           }}>
             {c(content, "hero_title")}<br />
             <em style={{ fontStyle: "italic", color: "#E8B84B" }}>{c(content, "hero_title_em")}</em><br />
             {c(content, "hero_title_end")}
           </h1>
+
           <p style={{
-            fontSize: "clamp(0.85rem,1.5vw,1rem)", color: "#C4A97A",
-            letterSpacing: "0.25em", textTransform: "uppercase", margin: "20px 0 40px",
+            fontSize: "clamp(0.82rem,1.4vw,0.95rem)", color: "#C4A97A",
+            letterSpacing: "0.22em", textTransform: "uppercase", margin: "24px 0 44px",
             animation: "fadeInUp 0.9s 0.4s ease both",
           }}>{c(content, "hero_subtitle")}</p>
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", animation: "fadeInUp 0.9s 0.6s ease both" }}>
-            <a href="#properties" style={{ background: "linear-gradient(135deg,#C9961A,#E8B84B)", color: "#3D0A0A", padding: "16px 36px", textDecoration: "none", borderRadius: 2, fontSize: "0.82rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", animation: "fadeInUp 0.9s 0.6s ease both" }}>
+            <a href="#properties"
+              style={{ background: "linear-gradient(135deg,#C9961A,#E8B84B)", color: "#1E0101", padding: "15px 38px", textDecoration: "none", borderRadius: 2, fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", boxShadow: "0 8px 32px rgba(201,150,26,0.35)" }}>
               {c(content, "hero_btn1")}
             </a>
-            <a href="#contact" style={{ background: "transparent", color: "#E8B84B", padding: "16px 36px", border: "1px solid rgba(201,150,26,0.4)", textDecoration: "none", borderRadius: 2, fontSize: "0.82rem", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+            <a href="#contact"
+              style={{ background: "rgba(255,255,255,0.03)", color: "#E8B84B", padding: "15px 38px", border: "1px solid rgba(201,150,26,0.35)", textDecoration: "none", borderRadius: 2, fontSize: "0.78rem", letterSpacing: "0.18em", textTransform: "uppercase", backdropFilter: "blur(10px)" }}>
               {c(content, "hero_btn2")}
             </a>
           </div>
+
+          {/* Trust badges */}
+          <div style={{ display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", marginTop: 52, animation: "fadeInUp 0.9s 0.8s ease both" }}>
+            {["Verified Listings","Bank-Ready Titles","Nairobi's Top Agents"].map((badge, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "0.7rem", color: "#8A6520", letterSpacing: "0.1em" }}>
+                <span style={{ color: "#C9961A", fontSize: "0.75rem" }}>✓</span> {badge}
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div ref={statsRef} style={{ position: "absolute", bottom: 60, left: 0, right: 0, zIndex: 2, display: "flex", justifyContent: "center", gap: 60, flexWrap: "wrap", padding: "0 20px" }}>
-          {[1,2,3,4].map(i => (
-            <div key={i} style={{ textAlign: "center" }}>
-              <div data-stat={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.4rem", fontWeight: 600, color: "#E8B84B", lineHeight: 1 }}>
-                {c(content, `stat_${i}_num`)}
+        {/* Stats */}
+        <div ref={statsRef} style={{ position: "absolute", bottom: 56, left: 0, right: 0, zIndex: 2, display: "flex", justifyContent: "center", gap: 0, flexWrap: "wrap", padding: "0 5%", maxWidth: "100%" }}>
+          <div style={{ display: "flex", gap: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(16px)", border: "1px solid rgba(201,150,26,0.14)", borderRadius: 4, overflow: "hidden" }}>
+            {[1,2,3,4].map((i, idx) => (
+              <div key={i} style={{ padding: "18px 36px", textAlign: "center", borderRight: idx < 3 ? "1px solid rgba(201,150,26,0.1)" : "none" }}>
+                <div data-stat={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.2rem", fontWeight: 600, color: "#E8B84B", lineHeight: 1 }}>
+                  {c(content, `stat_${i}_num`)}
+                </div>
+                <div style={{ fontSize: "0.62rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#6B4F20", marginTop: 5 }}>
+                  {c(content, `stat_${i}_label`)}
+                </div>
               </div>
-              <div style={{ fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#C4A97A", marginTop: 4 }}>
-                {c(content, `stat_${i}_label`)}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <div style={{ position: "absolute", bottom: 20, left: "50%", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: "#C4A97A", fontSize: "0.65rem", letterSpacing: "0.2em", textTransform: "uppercase", animation: "bounce 2s infinite" }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8A6520" strokeWidth="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-          Scroll
+        <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, color: "#6B4F20", fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase", animation: "bounce 2s infinite" }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B4F20" strokeWidth="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          Explore
         </div>
       </section>
 
-      {/* ── SEARCH ── */}
-      <div className="reveal" style={{ position: "relative", zIndex: 10, marginTop: -40, padding: "0 5%" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto", background: "rgba(12,2,2,0.93)", border: "1px solid rgba(201,150,26,0.25)", borderRadius: 4, padding: "28px 32px", backdropFilter: "blur(20px)", boxShadow: "0 30px 80px rgba(0,0,0,0.5)" }}>
-          <div style={{ display: "flex", marginBottom: 22, borderBottom: "1px solid rgba(201,150,26,0.18)" }}>
+      {/* ══════════════════════════════════════════════
+          SEARCH — find property for sale rent Nairobi
+      ══════════════════════════════════════════════ */}
+      <div className="reveal" style={{ position: "relative", zIndex: 10, marginTop: -2, padding: "0 5%" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", background: "rgba(8,0,0,0.97)", border: "1px solid rgba(201,150,26,0.2)", borderRadius: 4, padding: "30px 36px", backdropFilter: "blur(24px)", boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}>
+          <p style={{ fontSize: "0.62rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", marginBottom: 18 }}>Find Your Property</p>
+          <div style={{ display: "flex", marginBottom: 22, borderBottom: "1px solid rgba(201,150,26,0.12)", gap: 4 }}>
             {["Buy","Rent","Commercial","Land"].map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{ padding: "9px 22px", cursor: "pointer", background: "none", fontSize: "0.74rem", letterSpacing: "0.14em", textTransform: "uppercase", border: "none", fontFamily: "'Jost',sans-serif", borderBottom: `2px solid ${tab===t?"#C9961A":"transparent"}`, color: tab===t?"#E8B84B":"#C4A97A", marginBottom: -1, transition: "all 0.3s" }}>{t}</button>
+              <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 20px", cursor: "pointer", background: tab===t ? "rgba(201,150,26,0.1)" : "none", fontSize: "0.72rem", letterSpacing: "0.14em", textTransform: "uppercase", border: "none", fontFamily: "'Jost',sans-serif", borderBottom: `2px solid ${tab===t?"#C9961A":"transparent"}`, color: tab===t?"#E8B84B":"#6B4F20", marginBottom: -1, transition: "all 0.25s", borderRadius: "2px 2px 0 0" }}>{t}</button>
             ))}
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
-            {[{label:"Location",opts:["All Locations","Westlands","Karen","Kilimani","Lavington","Runda","Muthaiga"]},{label:"Type",opts:["All Types","Apartment","Villa","Townhouse","Bungalow","Penthouse"]},{label:"Bedrooms",opts:["Any","1 Bed","2 Beds","3 Beds","4+ Beds"]},{label:"Budget (KES)",opts:["Any","Up to 5M","5M–15M","15M–30M","30M–60M","60M+"]}].map((f,i)=>(
+            {[
+              {label:"Location",opts:["All Locations","Westlands","Karen","Kilimani","Lavington","Runda","Muthaiga","Kileleshwa","Spring Valley"]},
+              {label:"Property Type",opts:["All Types","Apartment","Villa","Townhouse","Bungalow","Penthouse","Office","Land"]},
+              {label:"Bedrooms",opts:["Any","Studio","1 Bed","2 Beds","3 Beds","4 Beds","5+ Beds"]},
+              {label:"Budget (KES)",opts:["Any","Up to 5M","5M–15M","15M–30M","30M–60M","60M–100M","100M+"]},
+            ].map((f,i) => (
               <div key={i} style={{ flex: 1, minWidth: 140 }}>
                 <label className="ah-label">{f.label}</label>
-                <select className="ah-input" style={{ appearance: "none" }}>
-                  {f.opts.map(o=><option key={o} style={{background:"#3D0A0A"}}>{o}</option>)}
+                <select className="ah-input" style={{ appearance: "none", cursor: "pointer" }}>
+                  {f.opts.map(o => <option key={o} style={{background:"#0E0101"}}>{o}</option>)}
                 </select>
               </div>
             ))}
-            <button className="ah-btn-gold" style={{ padding: "11px 28px", whiteSpace: "nowrap" }}>Search</button>
+            <button className="ah-btn-gold" style={{ padding: "11px 32px", whiteSpace: "nowrap", flexShrink: 0 }}>
+              Search Properties
+            </button>
           </div>
         </div>
       </div>
 
-      {/* ── MARQUEE ── */}
-      <div style={{ padding: "26px 0", overflow: "hidden", borderTop: "1px solid rgba(201,150,26,0.12)", borderBottom: "1px solid rgba(201,150,26,0.12)", background: "rgba(0,0,0,0.25)", marginTop: 40, maxWidth: "100vw" }}>
-        <div className="marquee-track" style={{ width: "max-content" }}>
+      {/* ══════════════════════════════════════════════
+          MARQUEE
+      ══════════════════════════════════════════════ */}
+      <div style={{ overflow: "hidden", borderTop: "1px solid rgba(201,150,26,0.08)", borderBottom: "1px solid rgba(201,150,26,0.08)", background: "rgba(0,0,0,0.3)", marginTop: 48 }}>
+        <div className="marquee-track" style={{ display: "flex", width: "max-content", padding: "18px 0" }}>
           {[...Array(2)].flatMap(() => marqueeItems).map((item: string, i: number) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 36px", fontSize: "0.72rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#8A6520", whiteSpace: "nowrap" }}>
-              <span style={{ width: 5, height: 5, background: "#C9961A", borderRadius: "50%", display: "inline-block" }} />
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 40px", fontSize: "0.68rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", whiteSpace: "nowrap" }}>
+              <span style={{ width: 4, height: 4, background: "#C9961A", borderRadius: "50%", opacity: 0.7 }} />
               {item}
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── PROPERTIES ── */}
-      <section id="properties" style={{ position: "relative", zIndex: 2, padding: "100px 5%", background: "linear-gradient(to bottom, #3D0A0A, #1E0404)" }}>
-        <div className="reveal" style={{ marginBottom: 56 }}>
-          <p style={eyebrow}>{c(content,"props_eyebrow")}</p>
-          <h2 style={secTitle}>{c(content,"props_title")} <em style={em}>{c(content,"props_title_em")}</em></h2>
-          <p style={secSub}>{c(content,"props_subtitle")}</p>
+      {/* ══════════════════════════════════════════════
+          PROPERTIES — luxury homes for sale Nairobi Kenya
+      ══════════════════════════════════════════════ */}
+      <section
+        id="properties"
+        aria-label="Luxury properties for sale and rent in Nairobi, Kenya"
+        style={{ position: "relative", zIndex: 2, padding: "110px 5%", background: "linear-gradient(to bottom, #0E0101, #180303)" }}
+      >
+        <div className="reveal" style={{ marginBottom: 64 }}>
+          <span style={T.eyebrow}>{c(content,"props_eyebrow") || "Premium Listings"}</span>
+          <h2 style={T.h2}>
+            {c(content,"props_title")} <em style={T.em}>{c(content,"props_title_em")}</em>
+          </h2>
+          <p style={T.sub}>{c(content,"props_subtitle") || "Curated luxury properties — apartments, villas, townhouses & land — across Nairobi's most sought-after neighbourhoods."}</p>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))", gap: 26 }}>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: 28 }}>
           {(properties && properties.length > 0 ? properties : []).map((p: any) => (
             <PropCard key={p.id} p={p} />
           ))}
           {(!properties || properties.length === 0) && (
-            <div style={{ gridColumn:"1/-1",textAlign:"center",padding:"60px 0",color:"#C4A97A" }}>
-              <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",fontStyle:"italic",opacity:0.5 }}>Properties coming soon</div>
+            <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"80px 0", color:"#C4A97A" }}>
+              <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.6rem", fontStyle:"italic", opacity:0.35, marginBottom:12 }}>Premium listings coming soon</div>
+              <p style={{ fontSize:"0.8rem", color:"#6B4F20" }}>Check back shortly or contact us directly for available properties.</p>
             </div>
           )}
         </div>
-        <div style={{ textAlign: "center", marginTop: 48 }}>
-          <button className="ah-btn-outline" style={{ padding: "14px 36px" }}>View All Properties</button>
+
+        <div style={{ textAlign: "center", marginTop: 56 }}>
+          <a href="#contact" className="ah-btn-outline" style={{ padding: "14px 40px", textDecoration: "none", display: "inline-block" }}>
+            Request Full Portfolio
+          </a>
         </div>
       </section>
 
-      {/* ── WHY US ── */}
-      <section id="why" style={{ position: "relative", zIndex: 2, padding: "100px 5%", background: "linear-gradient(to bottom,#1E0404,#3D0A0A)" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }} className="ah-two-col">
-          <div className="reveal" style={{ position: "relative", aspectRatio: "4/5", maxHeight: 560, background: "linear-gradient(135deg,#2A0606,#4A0E0E)", border: "1px solid rgba(201,150,26,0.2)", borderRadius: 4, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
-              {["🏠","💎","📍","🤝","AH","📊","🔑","⭐","🌟"].map((icon,i)=>(
-                <div key={i} style={{ width:70,height:70, background:icon==="AH"?"linear-gradient(135deg,rgba(201,150,26,0.4),rgba(201,150,26,0.2))":"linear-gradient(135deg,rgba(201,150,26,0.15),rgba(201,150,26,0.05))", clipPath:"polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)", display:"flex",alignItems:"center",justifyContent:"center", fontSize:icon==="AH"?"1rem":"1.4rem", color:icon==="AH"?"#3D0A0A":"#E8B84B", fontFamily:icon==="AH"?"'Cormorant Garamond',serif":undefined, fontWeight:icon==="AH"?700:undefined, animation:`hexPulse 3s ease-in-out ${i*0.3}s infinite` }}>
-                  {icon}
-                </div>
-              ))}
-            </div>
-            <div style={{ position:"absolute",bottom:32,right:-24, background:"linear-gradient(135deg,#C9961A,#E8B84B)",color:"#3D0A0A", padding:"18px 22px",borderRadius:4,boxShadow:"0 20px 50px rgba(0,0,0,0.4)",animation:"floatBadge 4s ease-in-out infinite" }}>
-              <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"2.2rem",fontWeight:700,lineHeight:1 }}>{c(content,"why_badge_num")}</div>
-              <div style={{ fontSize:"0.62rem",letterSpacing:"0.12em" }}>{c(content,"why_badge_label")}</div>
+      {/* ══════════════════════════════════════════════
+          WHY AETON — trusted real estate agents Kenya
+      ══════════════════════════════════════════════ */}
+      <section
+        id="why"
+        aria-label="Why choose Aeton Homes — trusted luxury real estate agency Nairobi"
+        style={{ position: "relative", zIndex: 2, padding: "110px 5%", background: "linear-gradient(to bottom,#180303,#0E0101)" }}
+      >
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1200, margin: "0 auto" }} className="ah-two-col">
+          {/* Visual */}
+          <div className="reveal" style={{ position: "relative" }}>
+            <div style={{ aspectRatio: "4/5", maxHeight: 560, background: "linear-gradient(135deg,#1A0303,#2E0808)", border: "1px solid rgba(201,150,26,0.15)", borderRadius: 4, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, padding: 20 }}>
+                {["🏠","💎","📍","🤝","AH","📊","🔑","⭐","🌟"].map((icon,i) => (
+                  <div key={i} style={{
+                    width:72, height:72, background: icon==="AH" ? "linear-gradient(135deg,rgba(201,150,26,0.45),rgba(201,150,26,0.2))" : "linear-gradient(135deg,rgba(201,150,26,0.1),rgba(201,150,26,0.03))",
+                    clipPath: "polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)",
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    fontSize: icon==="AH"?"0.95rem":"1.35rem", color: icon==="AH"?"#1A0101":"#E8B84B",
+                    fontFamily: icon==="AH"?"'Cormorant Garamond',serif":undefined, fontWeight: icon==="AH"?700:undefined,
+                    animation:`hexPulse 3s ease-in-out ${i*0.3}s infinite`,
+                  }}>{icon}</div>
+                ))}
+              </div>
+              {/* Float card */}
+              <div style={{ position:"absolute", bottom:28, right:-20, background:"linear-gradient(135deg,#C9961A,#E8B84B)", color:"#1A0101", padding:"20px 24px", borderRadius:4, boxShadow:"0 24px 60px rgba(0,0,0,0.5)", animation:"floatBadge 4s ease-in-out infinite" }}>
+                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.4rem", fontWeight:700, lineHeight:1 }}>{c(content,"why_badge_num")}</div>
+                <div style={{ fontSize:"0.6rem", letterSpacing:"0.14em", textTransform:"uppercase", marginTop:4 }}>{c(content,"why_badge_label")}</div>
+              </div>
             </div>
           </div>
+
+          {/* Text */}
           <div className="reveal">
-            <p style={eyebrow}>{c(content,"why_eyebrow")}</p>
-            <h2 style={secTitle}>{c(content,"why_title")} <em style={em}>{c(content,"why_title_em")}</em><br/>{c(content,"why_title_end")}</h2>
-            <p style={{...secSub, marginBottom:32}}>{c(content,"why_subtitle")}</p>
-            <div style={{ display:"flex",flexDirection:"column",gap:18 }}>
-              {[1,2,3,4].map(i=>(
-                <div key={i} style={{ display:"flex",gap:18,alignItems:"flex-start",padding:22,border:"1px solid rgba(201,150,26,0.1)",borderRadius:4,background:"rgba(255,255,255,0.02)" }}>
-                  <div style={{ width:44,height:44,flexShrink:0,background:"rgba(201,150,26,0.08)",border:"1px solid rgba(201,150,26,0.2)",borderRadius:2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.2rem" }}>
-                    {c(content,`why_feat_${i}_icon`)||["🛡️","🚀","🕐","📊"][i-1]}
+            <span style={T.eyebrow}>{c(content,"why_eyebrow") || "Why Aeton Homes"}</span>
+            <h2 style={T.h2}>
+              {c(content,"why_title")} <em style={T.em}>{c(content,"why_title_em")}</em>
+              {c(content,"why_title_end") && <><br/>{c(content,"why_title_end")}</>}
+            </h2>
+            <p style={{...T.sub, marginBottom:36}}>{c(content,"why_subtitle") || "Kenya's most trusted luxury property consultants — combining deep market knowledge with white-glove service."}</p>
+            <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+              {[1,2,3,4].map(i => (
+                <div key={i} style={{ display:"flex", gap:16, alignItems:"flex-start", padding:"18px 20px", border:"1px solid rgba(201,150,26,0.08)", borderRadius:4, background:"rgba(255,255,255,0.015)", transition:"border-color 0.3s" }}
+                  onMouseEnter={e=>(e.currentTarget.style.borderColor="rgba(201,150,26,0.22)")}
+                  onMouseLeave={e=>(e.currentTarget.style.borderColor="rgba(201,150,26,0.08)")}>
+                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(201,150,26,0.07)", border:"1px solid rgba(201,150,26,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1.1rem" }}>
+                    {c(content,`why_feat_${i}_icon`) || ["🛡️","🚀","🕐","📊"][i-1]}
                   </div>
                   <div>
-                    <div style={{ fontSize:"0.93rem",fontWeight:500,color:"#FDF8EF",marginBottom:5 }}>{c(content,`why_feat_${i}_title`)}</div>
-                    <div style={{ fontSize:"0.82rem",color:"#C4A97A",lineHeight:1.7 }}>{c(content,`why_feat_${i}_desc`)}</div>
+                    <div style={{ fontSize:"0.88rem", fontWeight:500, color:"#FDF8EF", marginBottom:4 }}>{c(content,`why_feat_${i}_title`)}</div>
+                    <div style={{ fontSize:"0.8rem", color:"#C4A97A", lineHeight:1.7 }}>{c(content,`why_feat_${i}_desc`)}</div>
                   </div>
                 </div>
               ))}
@@ -238,131 +313,163 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ── FEATURED VIDEOS ── */}
+      {/* ══════════════════════════════════════════════
+          FEATURED VIDEOS
+      ══════════════════════════════════════════════ */}
       {featuredVideos && featuredVideos.length > 0 && (
-        <section style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#3D0A0A,#150202)" }}>
-          <div className="reveal" style={{ marginBottom:56 }}>
-            <p style={eyebrow}>{c(content,"videos_eyebrow")}</p>
-            <h2 style={secTitle}>{c(content,"videos_title")} <em style={em}>{c(content,"videos_title_em")}</em></h2>
+        <section
+          aria-label="Luxury property tour videos Nairobi Kenya"
+          style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)" }}
+        >
+          <div className="reveal" style={{ marginBottom:60 }}>
+            <span style={T.eyebrow}>{c(content,"videos_eyebrow") || "Property Tours"}</span>
+            <h2 style={T.h2}>{c(content,"videos_title")} <em style={T.em}>{c(content,"videos_title_em")}</em></h2>
           </div>
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:26 }}>
-            {featuredVideos.map((v:any)=><VideoCard key={v.id} video={v} />)}
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:26 }}>
+            {featuredVideos.map((v:any) => <VideoCard key={v.id} video={v} />)}
           </div>
-          <div style={{ textAlign:"center",marginTop:48 }}>
-            <a href="/videos" className="ah-btn-outline" style={{ padding:"14px 36px",textDecoration:"none",display:"inline-block" }}>View All Videos</a>
+          <div style={{ textAlign:"center", marginTop:48 }}>
+            <a href="/videos" className="ah-btn-outline" style={{ padding:"14px 40px", textDecoration:"none", display:"inline-block" }}>View All Tours</a>
           </div>
         </section>
       )}
 
-      {/* ── PROCESS ── */}
-      <section id="process" style={{ position:"relative",zIndex:2,padding:"100px 5%",textAlign:"center",background:"linear-gradient(to bottom,#150202,#3D0A0A)" }}>
-        <div className="reveal" style={{ marginBottom:56 }}>
-          <p style={eyebrow}>{c(content,"process_eyebrow")}</p>
-          <h2 style={secTitle}>{c(content,"process_title")} <em style={em}>{c(content,"process_title_em")}</em></h2>
+      {/* ══════════════════════════════════════════════
+          PROCESS — how to buy property Kenya
+      ══════════════════════════════════════════════ */}
+      <section
+        id="process"
+        aria-label="How to buy or rent property in Nairobi Kenya — step by step"
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#0E0101)" }}
+      >
+        <div className="reveal" style={{ textAlign:"center", marginBottom:72 }}>
+          <span style={T.eyebrow}>{c(content,"process_eyebrow") || "How It Works"}</span>
+          <h2 style={T.h2}>{c(content,"process_title")} <em style={T.em}>{c(content,"process_title_em")}</em></h2>
+          <p style={{...T.sub, margin:"0 auto"}}>From first consultation to handing over the keys — a seamless, transparent journey.</p>
         </div>
-        <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:0 }} className="ah-process-grid">
-          {[1,2,3,4].map(i=>(
-            <div key={i} style={{ padding:"0 20px" }}>
-              <div style={{ width:76,height:76,margin:"0 auto 22px",background:"linear-gradient(135deg,rgba(201,150,26,0.12),rgba(201,150,26,0.04))",border:"1px solid rgba(201,150,26,0.28)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                <span style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.8rem",fontWeight:600,color:"#E8B84B" }}>{i}</span>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:0, position:"relative", maxWidth:1100, margin:"0 auto" }} className="ah-process-grid">
+          {/* Connector line */}
+          <div style={{ position:"absolute", top:38, left:"12.5%", right:"12.5%", height:1, background:"linear-gradient(to right,rgba(201,150,26,0.2),rgba(201,150,26,0.5),rgba(201,150,26,0.2))", zIndex:0 }} className="ah-process-line" />
+          {[1,2,3,4].map(i => (
+            <div key={i} style={{ padding:"0 24px", textAlign:"center", position:"relative", zIndex:1 }}>
+              <div style={{ width:76, height:76, margin:"0 auto 24px", background:"linear-gradient(135deg,rgba(201,150,26,0.1),rgba(201,150,26,0.04))", border:"1px solid rgba(201,150,26,0.3)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 0 0 6px rgba(201,150,26,0.04)" }}>
+                <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.9rem", fontWeight:600, color:"#E8B84B" }}>{i}</span>
               </div>
-              <div style={{ fontSize:"0.93rem",fontWeight:500,color:"#FDF8EF",marginBottom:10 }}>{c(content,`process_step_${i}_title`)}</div>
-              <div style={{ fontSize:"0.8rem",color:"#C4A97A",lineHeight:1.7 }}>{c(content,`process_step_${i}_desc`)}</div>
+              <div style={{ fontSize:"0.9rem", fontWeight:500, color:"#FDF8EF", marginBottom:10 }}>{c(content,`process_step_${i}_title`)}</div>
+              <div style={{ fontSize:"0.78rem", color:"#8A6520", lineHeight:1.75 }}>{c(content,`process_step_${i}_desc`)}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── TESTIMONIALS (admin-managed) ── */}
+      {/* ══════════════════════════════════════════════
+          TESTIMONIALS — client reviews luxury property
+      ══════════════════════════════════════════════ */}
       {testimonialsList && testimonialsList.length > 0 && (
-      <section id="testimonials" style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#3D0A0A,#1E0404)" }}>
-        <div className="reveal" style={{ marginBottom:56 }}>
-          <p style={eyebrow}>{c(content,"testi_eyebrow")}</p>
-          <h2 style={secTitle}>{c(content,"testi_title")} <em style={em}>{c(content,"testi_title_em")}</em></h2>
-        </div>
-        <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:22 }}>
-          {testimonialsList.map((t:any,i:number)=>(
-            <div key={t.id||i} className="reveal ah-card" style={{ padding:30 }}>
-              <div style={{ color:"#C9961A",fontSize:"0.9rem",marginBottom:14,letterSpacing:3 }}>{"★".repeat(t.stars||5)}</div>
-              <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.1rem",fontStyle:"italic",color:"#F0E6CE",lineHeight:1.7,marginBottom:22 }}>"{t.quote}"</p>
-              <div style={{ display:"flex",alignItems:"center",gap:12 }}>
-                {t.avatar_url ? (
-                  <img src={t.avatar_url} alt={t.name} style={{ width:42,height:42,borderRadius:"50%",objectFit:"cover" }} />
-                ) : (
-                  <div style={{ width:42,height:42,borderRadius:"50%",background:"linear-gradient(135deg,#8A6520,#C9961A)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Cormorant Garamond',serif",fontSize:"1.1rem",color:"#3D0A0A",fontWeight:700 }}>{t.name[0]}</div>
-                )}
-                <div>
-                  <div style={{ fontSize:"0.85rem",fontWeight:500,color:"#FDF8EF" }}>{t.name}</div>
-                  <div style={{ fontSize:"0.72rem",color:"#C4A97A" }}>{t.role}</div>
+        <section
+          id="testimonials"
+          aria-label="Client testimonials — Aeton Homes luxury real estate Kenya"
+          style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)" }}
+        >
+          <div className="reveal" style={{ textAlign:"center", marginBottom:64 }}>
+            <span style={T.eyebrow}>{c(content,"testi_eyebrow") || "Testimonials"}</span>
+            <h2 style={T.h2}>{c(content,"testi_title")} <em style={T.em}>{c(content,"testi_title_em")}</em></h2>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:22 }}>
+            {testimonialsList.map((t:any, i:number) => (
+              <div key={t.id||i} className="reveal ah-card" style={{ padding:28, position:"relative" }}>
+                <div style={{ fontSize:"1.8rem", color:"rgba(201,150,26,0.18)", fontFamily:"Georgia,serif", lineHeight:1, marginBottom:6, userSelect:"none" }}>"</div>
+                <div style={{ color:"#C9961A", fontSize:"0.8rem", marginBottom:12, letterSpacing:3 }}>{"★".repeat(t.stars||5)}</div>
+                <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.05rem", fontStyle:"italic", color:"#F0E6CE", lineHeight:1.75, marginBottom:22 }}>{t.quote}</p>
+                <div style={{ display:"flex", alignItems:"center", gap:12, borderTop:"1px solid rgba(201,150,26,0.08)", paddingTop:18 }}>
+                  {t.avatar_url
+                    ? <img src={t.avatar_url} alt={t.name} style={{ width:40, height:40, borderRadius:"50%", objectFit:"cover" }} />
+                    : <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg,#6B4510,#C9961A)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"#0E0101", fontWeight:700 }}>{t.name[0]}</div>
+                  }
+                  <div>
+                    <div style={{ fontSize:"0.83rem", fontWeight:500, color:"#FDF8EF" }}>{t.name}</div>
+                    <div style={{ fontSize:"0.7rem", color:"#6B4F20", marginTop:2 }}>{t.role}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
       )}
 
-      {/* ── CLIENT REVIEWS ── */}
-      <section id="reviews" style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#1E0404,#3D0A0A)" }}>
-        <div className="reveal" style={{ marginBottom:56,textAlign:"center" }}>
-          <p style={eyebrow}>Client Reviews</p>
-          <h2 style={secTitle}>What Our <em style={em}>Clients Say</em></h2>
-          <p style={{...secSub,margin:"0 auto"}}>Real experiences from people we've helped find their perfect property</p>
+      {/* ══════════════════════════════════════════════
+          CLIENT REVIEWS
+      ══════════════════════════════════════════════ */}
+      <section
+        id="reviews"
+        aria-label="Real estate client reviews Nairobi Kenya"
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#0E0101)" }}
+      >
+        <div className="reveal" style={{ textAlign:"center", marginBottom:64 }}>
+          <span style={T.eyebrow}>Client Reviews</span>
+          <h2 style={T.h2}>What Our <em style={T.em}>Clients Say</em></h2>
+          <p style={{...T.sub, margin:"0 auto"}}>Honest feedback from homebuyers, investors and tenants across Nairobi's luxury market.</p>
         </div>
-        <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,maxWidth:1100,margin:"0 auto" }} className="ah-two-col">
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:48, maxWidth:1100, margin:"0 auto" }} className="ah-two-col">
           <PublicReviewsList />
           <PublicReviewForm />
         </div>
       </section>
 
-      {/* ── TEAM ── */}
-      <section id="team" style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#1E0404,#3D0A0A)" }}>
-        <div className="reveal" style={{ marginBottom:56 }}>
-          <p style={eyebrow}>{c(content,"team_eyebrow")}</p>
-          <h2 style={secTitle}>{c(content,"team_title")} <em style={em}>{c(content,"team_title_em")}</em></h2>
+      {/* ══════════════════════════════════════════════
+          TEAM — real estate experts Nairobi
+      ══════════════════════════════════════════════ */}
+      <section
+        id="team"
+        aria-label="Aeton Homes real estate team — property experts Nairobi Kenya"
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)" }}
+      >
+        <div className="reveal" style={{ marginBottom:64 }}>
+          <span style={T.eyebrow}>{c(content,"team_eyebrow") || "Our Team"}</span>
+          <h2 style={T.h2}>{c(content,"team_title")} <em style={T.em}>{c(content,"team_title_em")}</em></h2>
         </div>
+
         {(teamList && teamList.length > 0) ? (
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:28 }}>
-            {teamList.map((m:any)=>(
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:26 }}>
+            {teamList.map((m:any) => (
               <div key={m.id} className="reveal ah-card" style={{ overflow:"hidden" }}>
-                <div style={{ aspectRatio:"3/4",overflow:"hidden",background:"linear-gradient(135deg,#2A0606,#1A0404)" }}>
-                  {m.photo_url ? (
-                    <img src={m.photo_url} alt={m.name} style={{ width:"100%",height:"100%",objectFit:"cover",display:"block" }} />
-                  ) : (
-                    <div style={{ width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"4rem",opacity:0.15 }}>👤</div>
-                  )}
+                <div style={{ aspectRatio:"3/4", overflow:"hidden", background:"#1A0303" }}>
+                  {m.photo_url
+                    ? <img src={m.photo_url} alt={m.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+                    : <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"3.5rem", opacity:0.1 }}>👤</div>
+                  }
                 </div>
-                <div style={{ padding:22,borderTop:"1px solid rgba(201,150,26,0.1)" }}>
-                  <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",fontWeight:600,color:"#FDF8EF",marginBottom:4 }}>{m.name}</div>
-                  <div style={{ fontSize:"0.7rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"#C9961A",marginBottom:10 }}>{m.role}</div>
-                  <div style={{ fontSize:"0.8rem",color:"#C4A97A",lineHeight:1.7 }}>{m.bio}</div>
+                <div style={{ padding:22, borderTop:"1px solid rgba(201,150,26,0.08)" }}>
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", fontWeight:600, color:"#FDF8EF", marginBottom:3 }}>{m.name}</div>
+                  <div style={{ fontSize:"0.65rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:12 }}>{m.role}</div>
+                  <div style={{ fontSize:"0.8rem", color:"#C4A97A", lineHeight:1.75 }}>{m.bio}</div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="reveal" style={{ display:"grid",gridTemplateColumns:"300px 1fr",gap:50,alignItems:"start",maxWidth:960 }}>
-            <div style={{ borderRadius:4,overflow:"hidden",border:"1px solid rgba(201,150,26,0.25)",boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-              <div style={{ aspectRatio:"3/4",background:"linear-gradient(135deg,#3A0A0A,#2A0606)",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                <div style={{ textAlign:"center" }}>
-                  <div style={{ width:90,height:90,borderRadius:"50%",background:"linear-gradient(135deg,rgba(201,150,26,0.3),rgba(201,150,26,0.1))",border:"2px solid rgba(201,150,26,0.4)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:"2.5rem" }}>👤</div>
-                  <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.3rem",color:"#E8B84B",fontStyle:"italic" }}>Aeton Homes</div>
-                </div>
+          /* CEO placeholder when no team added yet */
+          <div className="reveal" style={{ display:"grid", gridTemplateColumns:"280px 1fr", gap:52, alignItems:"start", maxWidth:900 }}>
+            <div style={{ borderRadius:4, overflow:"hidden", border:"1px solid rgba(201,150,26,0.18)", boxShadow:"0 24px 60px rgba(0,0,0,0.5)" }}>
+              <div style={{ aspectRatio:"3/4", background:"linear-gradient(160deg,#2A0606,#140202)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16 }}>
+                <div style={{ width:88, height:88, borderRadius:"50%", background:"rgba(201,150,26,0.12)", border:"1.5px solid rgba(201,150,26,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2.2rem" }}>👤</div>
+                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"rgba(201,150,26,0.5)", fontStyle:"italic" }}>Aeton Homes</div>
               </div>
             </div>
-            <div style={{ paddingTop:10 }}>
-              <div style={{ display:"inline-block",background:"rgba(201,150,26,0.1)",border:"1px solid rgba(201,150,26,0.25)",padding:"4px 14px",borderRadius:2,fontSize:"0.62rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"#C9961A",marginBottom:18 }}>Leadership</div>
-              <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"2.2rem",fontWeight:400,color:"#FDF8EF",marginBottom:6,lineHeight:1.2 }}>Our Chief Executive</h3>
-              <p style={{ fontSize:"0.72rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"#C9961A",marginBottom:28,borderBottom:"1px solid rgba(201,150,26,0.1)",paddingBottom:20 }}>Founder & CEO, Aeton Homes</p>
-              <p style={{ fontSize:"0.9rem",color:"#C4A97A",lineHeight:1.9,marginBottom:20 }}>
-                With over 12 years of experience in Kenya's luxury real estate market, our CEO founded Aeton Homes with a singular vision: to make premium property accessible, transparent, and rewarding for every client.
+            <div style={{ paddingTop:8 }}>
+              <div style={{ display:"inline-block", background:"rgba(201,150,26,0.08)", border:"1px solid rgba(201,150,26,0.2)", padding:"4px 14px", borderRadius:2, fontSize:"0.6rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:20 }}>Leadership</div>
+              <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.4rem", fontWeight:300, color:"#FDF8EF", marginBottom:6, lineHeight:1.15 }}>Our Chief Executive</h3>
+              <p style={{ fontSize:"0.65rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#C9961A", marginBottom:28, paddingBottom:22, borderBottom:"1px solid rgba(201,150,26,0.08)" }}>Founder & CEO — Aeton Homes Kenya</p>
+              <p style={{ fontSize:"0.88rem", color:"#C4A97A", lineHeight:1.9, marginBottom:20 }}>
+                With over 12 years of experience in Kenya's luxury real estate market, our CEO founded Aeton Homes with a singular vision: to make premium property accessible, transparent, and rewarding for every client across Nairobi and beyond.
               </p>
-              <p style={{ fontSize:"0.9rem",color:"#C4A97A",lineHeight:1.9,fontStyle:"italic",borderLeft:"2px solid rgba(201,150,26,0.3)",paddingLeft:18,marginBottom:28 }}>
+              <blockquote style={{ fontSize:"0.88rem", color:"#C4A97A", lineHeight:1.9, fontStyle:"italic", borderLeft:"2px solid rgba(201,150,26,0.35)", paddingLeft:20, marginBottom:28 }}>
                 "Every property transaction is a life decision. We treat it with the gravity it deserves."
-              </p>
-              <div style={{ display:"flex",gap:16,flexWrap:"wrap" }}>
-                {["12+ Years Experience","50+ Luxury Sales","Trusted by 200+ Families"].map((badge,i)=>(
-                  <div key={i} style={{ background:"rgba(201,150,26,0.08)",border:"1px solid rgba(201,150,26,0.18)",padding:"7px 16px",borderRadius:2,fontSize:"0.72rem",color:"#E8B84B",letterSpacing:"0.08em" }}>{badge}</div>
+              </blockquote>
+              <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+                {["12+ Years Experience","50+ Luxury Sales","200+ Families Served","Top Agent — Nairobi"].map((badge,i) => (
+                  <div key={i} style={{ background:"rgba(201,150,26,0.06)", border:"1px solid rgba(201,150,26,0.15)", padding:"6px 14px", borderRadius:2, fontSize:"0.68rem", color:"#8A6520", letterSpacing:"0.06em" }}>{badge}</div>
                 ))}
               </div>
             </div>
@@ -370,32 +477,52 @@ export default function Index() {
         )}
       </section>
 
-      {/* ── CONTACT ── */}
-      <section id="contact" style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#3D0A0A,#0D0202)" }}>
-        <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:80,alignItems:"start" }} className="ah-two-col">
+      {/* ══════════════════════════════════════════════
+          CONTACT — real estate enquiry Kenya
+      ══════════════════════════════════════════════ */}
+      <section
+        id="contact"
+        aria-label="Contact Aeton Homes — luxury real estate enquiries Nairobi Kenya"
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#050000)" }}
+      >
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:80, alignItems:"start", maxWidth:1200, margin:"0 auto" }} className="ah-two-col">
           <ContactForm />
-          <div style={{ paddingTop:10 }}>
-            <p style={eyebrow}>{c(content,"contact_eyebrow")}</p>
-            <h2 style={{ ...secTitle,marginBottom:12 }}>{c(content,"contact_title")}<br/><em style={em}>{c(content,"contact_title_em")}</em></h2>
-            <p style={{...secSub,marginBottom:38}}>{c(content,"contact_subtitle")}</p>
-            <div style={{ display:"flex",flexDirection:"column",gap:22 }}>
+          <div style={{ paddingTop:8 }}>
+            <span style={T.eyebrow}>{c(content,"contact_eyebrow") || "Get In Touch"}</span>
+            <h2 style={{...T.h2, marginBottom:12}}>
+              {c(content,"contact_title")}<br/><em style={T.em}>{c(content,"contact_title_em")}</em>
+            </h2>
+            <p style={{...T.sub, marginBottom:40}}>{c(content,"contact_subtitle") || "Ready to find your dream home in Nairobi? Our luxury property specialists are available 7 days a week."}</p>
+
+            <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
               {[
-                { icon:"📞",label:"Phone",key:"contact_phone" },
-                { icon:"✉️",label:"Email",key:"contact_email" },
-                { icon:"📍",label:"Office",key:"contact_address" },
-              ].map((item,i)=>(
-                <div key={i} style={{ display:"flex",gap:14,alignItems:"flex-start" }}>
-                  <div style={{ width:42,height:42,flexShrink:0,background:"rgba(201,150,26,0.08)",border:"1px solid rgba(201,150,26,0.22)",borderRadius:2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem" }}>{item.icon}</div>
+                { icon:"📞", label:"Phone", key:"contact_phone" },
+                { icon:"✉️", label:"Email", key:"contact_email" },
+                { icon:"📍", label:"Office", key:"contact_address" },
+              ].map((item,i) => (
+                <div key={i} style={{ display:"flex", gap:14, alignItems:"flex-start" }}>
+                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(201,150,26,0.06)", border:"1px solid rgba(201,150,26,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1rem" }}>{item.icon}</div>
                   <div>
                     <div className="ah-label" style={{ marginBottom:3 }}>{item.label}</div>
-                    <div style={{ fontSize:"0.92rem",color:"#FDF8EF" }}>{c(content,item.key)}</div>
+                    <div style={{ fontSize:"0.9rem", color:"#FDF8EF" }}>{c(content,item.key)}</div>
                   </div>
                 </div>
               ))}
             </div>
-            <a href={`https://wa.me/${c(content,"contact_whatsapp")}`} style={{ display:"inline-flex",alignItems:"center",gap:10,background:"#25D366",color:"#fff",padding:"13px 26px",borderRadius:2,marginTop:30,textDecoration:"none",fontSize:"0.82rem",fontWeight:500,letterSpacing:"0.08em",textTransform:"uppercase" }}>
-              💬 Chat on WhatsApp
+
+            <a
+              href={`https://wa.me/${c(content,"contact_whatsapp") || "254728683027"}`}
+              target="_blank" rel="noopener noreferrer"
+              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"#25D366", color:"#fff", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", boxShadow:"0 8px 24px rgba(37,211,102,0.25)" }}>
+              💬 WhatsApp Us Now
             </a>
+
+            {/* SEO-friendly area text */}
+            <div style={{ marginTop:40, padding:"20px 22px", background:"rgba(201,150,26,0.04)", border:"1px solid rgba(201,150,26,0.1)", borderRadius:4 }}>
+              <p style={{ fontSize:"0.75rem", color:"#6B4F20", lineHeight:1.8 }}>
+                Aeton Homes serves clients across <strong style={{color:"#8A6520"}}>Westlands, Karen, Kilimani, Lavington, Runda, Muthaiga</strong> and all of Nairobi. We specialise in <strong style={{color:"#8A6520"}}>luxury apartments, villas, townhouses, commercial property</strong> and prime land — for sale and rent in Kenya.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -406,19 +533,24 @@ export default function Index() {
         @media(max-width:900px){
           .ah-two-col{grid-template-columns:1fr!important;}
           .ah-two-col>div:first-child{display:none;}
-          .ah-process-grid{grid-template-columns:repeat(2,1fr)!important;gap:36px!important;}
+          .ah-process-grid{grid-template-columns:repeat(2,1fr)!important;gap:48px!important;}
+          .ah-process-line{display:none!important;}
+        }
+        @media(max-width:500px){
+          .ah-process-grid{grid-template-columns:1fr!important;}
         }
       `}</style>
     </div>
   );
 }
 
-// ── Sub-components ─────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
 
-// ── helpers ──────────────────────────────────────────────
 type MediaSlide = { kind: "image"; url: string } | { kind: "video"; url: string; embedUrl: string };
 
-function getEmbedUrl(v: { type: string; url: string }): string {
+function getYtVimeoEmbed(v: { type: string; url: string }): string {
   if (v.type === "youtube") {
     const id = v.url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([^&\s?/]+)/)?.[1];
     return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : v.url;
@@ -432,18 +564,20 @@ function getEmbedUrl(v: { type: string; url: string }): string {
 
 function buildMedia(p: any): MediaSlide[] {
   let imgs: string[] = [];
-  try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images || '[]'); } catch { imgs = []; }
+  try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images || "[]"); } catch { imgs = []; }
   if (p.image_url && !imgs.includes(p.image_url)) imgs = [p.image_url, ...imgs];
   if (!imgs.length) imgs = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"];
   let vids: { type: string; url: string }[] = [];
-  try { vids = Array.isArray(p.property_videos) ? p.property_videos : JSON.parse(p.property_videos || '[]'); } catch { vids = []; }
+  try { vids = Array.isArray(p.property_videos) ? p.property_videos : JSON.parse(p.property_videos || "[]"); } catch { vids = []; }
   vids = vids.filter(v => v.url?.trim());
-  const result: MediaSlide[] = imgs.map(url => ({ kind: "image", url }));
-  vids.forEach(v => result.push({ kind: "video", url: v.url, embedUrl: getEmbedUrl(v) }));
-  return result;
+  const slides: MediaSlide[] = imgs.map(url => ({ kind: "image", url }));
+  vids.forEach(v => slides.push({ kind: "video", url: v.url, embedUrl: getYtVimeoEmbed(v) }));
+  return slides;
 }
 
-// ── Property Detail Modal ──────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// PROPERTY MODAL
+// ══════════════════════════════════════════════════════════
 function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
   const API = import.meta.env.VITE_API_URL || "";
   const [idx, setIdx] = useState(0);
@@ -454,21 +588,11 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
 
   const media = buildMedia(p);
   const total = media.length;
-  const current = media[idx];
+  const cur = media[idx];
 
-  const go = (dir: number, e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setPlaying(false);
-    setIdx(i => (i + dir + total) % total);
-  };
+  const go = (dir: number, e?: React.MouseEvent) => { e?.stopPropagation(); setPlaying(false); setIdx(i => (i+dir+total)%total); };
 
-  // Lock body scroll
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-
-  // Escape key
+  useEffect(() => { document.body.style.overflow = "hidden"; return () => { document.body.style.overflow = ""; }; }, []);
   useEffect(() => {
     const fn = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", fn);
@@ -478,196 +602,159 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
   const submitEnquiry = async (e: React.FormEvent) => {
     e.preventDefault(); setStatus("loading");
     try {
-      await fetch(`${API}/api/enquiries`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, interest: p.title, message: form.message || `Enquiry about: ${p.title} — ${p.price}` }),
-      });
+      await fetch(`${API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ ...form, interest: p.title, message: form.message || `Enquiry about: ${p.title} — ${p.price}` }) });
       setStatus("success");
     } catch { setStatus("error"); }
   };
 
+  const specs = [
+    { icon:"🛏", label:"Beds", val: p.beds },
+    { icon:"🚿", label:"Baths", val: p.baths },
+    { icon:"📐", label:"Size", val: p.sqm, suffix:" m²" },
+  ].filter(s => s.val && Number(s.val) > 0);
+
   return (
-    <div onClick={onClose} style={{
-      position:"fixed", inset:0, zIndex:9000,
-      background:"rgba(0,0,0,0.88)", backdropFilter:"blur(6px)",
-      overflowY:"auto", padding:"20px 16px",
-      display:"flex", alignItems:"flex-start", justifyContent:"center",
-    }}>
-      <div onClick={e=>e.stopPropagation()} style={{
-        width:"100%", maxWidth:960,
-        background:"linear-gradient(135deg,#100202,#1E0404)",
-        border:"1px solid rgba(201,150,26,0.2)",
-        borderRadius:6, overflow:"hidden",
-        position:"relative", marginTop:20, marginBottom:40,
-        animation:"fadeInUp 0.3s ease",
-      }}>
+    <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:9000, background:"rgba(0,0,0,0.92)", backdropFilter:"blur(8px)", overflowY:"auto", padding:"16px", display:"flex", alignItems:"flex-start", justifyContent:"center" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ width:"100%", maxWidth:980, background:"#100101", border:"1px solid rgba(201,150,26,0.18)", borderRadius:6, overflow:"hidden", position:"relative", marginTop:24, marginBottom:40, animation:"fadeInUp 0.28s ease", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
+
         {/* Close */}
-        <button onClick={onClose} style={{
-          position:"absolute", top:14, right:14, zIndex:10,
-          width:36, height:36, borderRadius:"50%",
-          background:"rgba(0,0,0,0.6)", border:"1px solid rgba(201,150,26,0.25)",
-          color:"#E8B84B", fontSize:"1.2rem", cursor:"pointer",
-          display:"flex", alignItems:"center", justifyContent:"center",
-          lineHeight:1,
-        }}>×</button>
+        <button onClick={onClose} title="Close" style={{ position:"absolute", top:12, right:12, zIndex:10, width:34, height:34, borderRadius:"50%", background:"rgba(0,0,0,0.7)", border:"1px solid rgba(201,150,26,0.2)", color:"#E8B84B", fontSize:"1.1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
 
-        <div className="ah-modal-grid" style={{ display:"grid", gridTemplateColumns:"1fr 380px" }}>
+        <div className="ah-modal-grid" style={{ display:"grid", gridTemplateColumns:"1fr 360px" }}>
 
-          {/* ── LEFT: Gallery + Info ── */}
+          {/* ─── LEFT ─── */}
           <div>
-            {/* Main gallery */}
-            <div style={{ position:"relative", aspectRatio:"16/9", background:"#0A0101", userSelect:"none" }}
+            {/* Gallery */}
+            <div style={{ position:"relative", aspectRatio:"16/9", background:"#050000", userSelect:"none" }}
               onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
-              onTouchEnd={e=>{
-                if (touchStart===null) return;
-                const diff = touchStart - e.changedTouches[0].clientX;
-                if (Math.abs(diff)>40) go(diff>0?1:-1);
-                setTouchStart(null);
-              }}>
+              onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
-              {current.kind === "image" ? (
-                <img src={current.url} alt={p.title}
-                  style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#0A0101" }}
+              {cur.kind === "image" ? (
+                <img src={cur.url} alt={p.title} style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#050000" }}
                   onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80";}} />
               ) : playing ? (
-                current.url.includes(".mp4") ? (
-                  <video src={current.url} autoPlay controls style={{ width:"100%", height:"100%", background:"#000" }} />
-                ) : (
-                  <iframe src={current.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
-                )
+                cur.url.includes(".mp4")
+                  ? <video src={cur.url} autoPlay controls style={{ width:"100%", height:"100%", background:"#000" }} />
+                  : <iframe src={cur.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
               ) : (
-                <div style={{ width:"100%", height:"100%", background:"#0D0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
-                  onClick={()=>setPlaying(true)}>
-                  <div style={{ width:64, height:64, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 30px rgba(0,0,0,0.6)" }}>
-                    <span style={{ color:"#3D0A0A", fontSize:"1.6rem", marginLeft:5 }}>▶</span>
+                <div style={{ width:"100%", height:"100%", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }} onClick={()=>setPlaying(true)}>
+                  <div style={{ width:60, height:60, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 32px rgba(0,0,0,0.7)" }}>
+                    <span style={{ color:"#1A0101", fontSize:"1.4rem", marginLeft:5 }}>▶</span>
                   </div>
-                  <span style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", fontSize:"0.68rem", color:"rgba(255,255,255,0.45)", letterSpacing:"0.12em", textTransform:"uppercase" }}>🎬 Property Video</span>
+                  <span style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.12em", textTransform:"uppercase" }}>🎬 Property Video</span>
                 </div>
               )}
 
-              {/* Arrows */}
               {total > 1 && !playing && (<>
-                <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"1px solid rgba(255,255,255,0.1)",color:"#E8B84B",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
-                <button onClick={e=>go(1,e)} style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"1px solid rgba(255,255,255,0.1)",color:"#E8B84B",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
-                <div style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,0.65)",color:"#E8B84B",fontSize:"0.68rem",padding:"3px 9px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
-                  {current.kind==="video"&&<span>🎬</span>}{idx+1}/{total}
+                <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#E8B84B",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+                <button onClick={e=>go(1,e)} style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#E8B84B",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+                <div style={{ position:"absolute",top:10,right:10,background:"rgba(0,0,0,0.7)",color:"#E8B84B",fontSize:"0.65rem",padding:"3px 10px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
+                  {cur.kind==="video"&&<span>🎬</span>}{idx+1}/{total}
                 </div>
               </>)}
 
-              {/* Type badge */}
-              <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"5px 14px",borderRadius:2,fontSize:"0.64rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2 }}>
+              <span style={{ position:"absolute",top:12,left:12,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.15)",color:p.type==="sale"?"#1A0101":"#E8B84B",border:p.type==="rent"?"1px solid rgba(201,150,26,0.4)":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2 }}>
                 {p.type==="sale"?"For Sale":"For Rent"}
               </span>
             </div>
 
-            {/* Thumbnail strip */}
+            {/* Thumbnails */}
             {total > 1 && (
-              <div style={{ display:"flex", gap:6, padding:"10px 12px", overflowX:"auto", background:"rgba(0,0,0,0.3)", scrollbarWidth:"none" }}>
-                {media.map((m, i) => (
-                  <div key={i} onClick={()=>{setIdx(i);setPlaying(false);}} style={{
-                    flexShrink:0, width:68, height:48, borderRadius:3, overflow:"hidden", cursor:"pointer",
-                    border: i===idx ? "2px solid #C9961A" : "2px solid transparent",
-                    opacity: i===idx ? 1 : 0.55, transition:"all 0.2s",
-                    background:"#1A0404", display:"flex", alignItems:"center", justifyContent:"center",
-                  }}>
+              <div style={{ display:"flex", gap:5, padding:"8px 10px", overflowX:"auto", background:"rgba(0,0,0,0.5)", scrollbarWidth:"none" }}>
+                {media.map((m,i) => (
+                  <div key={i} onClick={()=>{setIdx(i);setPlaying(false);}} style={{ flexShrink:0, width:64, height:44, borderRadius:3, overflow:"hidden", cursor:"pointer", border: i===idx ? "2px solid #C9961A" : "2px solid rgba(255,255,255,0.05)", opacity: i===idx ? 1 : 0.5, transition:"all 0.2s", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center" }}>
                     {m.kind==="image"
-                      ? <img src={m.url} style={{ width:"100%", height:"100%", objectFit:"contain", background:"#1A0404" }} onError={e=>{(e.target as HTMLImageElement).style.display="none";}} />
-                      : <span style={{ fontSize:"1.2rem" }}>🎬</span>
+                      ? <img src={m.url} style={{ width:"100%", height:"100%", objectFit:"contain", background:"#0A0101" }} onError={e=>{(e.target as HTMLImageElement).style.display="none";}} />
+                      : <span style={{ fontSize:"1rem" }}>🎬</span>
                     }
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Property info */}
-            <div style={{ padding:"24px 28px" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12, marginBottom:16 }}>
+            {/* Info */}
+            <div style={{ padding:"22px 26px 26px" }}>
+              {/* Title row */}
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, marginBottom:14, flexWrap:"wrap" }}>
                 <div>
-                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.6rem,3vw,2.2rem)", fontWeight:400, color:"#FDF8EF", marginBottom:4 }}>{p.title}</h2>
-                  {p.subtitle && <p style={{ fontSize:"0.88rem", color:"#C4A97A", fontStyle:"italic" }}>{p.subtitle}</p>}
-                  <div style={{ fontSize:"0.82rem", color:"#8A6520", marginTop:6 }}>📍 {p.location}</div>
+                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.5rem,3vw,2rem)", fontWeight:400, color:"#FDF8EF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h2>
+                  {p.subtitle && <p style={{ fontSize:"0.84rem", color:"#C4A97A", fontStyle:"italic", marginBottom:4 }}>{p.subtitle}</p>}
+                  <div style={{ fontSize:"0.78rem", color:"#6B4F20" }}>📍 {p.location}</div>
                 </div>
-                <div style={{ textAlign:"right" }}>
-                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.6rem,3vw,2.2rem)", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>
-                    {p.price}<span style={{ fontSize:"0.8rem", fontFamily:"'Jost',sans-serif", fontWeight:300, color:"#C4A97A" }}>{p.price_suffix}</span>
+                <div style={{ textAlign:"right", flexShrink:0 }}>
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.5rem,2.5vw,2rem)", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>
+                    {p.price}
                   </div>
+                  {p.price_suffix && <div style={{ fontSize:"0.72rem", color:"#8A6520", marginTop:2 }}>{p.price_suffix}</div>}
                 </div>
               </div>
 
-              {/* Specs row — only show fields that have values > 0 */}
-              {(() => {
-                const specs = [
-                  { icon:"🛏", label:"Bedrooms", val: p.beds },
-                  { icon:"🚿", label:"Bathrooms", val: p.baths },
-                  { icon:"📐", label:"Size", val: p.sqm, suffix:" m²" },
-                ].filter(s => s.val && Number(s.val) > 0);
-                if (!specs.length) return null;
-                return (
-                  <div style={{ display:"flex", gap:0, marginBottom:20, borderTop:"1px solid rgba(201,150,26,0.1)", borderBottom:"1px solid rgba(201,150,26,0.1)", padding:"14px 0" }}>
-                    {specs.map((s,i) => (
-                      <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"6px 0" }}>
-                        <div style={{ fontSize:"1.3rem", marginBottom:4 }}>{s.icon}</div>
-                        <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.3rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
-                        <div style={{ fontSize:"0.62rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#8A6520", marginTop:3 }}>{s.label}</div>
-                      </div>
-                    ))}
-                  </div>
-                );
-              })()}
-
-              {/* Description */}
-              {p.description && (
-                <div style={{ marginBottom:20 }}>
-                  <h4 style={{ fontSize:"0.68rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#C9961A", marginBottom:10 }}>About This Property</h4>
-                  <p style={{ fontSize:"0.88rem", color:"#C4A97A", lineHeight:1.85, whiteSpace:"pre-wrap" }}>{p.description}</p>
+              {/* Specs */}
+              {specs.length > 0 && (
+                <div style={{ display:"flex", gap:0, marginBottom:20, background:"rgba(201,150,26,0.04)", border:"1px solid rgba(201,150,26,0.1)", borderRadius:3 }}>
+                  {specs.map((s,i) => (
+                    <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"12px 8px" }}>
+                      <div style={{ fontSize:"1.2rem", marginBottom:3 }}>{s.icon}</div>
+                      <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
+                      <div style={{ fontSize:"0.58rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#6B4F20", marginTop:3 }}>{s.label}</div>
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* WhatsApp shortcut */}
-              <a href={`https://wa.me/254728683027?text=${encodeURIComponent(`Hello Aeton Homes, I'm interested in: ${p.title} — ${p.price}${p.price_suffix}. Please share more details.`)}`}
+              {/* Description — always show if exists */}
+              {p.description && (
+                <div style={{ marginBottom:22, padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(201,150,26,0.08)", borderRadius:3 }}>
+                  <div style={{ fontSize:"0.58rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:10 }}>About This Property</div>
+                  <p style={{ fontSize:"0.86rem", color:"#C4A97A", lineHeight:1.9, whiteSpace:"pre-wrap", margin:0 }}>{p.description}</p>
+                </div>
+              )}
+
+              {/* WhatsApp */}
+              <a
+                href={`https://wa.me/254728683027?text=${encodeURIComponent(`Hello Aeton Homes, I'm interested in: ${p.title} — ${p.price}${p.price_suffix||""}. Please share more details.`)}`}
                 target="_blank" rel="noopener noreferrer"
-                style={{ display:"inline-flex", alignItems:"center", gap:10, background:"#25D366", color:"#fff", padding:"11px 22px", borderRadius:2, textDecoration:"none", fontSize:"0.8rem", fontWeight:500, letterSpacing:"0.08em", textTransform:"uppercase" }}>
-                💬 WhatsApp Us About This
+                style={{ display:"inline-flex", alignItems:"center", gap:9, background:"#25D366", color:"#fff", padding:"10px 22px", borderRadius:2, textDecoration:"none", fontSize:"0.76rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", boxShadow:"0 6px 20px rgba(37,211,102,0.2)" }}>
+                💬 WhatsApp About This
               </a>
             </div>
           </div>
 
-          {/* ── RIGHT: Enquiry form ── */}
-          <div style={{ borderLeft:"1px solid rgba(201,150,26,0.1)", padding:"28px 24px", display:"flex", flexDirection:"column" }}>
-            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.5rem", color:"#FDF8EF", marginBottom:6 }}>Book a Viewing</h3>
-            <p style={{ fontSize:"0.78rem", color:"#8A6520", marginBottom:22, lineHeight:1.6 }}>Interested in <strong style={{ color:"#C4A97A" }}>{p.title}</strong>? Fill in your details and we'll get back to you within 24 hours.</p>
+          {/* ─── RIGHT: Enquiry ─── */}
+          <div style={{ borderLeft:"1px solid rgba(201,150,26,0.08)", padding:"26px 22px", display:"flex", flexDirection:"column", background:"rgba(0,0,0,0.25)" }}>
+            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#FDF8EF", marginBottom:5 }}>Book a Viewing</h3>
+            <p style={{ fontSize:"0.75rem", color:"#6B4F20", marginBottom:22, lineHeight:1.65 }}>
+              Interested in <strong style={{color:"#8A6520"}}>{p.title}</strong>? Leave your details and we'll respond within hours.
+            </p>
 
             {status === "success" ? (
-              <div style={{ textAlign:"center", padding:"40px 0", flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12 }}>
+              <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, textAlign:"center", padding:"30px 0" }}>
                 <div style={{ fontSize:"2.5rem" }}>✅</div>
                 <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Enquiry sent!</p>
-                <p style={{ fontSize:"0.8rem", color:"#C4A97A" }}>We'll be in touch shortly.</p>
+                <p style={{ fontSize:"0.78rem", color:"#8A6520" }}>We'll be in touch shortly.</p>
               </div>
             ) : (
-              <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:14, flex:1 }}>
-                <div>
-                  <label className="ah-label">Full Name *</label>
-                  <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
-                </div>
-                <div>
-                  <label className="ah-label">Phone *</label>
-                  <input required value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} className="ah-input" placeholder="+254..." />
-                </div>
-                <div>
-                  <label className="ah-label">Email</label>
-                  <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
-                </div>
+              <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:13, flex:1 }}>
+                {[
+                  { key:"name", label:"Full Name *", placeholder:"Your name", required:true },
+                  { key:"phone", label:"Phone *", placeholder:"+254...", required:true },
+                  { key:"email", label:"Email", placeholder:"your@email.com", type:"email" },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="ah-label">{f.label}</label>
+                    <input type={f.type||"text"} required={f.required} value={(form as any)[f.key]} onChange={e=>setForm({...form,[f.key]:e.target.value})} className="ah-input" placeholder={f.placeholder} />
+                  </div>
+                ))}
                 <div style={{ flex:1 }}>
                   <label className="ah-label">Message</label>
-                  <textarea rows={3} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{ resize:"vertical" }} placeholder="When can you view? Any questions?" />
+                  <textarea rows={3} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Preferred viewing time, questions..." />
                 </div>
-                {status==="error" && <p style={{ color:"#f87171", fontSize:"0.78rem" }}>Something went wrong. Try again.</p>}
-                <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{ width:"100%", padding:13 }}>
-                  {status==="loading" ? "Sending..." : "Send Enquiry"}
+                {status==="error" && <p style={{color:"#f87171",fontSize:"0.76rem"}}>Something went wrong. Please try again.</p>}
+                <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{width:"100%",padding:13}}>
+                  {status==="loading" ? "Sending…" : "Send Enquiry"}
                 </button>
-                <p style={{ fontSize:"0.68rem", color:"#6B4F20", textAlign:"center", lineHeight:1.5 }}>
-                  We typically respond within a few hours during business hours.
+                <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
+                  Typically replied within a few hours · Mon–Sat 8am–7pm
                 </p>
               </form>
             )}
@@ -676,14 +763,17 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
       </div>
 
       <style>{`
-        @media (max-width: 700px) {
-          .ah-modal-grid { grid-template-columns: 1fr !important; }
+        @media(max-width:700px){
+          .ah-modal-grid{grid-template-columns:1fr!important;}
         }
       `}</style>
     </div>
   );
 }
 
+// ══════════════════════════════════════════════════════════
+// PROP CARD
+// ══════════════════════════════════════════════════════════
 function PropCard({ p }: { p: any }) {
   const [idx, setIdx] = useState(0);
   const [touchStart, setTouchStart] = useState<number|null>(null);
@@ -692,96 +782,117 @@ function PropCard({ p }: { p: any }) {
 
   const media = buildMedia(p);
   const total = media.length;
-  const current = media[idx];
+  const cur = media[idx];
 
-  const go = (dir: number, e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    setPlaying(false);
-    setIdx(i => (i + dir + total) % total);
-  };
+  const go = (dir: number, e?: React.MouseEvent) => { e?.stopPropagation(); setPlaying(false); setIdx(i => (i+dir+total)%total); };
+
+  const specs = [
+    {i:"🛏",v:p.beds,suffix:" Beds"},
+    {i:"🚿",v:p.baths,suffix:" Baths"},
+    {i:"📐",v:p.sqm,suffix:" m²"},
+  ].filter(f => f.v && Number(f.v) > 0);
+
+  // Truncate description for card preview
+  const descPreview = p.description ? (p.description.length > 100 ? p.description.slice(0, 100).trim() + "…" : p.description) : null;
 
   return (
     <>
       {showModal && <PropertyModal p={p} onClose={()=>setShowModal(false)} />}
 
-      <div className="ah-card" style={{ overflow:"hidden", cursor:"pointer", transition:"transform 0.4s,border-color 0.4s,box-shadow 0.4s" }}
+      <article className="ah-card" itemScope itemType="https://schema.org/RealEstateListing"
+        style={{ overflow:"hidden", cursor:"pointer", transition:"transform 0.35s,border-color 0.35s,box-shadow 0.35s", display:"flex", flexDirection:"column" }}
         onClick={()=>setShowModal(true)}
-        onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-8px)";el.style.borderColor="rgba(201,150,26,0.4)";el.style.boxShadow="0 24px 60px rgba(0,0,0,0.4)";}}
-        onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(201,150,26,0.12)";el.style.boxShadow="";}}>
+        onMouseEnter={e=>{ const el=e.currentTarget; el.style.transform="translateY(-6px)"; el.style.borderColor="rgba(201,150,26,0.35)"; el.style.boxShadow="0 28px 64px rgba(0,0,0,0.5)"; }}
+        onMouseLeave={e=>{ const el=e.currentTarget; el.style.transform=""; el.style.borderColor="rgba(201,150,26,0.12)"; el.style.boxShadow=""; }}>
 
-        {/* Media swiper */}
-        <div style={{ position:"relative", height:220, overflow:"hidden", background:"#1A0404", userSelect:"none" }}
+        {/* Image area */}
+        <div style={{ position:"relative", height:230, overflow:"hidden", background:"#0A0101", userSelect:"none", flexShrink:0 }}
           onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
-          onTouchEnd={e=>{
-            if (touchStart===null) return;
-            const diff = touchStart - e.changedTouches[0].clientX;
-            if (Math.abs(diff)>40) go(diff>0?1:-1);
-            setTouchStart(null);
-          }}>
+          onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
-          {current.kind === "image" ? (
-            <img src={current.url} alt={p.title}
-              style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#1A0404" }}
-              onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
+          {cur.kind === "image" ? (
+            <img src={cur.url} alt={p.title} itemProp="image"
+              style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#0A0101" }}
+              onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
           ) : playing ? (
-            current.url.includes(".mp4") ? (
-              <video src={current.url} autoPlay controls style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
-            ) : (
-              <iframe src={current.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
-            )
+            cur.url.includes(".mp4")
+              ? <video src={cur.url} autoPlay controls style={{ width:"100%", height:"100%", background:"#000" }} />
+              : <iframe src={cur.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
           ) : (
-            <div style={{ width:"100%", height:"100%", background:"linear-gradient(135deg,#1A0404,#2A0808)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
-              onClick={e=>{e.stopPropagation(); setPlaying(true);}}>
-              <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                <div style={{ width:54, height:54, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.5)" }}>
-                  <span style={{ color:"#3D0A0A", fontSize:"1.3rem", marginLeft:4 }}>▶</span>
-                </div>
+            <div style={{ width:"100%", height:"100%", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
+              onClick={e=>{ e.stopPropagation(); setPlaying(true); }}>
+              <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.6)" }}>
+                <span style={{ color:"#1A0101", fontSize:"1.2rem", marginLeft:4 }}>▶</span>
               </div>
-              <span style={{ position:"absolute", bottom:12, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.5)", letterSpacing:"0.1em", textTransform:"uppercase", whiteSpace:"nowrap" }}>🎬 Property Video</span>
+              <span style={{ position:"absolute", bottom:10, left:"50%", transform:"translateX(-50%)", fontSize:"0.62rem", color:"rgba(255,255,255,0.45)", letterSpacing:"0.1em", textTransform:"uppercase", whiteSpace:"nowrap" }}>🎬 Tour Video</span>
             </div>
           )}
 
           {total > 1 && !playing && (<>
-            <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
-            <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+            <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"none",color:"#E8B84B",width:26,height:26,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+            <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"none",color:"#E8B84B",width:26,height:26,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
             <div style={{ position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"center",gap:5,zIndex:2 }}>
-              {media.map((m,i)=>(
-                <button key={i} onClick={e=>{e.stopPropagation();setPlaying(false);setIdx(i);}}
-                  style={{ width:i===idx?16:6, height:6, borderRadius:3, background:i===idx?"#E8B84B":m.kind==="video"?"rgba(201,150,26,0.5)":"rgba(255,255,255,0.4)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
+              {media.map((_,i) => (
+                <button key={i} onClick={e=>{ e.stopPropagation(); setPlaying(false); setIdx(i); }}
+                  style={{ width:i===idx?14:5, height:5, borderRadius:3, background:i===idx?"#E8B84B":"rgba(255,255,255,0.3)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
               ))}
-            </div>
-            <div style={{ position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",color:"#E8B84B",fontSize:"0.65rem",padding:"2px 7px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
-              {current.kind==="video" && <span>🎬</span>}{idx+1}/{total}
             </div>
           </>)}
 
-          <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.62rem",fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",zIndex:2 }}>
+          {/* Status badge */}
+          <span style={{ position:"absolute",top:12,left:12,background:p.type==="sale"?"#C9961A":"rgba(10,1,1,0.8)",color:p.type==="sale"?"#1A0101":"#E8B84B",border:p.type==="rent"?"1px solid rgba(201,150,26,0.4)":"none",padding:"4px 11px",borderRadius:2,fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2,backdropFilter:"blur(4px)" }}>
             {p.type==="sale"?"For Sale":"For Rent"}
           </span>
+
+          {/* Image count */}
+          {total > 1 && (
+            <span style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,0.65)",color:"#E8B84B",fontSize:"0.6rem",padding:"3px 8px",borderRadius:10,zIndex:2 }}>
+              {total} {cur.kind==="video"?"🎬":"📷"}
+            </span>
+          )}
         </div>
 
-        <div style={{ padding:20 }}>
-          <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",fontWeight:600,color:"#E8B84B",marginBottom:5 }}>{p.price}{p.price_suffix&&<span style={{ fontSize:"0.78rem",fontFamily:"'Jost',sans-serif",fontWeight:300,color:"#C4A97A" }}>{p.price_suffix}</span>}</div>
-          <div style={{ fontSize:"0.97rem",fontWeight:500,color:"#FDF8EF",marginBottom:5 }}>{p.title}</div>
-          <div style={{ fontSize:"0.78rem",color:"#C4A97A",marginBottom:16 }}>📍 {p.location}</div>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:16, borderTop:"1px solid rgba(201,150,26,0.1)" }}>
-            <div style={{ display:"flex", gap:18, flexWrap:"wrap" }}>
-              {[{i:"🛏",v:p.beds,label:"Beds"},{i:"🚿",v:p.baths,label:"Baths"},{i:"📐",v:p.sqm,label:"m²",suffix:" m²"}]
-                .filter(f => f.v && Number(f.v) > 0)
-                .map((f,i)=>(
-                  <div key={i} style={{ display:"flex",alignItems:"center",gap:5,fontSize:"0.74rem",color:"#C4A97A" }}>
-                    <span>{f.i}</span>{f.v}{f.suffix||` ${f.label}`}
-                  </div>
-                ))}
+        {/* Card body */}
+        <div style={{ padding:"18px 20px 20px", display:"flex", flexDirection:"column", flex:1 }}>
+          {/* Price */}
+          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.55rem", fontWeight:600, color:"#E8B84B", lineHeight:1, marginBottom:6 }} itemProp="price">
+            {p.price}
+            {p.price_suffix && <span style={{ fontSize:"0.72rem", fontFamily:"'Jost',sans-serif", fontWeight:300, color:"#8A6520", marginLeft:4 }}>{p.price_suffix}</span>}
+          </div>
+
+          {/* Title */}
+          <div style={{ fontSize:"0.95rem", fontWeight:500, color:"#FDF8EF", marginBottom:4, lineHeight:1.3 }} itemProp="name">{p.title}</div>
+
+          {/* Location */}
+          <div style={{ fontSize:"0.75rem", color:"#6B4F20", marginBottom:12, display:"flex", alignItems:"center", gap:4 }}>
+            <span>📍</span><span itemProp="address">{p.location}</span>
+          </div>
+
+          {/* Description preview — always visible */}
+          {descPreview && (
+            <p style={{ fontSize:"0.78rem", color:"#8A6520", lineHeight:1.7, marginBottom:14, flexGrow:1 }}>{descPreview}</p>
+          )}
+
+          {/* Divider */}
+          <div style={{ borderTop:"1px solid rgba(201,150,26,0.08)", paddingTop:14, marginTop: descPreview ? 0 : "auto", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+            <div style={{ display:"flex", gap:14, flexWrap:"wrap" }}>
+              {specs.map((f,i) => (
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:4, fontSize:"0.72rem", color:"#8A6520" }}>
+                  <span>{f.i}</span>{f.v}{f.suffix}
+                </div>
+              ))}
             </div>
-            <span style={{ fontSize:"0.68rem", color:"#C9961A", letterSpacing:"0.1em", textTransform:"uppercase" }}>View →</span>
+            <span style={{ fontSize:"0.65rem", color:"#C9961A", letterSpacing:"0.12em", textTransform:"uppercase", flexShrink:0, marginLeft:8 }}>Details →</span>
           </div>
         </div>
-      </div>
+      </article>
     </>
   );
 }
 
+// ══════════════════════════════════════════════════════════
+// VIDEO CARD
+// ══════════════════════════════════════════════════════════
 function VideoCard({ video }: { video: any }) {
   const [playing, setPlaying] = useState(false);
   const getUrl = () => {
@@ -790,97 +901,49 @@ function VideoCard({ video }: { video: any }) {
     return video.video_url;
   };
   return (
-    <div className="ah-card" style={{ overflow:"hidden" }}>
-      <div style={{ position:"relative",aspectRatio:"16/9",background:"#1A0404",cursor:"pointer" }} onClick={()=>setPlaying(true)}>
-        {playing?(<iframe src={getUrl()} style={{ width:"100%",height:"100%",border:"none" }} allow="autoplay;fullscreen" allowFullScreen />):(<>
-          {video.thumbnail_url?<img src={video.thumbnail_url} alt={video.title} style={{ width:"100%",height:"100%",objectFit:"cover" }}/>:<div style={{ width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#2A0606,#1A0404)" }}><span style={{ fontSize:"3rem",opacity:0.2 }}>🎬</span></div>}
-          <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.25)" }}>
-            <div style={{ width:54,height:54,borderRadius:"50%",background:"linear-gradient(135deg,#C9961A,#E8B84B)",display:"flex",alignItems:"center",justifyContent:"center" }}>
-              <span style={{ color:"#3D0A0A",fontSize:"1.2rem",marginLeft:3 }}>▶</span>
+    <div className="ah-card" style={{ overflow:"hidden", transition:"transform 0.3s,box-shadow 0.3s" }}
+      onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-4px)";el.style.boxShadow="0 20px 50px rgba(0,0,0,0.4)";}}
+      onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.boxShadow="";}}>
+      <div style={{ position:"relative", aspectRatio:"16/9", background:"#0A0101", cursor:"pointer" }} onClick={()=>setPlaying(true)}>
+        {playing ? (
+          <iframe src={getUrl()} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay;fullscreen" allowFullScreen />
+        ) : (<>
+          {video.thumbnail_url
+            ? <img src={video.thumbnail_url} alt={video.title} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            : <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#1A0303,#0A0101)" }}><span style={{ fontSize:"2.5rem", opacity:0.15 }}>🎬</span></div>
+          }
+          <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.3)" }}>
+            <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 24px rgba(0,0,0,0.5)" }}>
+              <span style={{ color:"#1A0101", fontSize:"1.1rem", marginLeft:3 }}>▶</span>
             </div>
           </div>
         </>)}
       </div>
       <div style={{ padding:"14px 18px" }}>
-        <span style={{ fontSize:"0.6rem",letterSpacing:"0.1em",textTransform:"uppercase",background:"rgba(201,150,26,0.12)",color:"#E8B84B",padding:"2px 8px",borderRadius:2 }}>{video.category}</span>
-        <div style={{ fontSize:"0.95rem",fontWeight:500,color:"#FDF8EF",marginTop:8 }}>{video.title}</div>
-        {video.location_tag&&<div style={{ fontSize:"0.75rem",color:"#C4A97A",marginTop:3 }}>📍 {video.location_tag}</div>}
+        {video.category && <span style={{ fontSize:"0.58rem", letterSpacing:"0.12em", textTransform:"uppercase", background:"rgba(201,150,26,0.1)", color:"#E8B84B", padding:"2px 8px", borderRadius:2 }}>{video.category}</span>}
+        <div style={{ fontSize:"0.93rem", fontWeight:500, color:"#FDF8EF", marginTop:8, marginBottom:2 }}>{video.title}</div>
+        {video.location_tag && <div style={{ fontSize:"0.73rem", color:"#6B4F20" }}>📍 {video.location_tag}</div>}
       </div>
     </div>
   );
 }
 
-function ContactForm() {
-  const [form, setForm] = useState({ name:"",email:"",phone:"",interest:"",message:"" });
-  const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault(); setStatus("loading");
-    try {
-      const _API = import.meta.env.VITE_API_URL || "";
-      await fetch(`${_API}/api/enquiries`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(form)});
-      setStatus("success"); setForm({name:"",email:"",phone:"",interest:"",message:""});
-    } catch { setStatus("error"); }
-  };
-  if (status==="success") return (
-    <div className="ah-card" style={{ padding:40,textAlign:"center" }}>
-      <div style={{ fontSize:"3rem",marginBottom:16 }}>✅</div>
-      <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.3rem",color:"#E8B84B" }}>Thank you! We'll be in touch shortly.</p>
-    </div>
-  );
-  return (
-    <div className="ah-card" style={{ padding:38 }}>
-      <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.8rem",color:"#FDF8EF",marginBottom:26 }}>Send an Enquiry</h3>
-      <form onSubmit={submit}>
-        <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:18 }}>
-          <div><label className="ah-label">Full Name</label><input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name"/></div>
-          <div><label className="ah-label">Phone</label><input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} className="ah-input" placeholder="+254..."/></div>
-        </div>
-        <div style={{ marginBottom:18 }}><label className="ah-label">Email</label><input required type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com"/></div>
-        <div style={{ marginBottom:18 }}>
-          <label className="ah-label">Interest</label>
-          <select value={form.interest} onChange={e=>setForm({...form,interest:e.target.value})} className="ah-input" style={{ appearance:"none" }}>
-            <option style={{background:"#1A0303"}} value="">Select interest</option>
-            {["Buying","Renting","Selling","Investment","General Enquiry"].map(o=><option key={o} style={{background:"#1A0303"}}>{o}</option>)}
-          </select>
-        </div>
-        <div style={{ marginBottom:22 }}><label className="ah-label">Message</label><textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{ resize:"vertical" }} placeholder="Tell us what you're looking for..."/></div>
-        <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{ width:"100%",padding:14 }}>{status==="loading"?"Sending...":"Send Enquiry"}</button>
-      </form>
-    </div>
-  );
-}
-
-// Style helpers
-const eyebrow: React.CSSProperties = { fontSize:"0.7rem",letterSpacing:"0.3em",textTransform:"uppercase",color:"#C9961A",marginBottom:12 };
-const secTitle: React.CSSProperties = { fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.2rem,5vw,3.8rem)",fontWeight:300,color:"#FDF8EF",marginBottom:16 };
-const secSub: React.CSSProperties = { fontSize:"0.9rem",color:"#C4A97A",maxWidth:480,lineHeight:1.8 };
-const em: React.CSSProperties = { fontStyle:"italic",color:"#E8B84B" };
-
+// ══════════════════════════════════════════════════════════
+// PUBLIC REVIEWS
+// ══════════════════════════════════════════════════════════
 function PublicReviewsList() {
-  const API = import.meta.env.VITE_API_URL || "";
-  const [reviews, setReviews] = useState<any[]>([]);
-  useEffect(()=>{
-    fetch(`${API}/api/reviews`).then(r=>r.json()).then(d=>{ if(Array.isArray(d)) setReviews(d); }).catch(()=>{});
-  },[]);
-  if (!reviews.length) return (
-    <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
-      <div className="ah-card" style={{ padding:28,opacity:0.5,textAlign:"center" }}>
-        <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.1rem",fontStyle:"italic",color:"#C4A97A" }}>No reviews yet — be the first!</p>
-      </div>
-    </div>
-  );
+  const { data: reviews } = useApi<any[]>("/api/reviews");
+  if (!reviews || reviews.length === 0)
+    return <div style={{ color:"#6B4F20", fontSize:"0.82rem", paddingTop:20 }}>No reviews yet — be the first!</div>;
   return (
-    <div style={{ display:"flex",flexDirection:"column",gap:16,maxHeight:520,overflowY:"auto",paddingRight:4 }}>
-      {reviews.map((r:any)=>(
-        <div key={r.id} className="ah-card" style={{ padding:24 }}>
-          <div style={{ color:"#C9961A",fontSize:"0.9rem",marginBottom:10,letterSpacing:2 }}>{"★".repeat(r.stars||5)}</div>
-          <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.05rem",fontStyle:"italic",color:"#F0E6CE",lineHeight:1.7,marginBottom:16 }}>"{r.quote}"</p>
-          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
-            <div style={{ width:34,height:34,borderRadius:"50%",background:"linear-gradient(135deg,#8A6520,#C9961A)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Cormorant Garamond',serif",fontSize:"1rem",color:"#3D0A0A",fontWeight:700,flexShrink:0 }}>{r.name[0]}</div>
-            <div>
-              <div style={{ fontSize:"0.85rem",fontWeight:500,color:"#FDF8EF" }}>{r.name}</div>
-              <div style={{ fontSize:"0.7rem",color:"#8A6520" }}>{new Date(r.created_at).toLocaleDateString("en-KE",{year:"numeric",month:"short"})}</div>
-            </div>
+    <div style={{ display:"flex", flexDirection:"column", gap:18 }}>
+      {reviews.slice(0,6).map((r:any,i:number) => (
+        <div key={r.id||i} style={{ padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(201,150,26,0.08)", borderRadius:4 }}>
+          <div style={{ color:"#C9961A", fontSize:"0.78rem", marginBottom:8, letterSpacing:2 }}>{"★".repeat(r.rating||5)}<span style={{color:"rgba(201,150,26,0.25)"}}>{"★".repeat(5-(r.rating||5))}</span></div>
+          <p style={{ fontSize:"0.84rem", color:"#C4A97A", lineHeight:1.75, marginBottom:12, fontStyle:"italic" }}>"{r.review}"</p>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+            <span style={{ fontSize:"0.78rem", fontWeight:500, color:"#FDF8EF" }}>{r.name}</span>
+            {r.property_ref && <span style={{ fontSize:"0.65rem", color:"#6B4F20" }}>📍 {r.property_ref}</span>}
           </div>
         </div>
       ))}
@@ -889,58 +952,115 @@ function PublicReviewsList() {
 }
 
 function PublicReviewForm() {
-  const API = import.meta.env.VITE_API_URL || "";
-  const [form, setForm] = useState({ name:"", email:"", quote:"", stars:5 });
+  const [form, setForm] = useState({ name:"", rating:5, review:"", property_ref:"" });
   const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
-  const [hovered, setHovered] = useState(0);
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setStatus("loading");
     try {
-      const res = await fetch(`${API}/api/reviews`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(form)});
-      if (!res.ok) throw new Error();
+      const _API = import.meta.env.VITE_API_URL || "";
+      await fetch(`${_API}/api/reviews`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(form) });
       setStatus("success");
     } catch { setStatus("error"); }
   };
+  if (status === "success") return (
+    <div style={{ padding:"40px 0", textAlign:"center" }}>
+      <div style={{ fontSize:"2rem", marginBottom:12 }}>🙏</div>
+      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Thank you for your review!</p>
+    </div>
+  );
+  return (
+    <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:14 }}>
+      <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#FDF8EF", marginBottom:4 }}>Leave a Review</h3>
+      <div>
+        <label className="ah-label">Your Name *</label>
+        <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
+      </div>
+      <div>
+        <label className="ah-label">Rating</label>
+        <div style={{ display:"flex", gap:6 }}>
+          {[1,2,3,4,5].map(n => (
+            <button key={n} type="button" onClick={()=>setForm({...form,rating:n})}
+              style={{ background:"none", border:"none", cursor:"pointer", fontSize:"1.3rem", color:n<=form.rating?"#C9961A":"rgba(201,150,26,0.2)", padding:0, transition:"color 0.2s" }}>★</button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <label className="ah-label">Property (optional)</label>
+        <input value={form.property_ref} onChange={e=>setForm({...form,property_ref:e.target.value})} className="ah-input" placeholder="e.g. Karen Villa" />
+      </div>
+      <div>
+        <label className="ah-label">Your Review *</label>
+        <textarea required rows={4} value={form.review} onChange={e=>setForm({...form,review:e.target.value})} className="ah-input" placeholder="Share your experience with Aeton Homes…" />
+      </div>
+      {status==="error" && <p style={{color:"#f87171",fontSize:"0.76rem"}}>Something went wrong. Please try again.</p>}
+      <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{width:"100%",padding:12}}>
+        {status==="loading"?"Submitting…":"Submit Review"}
+      </button>
+    </form>
+  );
+}
 
-  if (status==="success") return (
-    <div className="ah-card" style={{ padding:36,textAlign:"center" }}>
-      <div style={{ fontSize:"3rem",marginBottom:14 }}>✨</div>
-      <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",color:"#E8B84B",marginBottom:10 }}>Thank you!</p>
-      <p style={{ fontSize:"0.84rem",color:"#C4A97A",lineHeight:1.7 }}>Your review has been submitted and is now live on the site — thank you!</p>
-      <button onClick={()=>{setStatus("idle");setForm({name:"",email:"",quote:"",stars:5});}} className="ah-btn-outline" style={{ marginTop:20,padding:"10px 24px" }}>Leave Another</button>
+// ══════════════════════════════════════════════════════════
+// CONTACT FORM
+// ══════════════════════════════════════════════════════════
+function ContactForm() {
+  const [form, setForm] = useState({ name:"", email:"", phone:"", interest:"", message:"" });
+  const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault(); setStatus("loading");
+    try {
+      const _API = import.meta.env.VITE_API_URL || "";
+      await fetch(`${_API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(form) });
+      setStatus("success"); setForm({name:"",email:"",phone:"",interest:"",message:""});
+    } catch { setStatus("error"); }
+  };
+
+  if (status === "success") return (
+    <div style={{ padding:"60px 0", textAlign:"center" }}>
+      <div style={{ fontSize:"2.5rem", marginBottom:16 }}>✅</div>
+      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#E8B84B", marginBottom:8 }}>Message received!</p>
+      <p style={{ fontSize:"0.82rem", color:"#8A6520" }}>Our team will be in touch very soon.</p>
     </div>
   );
 
   return (
-    <div className="ah-card" style={{ padding:32 }}>
-      <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",color:"#FDF8EF",marginBottom:6 }}>Leave a Review</h3>
-      <p style={{ fontSize:"0.8rem",color:"#8A6520",marginBottom:22 }}>Share your experience with Aeton Homes</p>
-      <form onSubmit={submit}>
-        <div style={{ marginBottom:16 }}>
-          <label className="ah-label">Your Rating</label>
-          <div style={{ display:"flex",gap:6,marginTop:4 }}>
-            {[1,2,3,4,5].map(n=>(
-              <button key={n} type="button"
-                onMouseEnter={()=>setHovered(n)} onMouseLeave={()=>setHovered(0)}
-                onClick={()=>setForm({...form,stars:n})}
-                style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.8rem",color:(hovered||form.stars)>=n?"#C9961A":"rgba(201,150,26,0.2)",transition:"color 0.15s",padding:"0 2px",lineHeight:1 }}>★</button>
-            ))}
-            <span style={{ fontSize:"0.78rem",color:"#8A6520",alignSelf:"center",marginLeft:6 }}>{["","Poor","Fair","Good","Great","Excellent"][hovered||form.stars]}</span>
-          </div>
+    <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:16 }}>
+      <div>
+        <span style={T.eyebrow}>{}</span>
+        <h2 style={{...T.h2, fontSize:"clamp(1.6rem,3vw,2.2rem)"}}>Send Us a <em style={T.em}>Message</em></h2>
+        <p style={{...T.sub, marginBottom:28}}>Tell us what you're looking for and we'll match you with the perfect property.</p>
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+        <div>
+          <label className="ah-label">Full Name *</label>
+          <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
         </div>
-        <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14 }}>
-          <div><label className="ah-label">Your Name *</label><input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="John Doe"/></div>
-          <div><label className="ah-label">Email (optional)</label><input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com"/></div>
+        <div>
+          <label className="ah-label">Phone *</label>
+          <input required value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} className="ah-input" placeholder="+254..." />
         </div>
-        <div style={{ marginBottom:20 }}>
-          <label className="ah-label">Your Review *</label>
-          <textarea required rows={4} value={form.quote} onChange={e=>setForm({...form,quote:e.target.value})} className="ah-input" style={{ resize:"vertical" }} placeholder="Tell us about your experience with Aeton Homes..."/>
-        </div>
-        {status==="error"&&<p style={{ color:"#f87171",fontSize:"0.8rem",marginBottom:12 }}>Something went wrong. Please try again.</p>}
-        <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{ width:"100%",padding:13 }}>{status==="loading"?"Submitting...":"Submit Review"}</button>
-        <p style={{ fontSize:"0.7rem",color:"#8A6520",marginTop:10,textAlign:"center" }}>Your review will appear instantly on the site</p>
-      </form>
-    </div>
+      </div>
+      <div>
+        <label className="ah-label">Email</label>
+        <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
+      </div>
+      <div>
+        <label className="ah-label">I'm interested in</label>
+        <select value={form.interest} onChange={e=>setForm({...form,interest:e.target.value})} className="ah-input" style={{appearance:"none",cursor:"pointer"}}>
+          {["","Buying a Home","Renting a Property","Commercial Space","Investment Property","Land Purchase","General Enquiry"].map(o=><option key={o} value={o} style={{background:"#0E0101"}}>{o||"Select..."}</option>)}
+        </select>
+      </div>
+      <div>
+        <label className="ah-label">Message</label>
+        <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Budget, preferred location, timeline, requirements…" />
+      </div>
+      {status==="error" && <p style={{color:"#f87171",fontSize:"0.78rem"}}>Something went wrong. Please try again.</p>}
+      <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{padding:"13px 0",width:"100%",fontSize:"0.78rem"}}>
+        {status==="loading"?"Sending…":"Send Message"}
+      </button>
+      <p style={{ fontSize:"0.68rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
+        By submitting you agree to be contacted by Aeton Homes regarding your enquiry.
+      </p>
+    </form>
   );
 }
