@@ -404,55 +404,115 @@ export default function Index() {
 
 // ── Sub-components ─────────────────────────────────────────
 
-function PropCard({ p }: { p: any }) {
-  const [imgIdx, setImgIdx] = useState(0);
-  const [touchStart, setTouchStart] = useState<number|null>(null);
+// ── helpers ──────────────────────────────────────────────
+type MediaSlide = { kind: "image"; url: string } | { kind: "video"; url: string; embedUrl: string };
 
-  // Build images array: images field + image_url as fallback
-  const allImages: string[] = (() => {
+function getEmbedUrl(v: { type: string; url: string }): string {
+  if (v.type === "youtube") {
+    const id = v.url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([^&\s?/]+)/)?.[1];
+    return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : v.url;
+  }
+  if (v.type === "vimeo") {
+    const id = v.url.match(/vimeo\.com\/(\d+)/)?.[1];
+    return id ? `https://player.vimeo.com/video/${id}?autoplay=1` : v.url;
+  }
+  return v.url; // mp4 — handled via <video>
+}
+
+function PropCard({ p }: { p: any }) {
+  const [idx, setIdx] = useState(0);
+  const [touchStart, setTouchStart] = useState<number|null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  // Build unified media array: images first, then videos
+  const media: MediaSlide[] = (() => {
     let imgs: string[] = [];
     try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images || '[]'); } catch { imgs = []; }
     if (p.image_url && !imgs.includes(p.image_url)) imgs = [p.image_url, ...imgs];
     if (!imgs.length) imgs = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80"];
-    return imgs;
+
+    let vids: { type: string; url: string }[] = [];
+    try { vids = Array.isArray(p.property_videos) ? p.property_videos : JSON.parse(p.property_videos || '[]'); } catch { vids = []; }
+    vids = vids.filter(v => v.url?.trim());
+
+    const result: MediaSlide[] = imgs.map(url => ({ kind: "image", url }));
+    vids.forEach(v => result.push({ kind: "video", url: v.url, embedUrl: getEmbedUrl(v) }));
+    return result;
   })();
 
-  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setImgIdx(i => (i - 1 + allImages.length) % allImages.length); };
-  const next = (e: React.MouseEvent) => { e.stopPropagation(); setImgIdx(i => (i + 1) % allImages.length); };
+  const total = media.length;
+  const current = media[idx];
+
+  const go = (dir: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setPlaying(false);
+    setIdx(i => (i + dir + total) % total);
+  };
 
   return (
-    <div className="ah-card" style={{ overflow:"hidden",cursor:"pointer",transition:"transform 0.4s,border-color 0.4s,box-shadow 0.4s" }}
+    <div className="ah-card" style={{ overflow:"hidden", cursor:"pointer", transition:"transform 0.4s,border-color 0.4s,box-shadow 0.4s" }}
       onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-8px)";el.style.borderColor="rgba(201,150,26,0.4)";el.style.boxShadow="0 24px 60px rgba(0,0,0,0.4)";}}
       onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(201,150,26,0.12)";el.style.boxShadow="";}}>
-      {/* Image swiper */}
-      <div style={{ position:"relative",height:220,overflow:"hidden",background:"#1A0404",userSelect:"none" }}
+
+      {/* Media swiper */}
+      <div style={{ position:"relative", height:220, overflow:"hidden", background:"#1A0404", userSelect:"none" }}
         onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
         onTouchEnd={e=>{
           if (touchStart===null) return;
           const diff = touchStart - e.changedTouches[0].clientX;
-          if (Math.abs(diff)>40) diff>0 ? setImgIdx(i=>(i+1)%allImages.length) : setImgIdx(i=>(i-1+allImages.length)%allImages.length);
+          if (Math.abs(diff)>40) go(diff>0?1:-1);
           setTouchStart(null);
         }}>
-        <img src={allImages[imgIdx]} alt={p.title}
-          style={{ width:"100%",height:"100%",objectFit:"cover",transition:"opacity 0.3s",display:"block" }}
-          onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
-        {/* Arrows — only show if multiple images */}
-        {allImages.length > 1 && (<>
-          <button onClick={prev} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
-          <button onClick={next} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+
+        {/* Current slide */}
+        {current.kind === "image" ? (
+          <img src={current.url} alt={p.title}
+            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+            onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
+        ) : playing ? (
+          current.url.endsWith(".mp4") || current.url.includes(".mp4") ? (
+            <video src={current.url} autoPlay controls style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+          ) : (
+            <iframe src={current.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
+          )
+        ) : (
+          /* Video thumbnail / play button */
+          <div style={{ width:"100%", height:"100%", background:"linear-gradient(135deg,#1A0404,#2A0808)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
+            onClick={e=>{e.stopPropagation(); setPlaying(true);}}>
+            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <div style={{ width:54, height:54, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.5)" }}>
+                <span style={{ color:"#3D0A0A", fontSize:"1.3rem", marginLeft:4 }}>▶</span>
+              </div>
+            </div>
+            <span style={{ position:"absolute", bottom:12, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.5)", letterSpacing:"0.1em", textTransform:"uppercase", whiteSpace:"nowrap" }}>
+              🎬 Property Video
+            </span>
+          </div>
+        )}
+
+        {/* Nav arrows */}
+        {total > 1 && !playing && (<>
+          <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+          <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
           {/* Dots */}
           <div style={{ position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"center",gap:5,zIndex:2 }}>
-            {allImages.map((_,i)=>(
-              <button key={i} onClick={e=>{e.stopPropagation();setImgIdx(i);}} style={{ width:i===imgIdx?16:6,height:6,borderRadius:3,background:i===imgIdx?"#E8B84B":"rgba(255,255,255,0.4)",border:"none",cursor:"pointer",padding:0,transition:"all 0.25s" }}/>
+            {media.map((m,i)=>(
+              <button key={i} onClick={e=>{e.stopPropagation();setPlaying(false);setIdx(i);}}
+                style={{ width:i===idx?16:6, height:6, borderRadius:3, background:i===idx?"#E8B84B":m.kind==="video"?"rgba(201,150,26,0.5)":"rgba(255,255,255,0.4)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
             ))}
           </div>
-          {/* Counter */}
-          <div style={{ position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",color:"#E8B84B",fontSize:"0.65rem",padding:"2px 7px",borderRadius:10,zIndex:2 }}>{imgIdx+1}/{allImages.length}</div>
+          {/* Counter + type indicator */}
+          <div style={{ position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",color:"#E8B84B",fontSize:"0.65rem",padding:"2px 7px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
+            {current.kind==="video" && <span>🎬</span>}
+            {idx+1}/{total}
+          </div>
         </>)}
+
         <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.62rem",fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",zIndex:2 }}>
           {p.type==="sale"?"For Sale":"For Rent"}
         </span>
       </div>
+
       <div style={{ padding:20 }}>
         <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",fontWeight:600,color:"#E8B84B",marginBottom:5 }}>{p.price}{p.price_suffix&&<span style={{ fontSize:"0.78rem",fontFamily:"'Jost',sans-serif",fontWeight:300,color:"#C4A97A" }}>{p.price_suffix}</span>}</div>
         <div style={{ fontSize:"0.97rem",fontWeight:500,color:"#FDF8EF",marginBottom:5 }}>{p.title}</div>

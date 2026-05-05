@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { showToast } from "./index";
 
 const API = import.meta.env.VITE_API_URL || "";
-const EMPTY = { title:"",subtitle:"",description:"",price:"",price_suffix:"",type:"sale",beds:3,baths:2,sqm:150,location:"",image_url:"",images:[],featured:false,active:true,order_index:0 };
+const EMPTY = { title:"",subtitle:"",description:"",price:"",price_suffix:"",type:"sale",beds:3,baths:2,sqm:150,location:"",image_url:"",images:[],property_videos:[],featured:false,active:true,order_index:0 };
 
 export default function PropertiesTab({ token }: { token: string }) {
   const [list, setList] = useState<any[]>([]);
@@ -17,12 +17,32 @@ export default function PropertiesTab({ token }: { token: string }) {
   const load = () => { setLoading(true); fetch(`${API}/api/properties/all`,{headers:{"Authorization":`Bearer ${token}`}}).then(r=>r.json()).then(d=>{setList(Array.isArray(d)?d:[]);setLoading(false);}); };
   useEffect(()=>{ load(); },[]);
 
-  const openAdd = () => { setForm({...EMPTY,images:[]}); setEditing(null); setShowForm(true); };
+  const openAdd = () => { setForm({...EMPTY,images:[],property_videos:[]}); setEditing(null); setShowForm(true); };
   const openEdit = (p:any) => {
     let imgs:string[] = [];
     try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images||'[]'); } catch { imgs=[]; }
-    setForm({...p,images:imgs});
+    let vids:any[] = [];
+    try { vids = Array.isArray(p.property_videos) ? p.property_videos : JSON.parse(p.property_videos||'[]'); } catch { vids=[]; }
+    setForm({...p, images:imgs, property_videos:vids});
     setEditing(p.id); setShowForm(true);
+  };
+
+  // Add a video entry (YouTube/Vimeo URL or direct mp4 URL)
+  const addVideo = () => {
+    setForm((f:any) => ({
+      ...f,
+      property_videos: [...(f.property_videos||[]), { type:"youtube", url:"", label:"" }]
+    }));
+  };
+  const updateVideo = (idx:number, key:string, val:string) => {
+    setForm((f:any) => {
+      const vids = [...(f.property_videos||[])];
+      vids[idx] = { ...vids[idx], [key]: val };
+      return { ...f, property_videos: vids };
+    });
+  };
+  const removeVideo = (idx:number) => {
+    setForm((f:any) => ({ ...f, property_videos: (f.property_videos||[]).filter((_:any,i:number)=>i!==idx) }));
   };
 
   // Upload a single image and add to the images array
@@ -65,7 +85,12 @@ export default function PropertiesTab({ token }: { token: string }) {
   const save = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true);
     try {
-      const payload = { ...form, images: Array.isArray(form.images) ? form.images : [], image_url: form.images?.[0] || form.image_url || "" };
+      const payload = {
+        ...form,
+        images: Array.isArray(form.images) ? form.images : [],
+        image_url: form.images?.[0] || form.image_url || "",
+        property_videos: Array.isArray(form.property_videos) ? form.property_videos.filter((v:any)=>v.url?.trim()) : [],
+      };
       if (editing) { await fetch(`${API}/api/properties/${editing}`,{method:"PUT",headers:hdrs,body:JSON.stringify(payload)}); showToast("Property updated!"); }
       else { await fetch(`${API}/api/properties`,{method:"POST",headers:hdrs,body:JSON.stringify(payload)}); showToast("Property added!"); }
       setShowForm(false); load();
@@ -157,6 +182,39 @@ export default function PropertiesTab({ token }: { token: string }) {
                 </div>
               </div>
 
+              {/* ── Property Videos ── */}
+              <div style={{ gridColumn:"1/-1" }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
+                  <label className="ah-label" style={{ marginBottom:0 }}>Property Videos ({(form.property_videos||[]).length})</label>
+                  <button type="button" onClick={addVideo} className="ah-btn-outline" style={{ padding:"5px 14px", fontSize:"0.72rem" }}>+ Add Video</button>
+                </div>
+                {(form.property_videos||[]).length === 0 && (
+                  <p style={{ fontSize:"0.78rem", color:"#6B4F20", fontStyle:"italic" }}>No videos yet. Add a YouTube, Vimeo, or direct MP4 URL.</p>
+                )}
+                <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                  {(form.property_videos||[]).map((v:any, idx:number) => (
+                    <div key={idx} style={{ display:"grid", gridTemplateColumns:"120px 1fr auto", gap:10, alignItems:"center", background:"rgba(255,255,255,0.03)", border:"1px solid rgba(201,150,26,0.12)", borderRadius:3, padding:"10px 14px" }}>
+                      <select value={v.type} onChange={e=>updateVideo(idx,"type",e.target.value)} className="ah-input" style={{ appearance:"none", fontSize:"0.78rem" }}>
+                        <option value="youtube" style={{background:"#1A0303"}}>YouTube</option>
+                        <option value="vimeo"   style={{background:"#1A0303"}}>Vimeo</option>
+                        <option value="mp4"     style={{background:"#1A0303"}}>Direct MP4</option>
+                      </select>
+                      <input
+                        value={v.url}
+                        onChange={e=>updateVideo(idx,"url",e.target.value)}
+                        className="ah-input"
+                        placeholder={
+                          v.type==="youtube" ? "https://youtu.be/..." :
+                          v.type==="vimeo"   ? "https://vimeo.com/..." :
+                          "https://example.com/video.mp4"
+                        }
+                      />
+                      <button type="button" onClick={()=>removeVideo(idx)} style={{ background:"rgba(200,50,50,0.15)", border:"1px solid rgba(200,50,50,0.3)", color:"#f87171", width:32, height:32, borderRadius:3, cursor:"pointer", fontSize:"1rem", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>×</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div style={{ display:"flex",gap:24,gridColumn:"1/-1" }}>
                 <label style={{ display:"flex",alignItems:"center",gap:8,cursor:"pointer",fontSize:"0.82rem",color:"#C4A97A" }}>
                   <input type="checkbox" checked={form.featured} onChange={e=>setForm({...form,featured:e.target.checked})} style={{ width:15,height:15 }}/>
@@ -186,6 +244,8 @@ export default function PropertiesTab({ token }: { token: string }) {
           {list.map(p=>{
             let imgs:string[]=[];
             try{imgs=Array.isArray(p.images)?p.images:JSON.parse(p.images||'[]');}catch{imgs=[];}
+            let pvids:any[]=[];
+            try{pvids=Array.isArray(p.property_videos)?p.property_videos:JSON.parse(p.property_videos||'[]');}catch{pvids=[];}
             const mainImg = imgs[0] || p.image_url;
             return (
               <div key={p.id} className="ah-card" style={{ overflow:"hidden" }}>
@@ -196,6 +256,7 @@ export default function PropertiesTab({ token }: { token: string }) {
                     {p.featured&&<span style={{ fontSize:"0.6rem",fontWeight:600,textTransform:"uppercase",padding:"2px 8px",borderRadius:2,background:"rgba(201,150,26,0.3)",color:"#E8B84B" }}>★</span>}
                     {!p.active&&<span style={{ fontSize:"0.6rem",fontWeight:600,textTransform:"uppercase",padding:"2px 8px",borderRadius:2,background:"rgba(100,100,100,0.5)",color:"#aaa" }}>Hidden</span>}
                     {imgs.length>1&&<span style={{ fontSize:"0.6rem",fontWeight:600,textTransform:"uppercase",padding:"2px 8px",borderRadius:2,background:"rgba(0,0,0,0.5)",color:"#E8B84B" }}>📷{imgs.length}</span>}
+                    {pvids.length>0&&<span style={{ fontSize:"0.6rem",fontWeight:600,textTransform:"uppercase",padding:"2px 8px",borderRadius:2,background:"rgba(0,0,0,0.5)",color:"#C4A97A" }}>🎬{pvids.length}</span>}
                   </div>
                 </div>
                 <div style={{ padding:16 }}>
