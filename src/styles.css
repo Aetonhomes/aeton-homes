@@ -197,16 +197,111 @@ img { max-width: 100%; height: auto; }
   .ah-team-grid { grid-template-columns: 1fr !important; }
 }
 
-/* ── Admin mobile ── */
-@media (max-width: 700px) {
-  /* Stack admin sidebar above content on mobile */
-  .ah-admin-layout { flex-direction: column !important; }
-  .ah-admin-sidebar-el {
-    width: 100% !important;
-    height: auto !important;
-    position: relative !important;
-    flex-direction: row !important;
-    overflow-x: auto !important;
+/* ── Admin responsive ── */
+
+/* Sidebar drawer animation */
+.ah-sidebar {
+  transition: left 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+@media (max-width: 768px) {
+  /* Hide sidebar by default, show as drawer */
+  .ah-sidebar {
+    position: fixed !important;
+    left: -240px;
+    top: 0;
+    height: 100vh !important;
+    width: 220px !important;
+    min-width: 220px !important;
+    z-index: 200;
+    box-shadow: none;
   }
-  .ah-admin-main { padding: 16px 12px !important; }
+  .ah-sidebar.open {
+    left: 0 !important;
+    box-shadow: 4px 0 30px rgba(0,0,0,0.6);
+  }
+
+  /* Show top bar */
+  .ah-topbar { display: flex !important; }
+
+  /* Main content full width */
+  .ah-main-content { width: 100% !important; }
+
+  /* Overlay */
+  .ah-overlay { display: block !important; }
+
+  /* Reduce padding */
+  .ah-main-content > div { padding: 16px 12px !important; }
+
+  /* Analytics stat grid */
+  .ah-analytics-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Analytics chart grid */
+  .ah-analytics-charts {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Enquiry cards — stack actions below */
+  .ah-enquiry-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .ah-enquiry-actions {
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start !important;
+  }
+
+  /* Properties form — single col */
+  .ah-prop-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ah-prop-grid > [style*="gridColumn"] {
+    grid-column: 1 !important;
+  }
+
+  /* Recent visitors table — hide less important cols */
+  .ah-visitors-table th:nth-child(3),
+  .ah-visitors-table td:nth-child(3),
+  .ah-visitors-table th:nth-child(5),
+  .ah-visitors-table td:nth-child(5) {
+    display: none;
+  }
+
+  /* Overflow tables */
+  .ah-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Form grids collapse */
+  .ah-form-grid-2 { grid-template-columns: 1fr !important; }
+
+  /* Buttons full width on small forms */
+  .ah-form-actions { flex-direction: column !important; }
+  .ah-form-actions button,
+  .ah-form-actions a { width: 100% !important; text-align: center; }
+
+  /* Section titles smaller */
+  .ah-section-title { font-size: 1.3rem !important; }
+
+  /* Tab filter buttons scroll */
+  .ah-filter-tabs { overflow-x: auto; flex-wrap: nowrap !important; padding-bottom: 4px; }
+  .ah-filter-tabs button { white-space: nowrap; flex-shrink: 0; }
+
+  /* Review cards — action buttons row */
+  .ah-review-row { flex-wrap: wrap; }
+  .ah-review-actions { flex-direction: row !important; margin-top: 8px; }
+}
+
+@media (max-width: 480px) {
+  .ah-analytics-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .ah-analytics-stats > div { padding: 14px 10px !important; }
+  .ah-analytics-stats .ah-stat-num { font-size: 1.5rem !important; }
+
+  .ah-main-content > div { padding: 12px 10px !important; }
 }

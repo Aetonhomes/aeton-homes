@@ -39,7 +39,7 @@ export default function EnquiriesTab({ token }: { token: string }) {
           <h2 className="ah-section-title">Enquiries</h2>
           <p style={{ fontSize: "0.8rem", color: "#C4A97A", marginTop: 4 }}>{list.length} total · {list.filter(e => e.status === "new").length} new</p>
         </div>
-        <div style={{ display: "flex", gap: 6 }}>
+        <div className="ah-filter-tabs" style={{ display: "flex", gap: 6 }}>
           {["all", "new", "contacted", "closed"].map(s => (
             <button key={s} onClick={() => setFilter(s)} style={{ padding: "7px 14px", border: "1px solid", borderColor: filter === s ? "#C9961A" : "rgba(201,150,26,0.2)", background: filter === s ? "rgba(201,150,26,0.15)" : "none", color: filter === s ? "#E8B84B" : "#C4A97A", cursor: "pointer", fontFamily: "'Jost',sans-serif", fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase", borderRadius: 2, transition: "all 0.2s" }}>{s}</button>
           ))}
@@ -55,7 +55,7 @@ export default function EnquiriesTab({ token }: { token: string }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {filtered.map(e => (
             <div key={e.id} className="ah-card" style={{ padding: "18px 22px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+              <div className="ah-enquiry-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
                 <div style={{ flex: 1, minWidth: 220 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 5 }}>
                     <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg,#8A6520,#C9961A)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Cormorant Garamond',serif", fontSize: "1rem", color: "#3D0A0A", fontWeight: 700, flexShrink: 0 }}>{e.name[0]}</div>
@@ -70,7 +70,7 @@ export default function EnquiriesTab({ token }: { token: string }) {
                     {e.created_at ? new Date(e.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : ""}
                   </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", flexShrink: 0 }}>
+                <div className="ah-enquiry-actions" style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", flexShrink: 0 }}>
                   <span style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", padding: "3px 10px", borderRadius: 20, background: STATUS_BG[e.status] || "rgba(100,100,100,0.1)", color: STATUS_COLOR[e.status] || "#888" }}>{e.status}</span>
                   {/* Contact buttons */}
                   <div style={{ display: "flex", gap: 6 }}>

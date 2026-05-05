@@ -27,7 +27,7 @@ export default function AnalyticsTab({ token }: { token: string }) {
       </div>
 
       {/* Top stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 12, marginBottom: 28 }}>
+      <div className="ah-analytics-stats" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 12, marginBottom: 28 }}>
         {[
           { label: "Today", value: data.visits.today },
           { label: "This Week", value: data.visits.week },
@@ -44,7 +44,7 @@ export default function AnalyticsTab({ token }: { token: string }) {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 28 }}>
+      <div className="ah-analytics-charts" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 28 }}>
         {/* Visits by day chart */}
         <div className="ah-card" style={{ padding: "20px 18px" }}>
           <div style={{ fontSize: "0.72rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#C4A97A", marginBottom: 16 }}>Visits — Last 30 Days</div>
@@ -105,8 +105,8 @@ export default function AnalyticsTab({ token }: { token: string }) {
         {data.recent.length === 0 ? (
           <p style={{ color: "#8A6520", fontSize: "0.8rem" }}>No visits recorded yet.</p>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.75rem" }}>
+          <div className="ah-table-scroll" style={{ overflowX: "auto" }}>
+            <table className="ah-visitors-table" style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.75rem" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid rgba(201,150,26,0.15)" }}>
                   {["Time", "Page", "IP", "Referrer", "Screen"].map(h => (
