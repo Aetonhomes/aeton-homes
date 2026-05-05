@@ -5,12 +5,14 @@ import VideosTab from "./VideosTab";
 import TestimonialsTab from "./TestimonialsTab";
 import TeamTab from "./TeamTab";
 import EnquiriesTab from "./EnquiriesTab";
+import ReviewsTab from "./ReviewsTab";
 
 const TABS = [
   { id:"content", label:"✏️ Site Content" },
   { id:"properties", label:"🏠 Properties" },
+  { id:"reviews", label:"⭐ Reviews" },
   { id:"videos", label:"🎬 Videos" },
-  { id:"testimonials", label:"⭐ Testimonials" },
+  { id:"testimonials", label:"💬 Testimonials" },
   { id:"team", label:"👤 Team" },
   { id:"enquiries", label:"📩 Enquiries" },
 ];
@@ -54,6 +56,7 @@ export default function Admin() {
         <div style={{ padding:"24px 20px",minHeight:"100vh" }}>
           {tab==="content"      && <ContentEditor token={token}/>}
           {tab==="properties"   && <PropertiesTab token={token}/>}
+          {tab==="reviews"      && <ReviewsTab token={token}/>}
           {tab==="videos"       && <VideosTab token={token}/>}
           {tab==="testimonials" && <TestimonialsTab token={token}/>}
           {tab==="team"         && <TeamTab token={token}/>}

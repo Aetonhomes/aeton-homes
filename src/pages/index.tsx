@@ -177,9 +177,14 @@ export default function Index() {
           <p style={secSub}>{c(content,"props_subtitle")}</p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(320px,1fr))", gap: 26 }}>
-          {(properties && properties.length > 0 ? properties : FALLBACK_PROPS).map((p: any) => (
+          {(properties && properties.length > 0 ? properties : []).map((p: any) => (
             <PropCard key={p.id} p={p} />
           ))}
+          {(!properties || properties.length === 0) && (
+            <div style={{ gridColumn:"1/-1",textAlign:"center",padding:"60px 0",color:"#C4A97A" }}>
+              <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",fontStyle:"italic",opacity:0.5 }}>Properties coming soon</div>
+            </div>
+          )}
         </div>
         <div style={{ textAlign: "center", marginTop: 48 }}>
           <button className="ah-btn-outline" style={{ padding: "14px 36px" }}>View All Properties</button>
@@ -258,14 +263,15 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
+      {/* ── TESTIMONIALS (admin-managed) ── */}
+      {testimonialsList && testimonialsList.length > 0 && (
       <section id="testimonials" style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#3D0A0A,#1E0404)" }}>
         <div className="reveal" style={{ marginBottom:56 }}>
           <p style={eyebrow}>{c(content,"testi_eyebrow")}</p>
           <h2 style={secTitle}>{c(content,"testi_title")} <em style={em}>{c(content,"testi_title_em")}</em></h2>
         </div>
         <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:22 }}>
-          {(testimonialsList && testimonialsList.length > 0 ? testimonialsList : FALLBACK_TESTIMONIALS).map((t:any,i:number)=>(
+          {testimonialsList.map((t:any,i:number)=>(
             <div key={t.id||i} className="reveal ah-card" style={{ padding:30 }}>
               <div style={{ color:"#C9961A",fontSize:"0.9rem",marginBottom:14,letterSpacing:3 }}>{"★".repeat(t.stars||5)}</div>
               <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.1rem",fontStyle:"italic",color:"#F0E6CE",lineHeight:1.7,marginBottom:22 }}>"{t.quote}"</p>
@@ -282,6 +288,20 @@ export default function Index() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+      )}
+
+      {/* ── CLIENT REVIEWS ── */}
+      <section id="reviews" style={{ position:"relative",zIndex:2,padding:"100px 5%",background:"linear-gradient(to bottom,#1E0404,#3D0A0A)" }}>
+        <div className="reveal" style={{ marginBottom:56,textAlign:"center" }}>
+          <p style={eyebrow}>Client Reviews</p>
+          <h2 style={secTitle}>What Our <em style={em}>Clients Say</em></h2>
+          <p style={{...secSub,margin:"0 auto"}}>Real experiences from people we've helped find their perfect property</p>
+        </div>
+        <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,maxWidth:1100,margin:"0 auto" }} className="ah-two-col">
+          <PublicReviewsList />
+          <PublicReviewForm />
         </div>
       </section>
 
@@ -375,15 +395,51 @@ export default function Index() {
 // ── Sub-components ─────────────────────────────────────────
 
 function PropCard({ p }: { p: any }) {
+  const [imgIdx, setImgIdx] = useState(0);
+  const [touchStart, setTouchStart] = useState<number|null>(null);
+
+  // Build images array: images field + image_url as fallback
+  const allImages: string[] = (() => {
+    let imgs: string[] = [];
+    try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images || '[]'); } catch { imgs = []; }
+    if (p.image_url && !imgs.includes(p.image_url)) imgs = [p.image_url, ...imgs];
+    if (!imgs.length) imgs = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80"];
+    return imgs;
+  })();
+
+  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setImgIdx(i => (i - 1 + allImages.length) % allImages.length); };
+  const next = (e: React.MouseEvent) => { e.stopPropagation(); setImgIdx(i => (i + 1) % allImages.length); };
+
   return (
     <div className="ah-card" style={{ overflow:"hidden",cursor:"pointer",transition:"transform 0.4s,border-color 0.4s,box-shadow 0.4s" }}
       onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-8px)";el.style.borderColor="rgba(201,150,26,0.4)";el.style.boxShadow="0 24px 60px rgba(0,0,0,0.4)";}}
       onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(201,150,26,0.12)";el.style.boxShadow="";}}>
-      <div style={{ position:"relative",height:220,overflow:"hidden",background:"#1A0404" }}>
-        <img src={p.image_url||"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80"} alt={p.title}
-          style={{ width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.6s",display:"block" }}
+      {/* Image swiper */}
+      <div style={{ position:"relative",height:220,overflow:"hidden",background:"#1A0404",userSelect:"none" }}
+        onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
+        onTouchEnd={e=>{
+          if (touchStart===null) return;
+          const diff = touchStart - e.changedTouches[0].clientX;
+          if (Math.abs(diff)>40) diff>0 ? setImgIdx(i=>(i+1)%allImages.length) : setImgIdx(i=>(i-1+allImages.length)%allImages.length);
+          setTouchStart(null);
+        }}>
+        <img src={allImages[imgIdx]} alt={p.title}
+          style={{ width:"100%",height:"100%",objectFit:"cover",transition:"opacity 0.3s",display:"block" }}
           onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
-        <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.62rem",fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase" }}>
+        {/* Arrows — only show if multiple images */}
+        {allImages.length > 1 && (<>
+          <button onClick={prev} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+          <button onClick={next} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+          {/* Dots */}
+          <div style={{ position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"center",gap:5,zIndex:2 }}>
+            {allImages.map((_,i)=>(
+              <button key={i} onClick={e=>{e.stopPropagation();setImgIdx(i);}} style={{ width:i===imgIdx?16:6,height:6,borderRadius:3,background:i===imgIdx?"#E8B84B":"rgba(255,255,255,0.4)",border:"none",cursor:"pointer",padding:0,transition:"all 0.25s" }}/>
+            ))}
+          </div>
+          {/* Counter */}
+          <div style={{ position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",color:"#E8B84B",fontSize:"0.65rem",padding:"2px 7px",borderRadius:10,zIndex:2 }}>{imgIdx+1}/{allImages.length}</div>
+        </>)}
+        <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.62rem",fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",zIndex:2 }}>
           {p.type==="sale"?"For Sale":"For Rent"}
         </span>
       </div>
@@ -475,14 +531,91 @@ const secTitle: React.CSSProperties = { fontFamily:"'Cormorant Garamond',serif",
 const secSub: React.CSSProperties = { fontSize:"0.9rem",color:"#C4A97A",maxWidth:480,lineHeight:1.8 };
 const em: React.CSSProperties = { fontStyle:"italic",color:"#E8B84B" };
 
-// Fallback data when DB empty
-const FALLBACK_PROPS = [
-  {id:1,title:"The Ridgeways Manor",location:"Ridgeways, Nairobi",price:"KES 45,000,000",type:"sale",beds:5,baths:4,sqm:450,image_url:"https://jewelbookstore.neocities.org/property%208.jpeg"},
-  {id:2,title:"Karen Garden Villa",location:"Karen, Nairobi",price:"KES 220,000",price_suffix:"/mo",type:"rent",beds:4,baths:3,sqm:380,image_url:"https://jewelbookstore.neocities.org/property%207.jpeg"},
-  {id:3,title:"Westlands Sky Penthouse",location:"Westlands, Nairobi",price:"KES 68,000,000",type:"sale",beds:3,baths:3,sqm:290,image_url:"https://jewelbookstore.neocities.org/property%206.jpeg"},
-];
-const FALLBACK_TESTIMONIALS = [
-  {id:1,name:"Amara Osei",role:"Property Investor",quote:"Aeton Homes found me the perfect investment property in Karen within two weeks. Their market knowledge is unmatched.",stars:5},
-  {id:2,name:"James Mwangi",role:"First-time Buyer",quote:"As a first-time buyer I was nervous, but the team guided me through every step with patience and expertise.",stars:5},
-  {id:3,name:"Wanjiru Kamau",role:"Business Owner",quote:"I've bought two commercial properties through Aeton Homes. Fast, transparent, and always professional.",stars:5},
-];
+function PublicReviewsList() {
+  const API = import.meta.env.VITE_API_URL || "";
+  const [reviews, setReviews] = useState<any[]>([]);
+  useEffect(()=>{
+    fetch(`${API}/api/reviews`).then(r=>r.json()).then(d=>{ if(Array.isArray(d)) setReviews(d); }).catch(()=>{});
+  },[]);
+  if (!reviews.length) return (
+    <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
+      <div className="ah-card" style={{ padding:28,opacity:0.5,textAlign:"center" }}>
+        <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.1rem",fontStyle:"italic",color:"#C4A97A" }}>No reviews yet — be the first!</p>
+      </div>
+    </div>
+  );
+  return (
+    <div style={{ display:"flex",flexDirection:"column",gap:16,maxHeight:520,overflowY:"auto",paddingRight:4 }}>
+      {reviews.map((r:any)=>(
+        <div key={r.id} className="ah-card" style={{ padding:24 }}>
+          <div style={{ color:"#C9961A",fontSize:"0.9rem",marginBottom:10,letterSpacing:2 }}>{"★".repeat(r.stars||5)}</div>
+          <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.05rem",fontStyle:"italic",color:"#F0E6CE",lineHeight:1.7,marginBottom:16 }}>"{r.quote}"</p>
+          <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+            <div style={{ width:34,height:34,borderRadius:"50%",background:"linear-gradient(135deg,#8A6520,#C9961A)",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'Cormorant Garamond',serif",fontSize:"1rem",color:"#3D0A0A",fontWeight:700,flexShrink:0 }}>{r.name[0]}</div>
+            <div>
+              <div style={{ fontSize:"0.85rem",fontWeight:500,color:"#FDF8EF" }}>{r.name}</div>
+              <div style={{ fontSize:"0.7rem",color:"#8A6520" }}>{new Date(r.created_at).toLocaleDateString("en-KE",{year:"numeric",month:"short"})}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PublicReviewForm() {
+  const API = import.meta.env.VITE_API_URL || "";
+  const [form, setForm] = useState({ name:"", email:"", quote:"", stars:5 });
+  const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
+  const [hovered, setHovered] = useState(0);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault(); setStatus("loading");
+    try {
+      const res = await fetch(`${API}/api/reviews`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(form)});
+      if (!res.ok) throw new Error();
+      setStatus("success");
+    } catch { setStatus("error"); }
+  };
+
+  if (status==="success") return (
+    <div className="ah-card" style={{ padding:36,textAlign:"center" }}>
+      <div style={{ fontSize:"3rem",marginBottom:14 }}>✨</div>
+      <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",color:"#E8B84B",marginBottom:10 }}>Thank you!</p>
+      <p style={{ fontSize:"0.84rem",color:"#C4A97A",lineHeight:1.7 }}>Your review has been submitted and will appear once approved.</p>
+      <button onClick={()=>{setStatus("idle");setForm({name:"",email:"",quote:"",stars:5});}} className="ah-btn-outline" style={{ marginTop:20,padding:"10px 24px" }}>Leave Another</button>
+    </div>
+  );
+
+  return (
+    <div className="ah-card" style={{ padding:32 }}>
+      <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",color:"#FDF8EF",marginBottom:6 }}>Leave a Review</h3>
+      <p style={{ fontSize:"0.8rem",color:"#8A6520",marginBottom:22 }}>Share your experience with Aeton Homes</p>
+      <form onSubmit={submit}>
+        <div style={{ marginBottom:16 }}>
+          <label className="ah-label">Your Rating</label>
+          <div style={{ display:"flex",gap:6,marginTop:4 }}>
+            {[1,2,3,4,5].map(n=>(
+              <button key={n} type="button"
+                onMouseEnter={()=>setHovered(n)} onMouseLeave={()=>setHovered(0)}
+                onClick={()=>setForm({...form,stars:n})}
+                style={{ background:"none",border:"none",cursor:"pointer",fontSize:"1.8rem",color:(hovered||form.stars)>=n?"#C9961A":"rgba(201,150,26,0.2)",transition:"color 0.15s",padding:"0 2px",lineHeight:1 }}>★</button>
+            ))}
+            <span style={{ fontSize:"0.78rem",color:"#8A6520",alignSelf:"center",marginLeft:6 }}>{["","Poor","Fair","Good","Great","Excellent"][hovered||form.stars]}</span>
+          </div>
+        </div>
+        <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14 }}>
+          <div><label className="ah-label">Your Name *</label><input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="John Doe"/></div>
+          <div><label className="ah-label">Email (optional)</label><input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com"/></div>
+        </div>
+        <div style={{ marginBottom:20 }}>
+          <label className="ah-label">Your Review *</label>
+          <textarea required rows={4} value={form.quote} onChange={e=>setForm({...form,quote:e.target.value})} className="ah-input" style={{ resize:"vertical" }} placeholder="Tell us about your experience with Aeton Homes..."/>
+        </div>
+        {status==="error"&&<p style={{ color:"#f87171",fontSize:"0.8rem",marginBottom:12 }}>Something went wrong. Please try again.</p>}
+        <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{ width:"100%",padding:13 }}>{status==="loading"?"Submitting...":"Submit Review"}</button>
+        <p style={{ fontSize:"0.7rem",color:"#8A6520",marginTop:10,textAlign:"center" }}>Reviews are moderated before appearing publicly</p>
+      </form>
+    </div>
+  );
+}
