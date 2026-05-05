@@ -8,7 +8,6 @@ const S = {
 
 export default function Nav({ content }: { content: Record<string, string> }) {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -23,63 +22,78 @@ export default function Nav({ content }: { content: Record<string, string> }) {
 
   return (
     <>
-      {/* Mobile overlay */}
-      <div style={{
-        position: "fixed", inset: 0, zIndex: 999,
-        background: "rgba(10,1,1,0.98)",
-        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 36,
-        transform: open ? "translateX(0)" : "translateX(100%)",
-        transition: "transform 0.4s",
-      }}>
-        {links.map((l, i) => (
-          <a key={i} href={l.href} onClick={() => setOpen(false)} style={{
-            fontSize: "1.6rem", fontFamily: "'Cormorant Garamond', serif",
-            color: "#FDF8EF", textDecoration: "none", fontStyle: "italic",
-          }}>{l.label}</a>
-        ))}
-        <Link href="/admin" onClick={() => setOpen(false)} style={{ fontSize: "0.85rem", color: "#E8B84B", textDecoration: "none", letterSpacing: "0.15em", textTransform: "uppercase" }}>
-          Admin ↗
-        </Link>
-      </div>
-
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "18px 5%",
-        background: scrolled ? "rgba(20,3,3,0.97)" : "linear-gradient(to bottom, rgba(20,3,3,0.9), transparent)",
-        borderBottom: scrolled ? "1px solid rgba(201,150,26,0.18)" : "none",
-        backdropFilter: "blur(4px)",
+        padding: "12px 5%",
+        background: scrolled ? "rgba(20,3,3,0.97)" : "rgba(20,3,3,0.82)",
+        borderBottom: scrolled ? "1px solid rgba(201,150,26,0.18)" : "1px solid rgba(201,150,26,0.08)",
+        backdropFilter: "blur(8px)",
         transition: "all 0.4s",
       }}>
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+        {/* Logo */}
+        <a href="/" style={{ display: "flex", alignItems: "center", flexShrink: 0, textDecoration: "none" }}>
           <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes"
-            style={{ height: 52, width: "auto", objectFit: "contain", borderRadius: 3 }} />
+            style={{ height: 44, width: "auto", objectFit: "contain", borderRadius: 3 }} />
         </a>
 
-        <ul className="ah-desktop-nav" style={{ display: "flex", gap: 28, listStyle: "none", alignItems: "center" }}>
-          {links.map((l, i) => i < links.length - 1 ? (
-            <li key={i}><a href={l.href} style={S.link}>{l.label}</a></li>
-          ) : (
-            <li key={i}><a href={l.href} style={{
-              ...S.link,
-              background: "linear-gradient(135deg, #C9961A, #E8B84B)", color: "#3D0A0A",
-              padding: "10px 22px", borderRadius: 2, fontWeight: 500,
-            }}>{l.label}</a></li>
-          ))}
-        </ul>
-
-        <button onClick={() => setOpen(!open)} className="ah-hamburger" style={{
-          display: "none", background: "none", border: "none",
-          flexDirection: "column", gap: 5, cursor: "pointer", padding: 4,
+        {/* Links — always visible, scroll on mobile */}
+        <div className="ah-nav-links" style={{
+          display: "flex", alignItems: "center", gap: 4,
+          overflowX: "auto", flex: 1, justifyContent: "flex-end",
+          scrollbarWidth: "none", msOverflowStyle: "none",
+          paddingLeft: 12,
         }}>
-          {[0,1,2].map(i => <span key={i} style={{ display: "block", width: 24, height: 2, background: "#E8B84B" }} />)}
-        </button>
+          {links.map((l, i) => i < links.length - 1 ? (
+            <a key={i} href={l.href} className="ah-nav-link" style={{
+              ...S.link,
+              padding: "8px 12px",
+              borderRadius: 2,
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+              transition: "color 0.2s",
+            }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#E8B84B")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#F0E6CE")}
+            >{l.label}</a>
+          ) : (
+            <a key={i} href={l.href} style={{
+              ...S.link,
+              background: "linear-gradient(135deg, #C9961A, #E8B84B)",
+              color: "#3D0A0A", padding: "9px 18px", borderRadius: 2,
+              fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0,
+              marginLeft: 6,
+            }}>{l.label}</a>
+          ))}
+          <Link href="/admin" style={{
+            fontSize: "0.68rem", color: "#8A6520", textDecoration: "none",
+            letterSpacing: "0.15em", textTransform: "uppercase",
+            padding: "8px 10px", whiteSpace: "nowrap", flexShrink: 0,
+            transition: "color 0.2s",
+          }}
+            onMouseEnter={(e: any) => (e.currentTarget.style.color = "#E8B84B")}
+            onMouseLeave={(e: any) => (e.currentTarget.style.color = "#8A6520")}
+          >Admin ↗</Link>
+        </div>
       </nav>
 
       <style>{`
-        @media (max-width: 900px) {
-          .ah-desktop-nav { display: none !important; }
-          .ah-hamburger { display: flex !important; }
+        /* Hide scrollbar on nav link row */
+        .ah-nav-links::-webkit-scrollbar { display: none; }
+
+        @media (max-width: 700px) {
+          /* Smaller font + tighter padding on mobile */
+          .ah-nav-link {
+            font-size: 0.7rem !important;
+            padding: 7px 8px !important;
+            letter-spacing: 0.08em !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .ah-nav-link {
+            font-size: 0.65rem !important;
+            padding: 6px 7px !important;
+          }
         }
       `}</style>
     </>
