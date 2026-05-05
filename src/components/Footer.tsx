@@ -88,7 +88,7 @@ export default function Footer({ content }: { content: Record<string, string> })
       </div>
       <div style={{ borderTop: "1px solid rgba(201,150,26,0.1)", paddingTop: 22, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, fontSize: "0.72rem", color: "#C4A97A" }}>
         <span>© {new Date().getFullYear()} Aeton Homes. All rights reserved.</span>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
           {SOCIALS.map(s => (
             <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
               style={{ color: "#8A6520", textDecoration: "none", fontSize: "0.7rem", transition: "color 0.2s" }}
@@ -96,6 +96,18 @@ export default function Footer({ content }: { content: Record<string, string> })
               onMouseLeave={e => (e.currentTarget.style.color = "#8A6520")}
             >{s.label}</a>
           ))}
+          <span style={{ color: "rgba(201,150,26,0.2)" }}>|</span>
+          <span style={{ color: "#6B4F20", fontSize: "0.68rem" }}>
+            Website by{" "}
+            <a
+              href="https://materiaprimadesignsea.neocities.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#8A6520", textDecoration: "none", transition: "color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#E8B84B")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#8A6520")}
+            >Materia Prima Designs</a>
+          </span>
         </div>
       </div>
       <style>{`@media(max-width:768px){ .ah-footer-grid{ grid-template-columns:1fr 1fr !important; } }`}</style>
