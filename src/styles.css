@@ -16,14 +16,36 @@
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 body {
   background: var(--crimson);
   color: var(--cream);
   font-family: 'Jost', sans-serif;
   font-weight: 300;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
+
+/* Prevent any element from causing horizontal scroll */
+section, header, footer, nav, div {
+  max-width: 100%;
+}
+
+/* Responsive container */
+.ah-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
+
+/* Responsive images */
+img { max-width: 100%; height: auto; }
 
 /* Particles */
 #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
@@ -50,7 +72,9 @@ body {
 @keyframes marquee    { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 @keyframes shimmer    { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-.marquee-track { animation: marquee 30s linear infinite; display: flex; gap: 0; width: max-content; }
+/* Marquee — must be clipped by parent overflow:hidden */
+.marquee-wrapper { overflow: hidden; width: 100%; max-width: 100vw; }
+.marquee-track { animation: marquee 30s linear infinite; display: flex; gap: 0; width: max-content; flex-shrink: 0; }
 .shimmer {
   background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
   background-size: 200% 100%;
@@ -138,4 +162,51 @@ body {
   font-size: 1.6rem;
   color: var(--cream);
   font-weight: 400;
+}
+
+/* ── Responsive fixes ── */
+@media (max-width: 768px) {
+  /* Sections padding */
+  section { padding-left: 4% !important; padding-right: 4% !important; }
+
+  /* Hero text */
+  h1 { font-size: clamp(2rem, 8vw, 3.5rem) !important; word-break: break-word; }
+  h2 { font-size: clamp(1.6rem, 6vw, 2.8rem) !important; }
+
+  /* Property / card grids — stack on mobile */
+  .ah-grid { grid-template-columns: 1fr !important; }
+
+  /* Stats row */
+  .ah-stats { grid-template-columns: 1fr 1fr !important; }
+
+  /* Team / testimonial rows */
+  .ah-team-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Videos grid */
+  .ah-videos-grid { grid-template-columns: 1fr !important; }
+
+  /* Admin sidebar */
+  .ah-admin-sidebar { display: none; }
+
+  /* Tables */
+  table { font-size: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  .ah-stats { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  .ah-team-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Admin mobile ── */
+@media (max-width: 700px) {
+  /* Stack admin sidebar above content on mobile */
+  .ah-admin-layout { flex-direction: column !important; }
+  .ah-admin-sidebar-el {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+  }
+  .ah-admin-main { padding: 16px 12px !important; }
 }

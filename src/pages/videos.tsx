@@ -19,7 +19,7 @@ export default function Videos() {
   };
 
   return (
-    <div style={{ background:"#3D0A0A",color:"#FDF8EF",minHeight:"100vh" }}>
+    <div style={{ background:"#3D0A0A",color:"#FDF8EF",minHeight:"100vh",overflowX:"hidden",width:"100%" }}>
       <Particles />
       <Nav content={content} />
       <section style={{ position:"relative",padding:"160px 5% 60px",textAlign:"center",background:"linear-gradient(to bottom,#1A0404,#3D0A0A)" }}>

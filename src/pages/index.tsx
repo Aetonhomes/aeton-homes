@@ -64,7 +64,7 @@ export default function Index() {
   };
 
   return (
-    <div style={{ background: "#3D0A0A", color: "#FDF8EF", minHeight: "100vh" }}>
+    <div style={{ background: "#3D0A0A", color: "#FDF8EF", minHeight: "100vh", overflowX: "hidden", width: "100%" }}>
       <Particles />
       <Nav content={content} />
 
@@ -158,8 +158,8 @@ export default function Index() {
       </div>
 
       {/* ── MARQUEE ── */}
-      <div style={{ padding: "26px 0", overflow: "hidden", borderTop: "1px solid rgba(201,150,26,0.12)", borderBottom: "1px solid rgba(201,150,26,0.12)", background: "rgba(0,0,0,0.25)", marginTop: 40 }}>
-        <div className="marquee-track">
+      <div style={{ padding: "26px 0", overflow: "hidden", borderTop: "1px solid rgba(201,150,26,0.12)", borderBottom: "1px solid rgba(201,150,26,0.12)", background: "rgba(0,0,0,0.25)", marginTop: 40, maxWidth: "100vw" }}>
+        <div className="marquee-track" style={{ width: "max-content" }}>
           {[...Array(2)].flatMap(() => marqueeItems).map((item: string, i: number) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 36px", fontSize: "0.72rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#8A6520", whiteSpace: "nowrap" }}>
               <span style={{ width: 5, height: 5, background: "#C9961A", borderRadius: "50%", display: "inline-block" }} />

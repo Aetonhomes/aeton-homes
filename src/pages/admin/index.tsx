@@ -22,9 +22,9 @@ export default function Admin() {
   if (!token) return <Login onLogin={setToken} />;
 
   return (
-    <div style={{ background:"#0A0101",color:"#FDF8EF",minHeight:"100vh",display:"flex" }}>
+    <div style={{ background:"#0A0101",color:"#FDF8EF",minHeight:"100vh",display:"flex",overflowX:"hidden",width:"100%",maxWidth:"100vw" }}>
       {/* Sidebar */}
-      <div style={{ width:220,flexShrink:0,background:"rgba(5,0,0,0.8)",borderRight:"1px solid rgba(201,150,26,0.15)",display:"flex",flexDirection:"column",position:"sticky",top:0,height:"100vh",overflow:"auto" }}>
+      <div style={{ width:220,minWidth:220,flexShrink:0,background:"rgba(5,0,0,0.8)",borderRight:"1px solid rgba(201,150,26,0.15)",display:"flex",flexDirection:"column",position:"sticky",top:0,height:"100vh",overflow:"auto" }}>
         <div style={{ padding:"22px 20px 18px",borderBottom:"1px solid rgba(201,150,26,0.12)" }}>
           <a href="/" style={{ display:"block",textDecoration:"none" }}>
             <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton" style={{ height:44,objectFit:"contain",borderRadius:3 }}/>
@@ -50,8 +50,8 @@ export default function Admin() {
       </div>
 
       {/* Main */}
-      <div style={{ flex:1,overflow:"auto" }}>
-        <div style={{ padding:"32px 36px",minHeight:"100vh" }}>
+      <div style={{ flex:1,overflow:"auto",minWidth:0 }}>
+        <div style={{ padding:"24px 20px",minHeight:"100vh" }}>
           {tab==="content"      && <ContentEditor token={token}/>}
           {tab==="properties"   && <PropertiesTab token={token}/>}
           {tab==="videos"       && <VideosTab token={token}/>}
