@@ -65,6 +65,11 @@ export default function EnquiriesTab({ token }: { token: string }) {
                     </div>
                   </div>
                   {e.interest && <div style={{ fontSize: "0.74rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "#E8B84B", marginBottom: 6 }}>{e.interest}</div>}
+                  {e.preferred_contact && (
+                    <div style={{ display:"inline-flex", alignItems:"center", gap:5, fontSize:"0.72rem", background:"rgba(201,150,26,0.1)", border:"1px solid rgba(201,150,26,0.2)", color:"#E8B84B", padding:"3px 10px", borderRadius:10, marginBottom:8 }}>
+                      {{"call":"📞","whatsapp":"💬","sms":"✉️","telegram":"✈️","email":"📧"}[e.preferred_contact]||"📞"} Contact via <strong>{e.preferred_contact}</strong>
+                    </div>
+                  )}
                   {e.message && <p style={{ fontSize: "0.8rem", color: "#C4A97A", lineHeight: 1.65, maxWidth: 500 }}>{e.message}</p>}
                   <div style={{ fontSize: "0.68rem", color: "#6B4F20", marginTop: 8 }}>
                     {e.created_at ? new Date(e.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : ""}

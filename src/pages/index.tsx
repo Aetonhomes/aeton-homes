@@ -449,27 +449,27 @@ export default function Index() {
             ))}
           </div>
         ) : (
-          /* CEO placeholder when no team added yet */
-          <div className="reveal" style={{ display:"grid", gridTemplateColumns:"280px 1fr", gap:52, alignItems:"start", maxWidth:900 }}>
+          /* CEO placeholder — stacks vertically on mobile, no hidden columns */
+          <div className="reveal ah-ceo-grid" style={{ display:"grid", gridTemplateColumns:"240px 1fr", gap:44, alignItems:"start", maxWidth:860 }}>
             <div style={{ borderRadius:4, overflow:"hidden", border:"1px solid rgba(201,150,26,0.18)", boxShadow:"0 24px 60px rgba(0,0,0,0.5)" }}>
               <div style={{ aspectRatio:"3/4", background:"linear-gradient(160deg,#2A0606,#140202)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16 }}>
-                <div style={{ width:88, height:88, borderRadius:"50%", background:"rgba(201,150,26,0.12)", border:"1.5px solid rgba(201,150,26,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2.2rem" }}>👤</div>
-                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"rgba(201,150,26,0.5)", fontStyle:"italic" }}>Aeton Homes</div>
+                <div style={{ width:80, height:80, borderRadius:"50%", background:"rgba(201,150,26,0.12)", border:"1.5px solid rgba(201,150,26,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2rem" }}>👤</div>
+                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"rgba(201,150,26,0.4)", fontStyle:"italic" }}>Aeton Homes</div>
               </div>
             </div>
-            <div style={{ paddingTop:8 }}>
-              <div style={{ display:"inline-block", background:"rgba(201,150,26,0.08)", border:"1px solid rgba(201,150,26,0.2)", padding:"4px 14px", borderRadius:2, fontSize:"0.6rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:20 }}>Leadership</div>
-              <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.4rem", fontWeight:300, color:"#FDF8EF", marginBottom:6, lineHeight:1.15 }}>Our Chief Executive</h3>
-              <p style={{ fontSize:"0.65rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#C9961A", marginBottom:28, paddingBottom:22, borderBottom:"1px solid rgba(201,150,26,0.08)" }}>Founder & CEO — Aeton Homes Kenya</p>
-              <p style={{ fontSize:"0.88rem", color:"#C4A97A", lineHeight:1.9, marginBottom:20 }}>
+            <div style={{ paddingTop:4 }}>
+              <div style={{ display:"inline-block", background:"rgba(201,150,26,0.08)", border:"1px solid rgba(201,150,26,0.2)", padding:"4px 14px", borderRadius:2, fontSize:"0.6rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:18 }}>Leadership</div>
+              <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.8rem,4vw,2.4rem)", fontWeight:300, color:"#FDF8EF", marginBottom:6, lineHeight:1.15 }}>Our Chief Executive</h3>
+              <p style={{ fontSize:"0.65rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#C9961A", marginBottom:24, paddingBottom:20, borderBottom:"1px solid rgba(201,150,26,0.08)" }}>Founder & CEO — Aeton Homes Kenya</p>
+              <p style={{ fontSize:"0.87rem", color:"#C4A97A", lineHeight:1.9, marginBottom:18 }}>
                 With over 12 years of experience in Kenya's luxury real estate market, our CEO founded Aeton Homes with a singular vision: to make premium property accessible, transparent, and rewarding for every client across Nairobi and beyond.
               </p>
-              <blockquote style={{ fontSize:"0.88rem", color:"#C4A97A", lineHeight:1.9, fontStyle:"italic", borderLeft:"2px solid rgba(201,150,26,0.35)", paddingLeft:20, marginBottom:28 }}>
+              <blockquote style={{ fontSize:"0.87rem", color:"#C4A97A", lineHeight:1.9, fontStyle:"italic", borderLeft:"2px solid rgba(201,150,26,0.35)", paddingLeft:18, marginBottom:24 }}>
                 "Every property transaction is a life decision. We treat it with the gravity it deserves."
               </blockquote>
-              <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
+              <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
                 {["12+ Years Experience","50+ Luxury Sales","200+ Families Served","Top Agent — Nairobi"].map((badge,i) => (
-                  <div key={i} style={{ background:"rgba(201,150,26,0.06)", border:"1px solid rgba(201,150,26,0.15)", padding:"6px 14px", borderRadius:2, fontSize:"0.68rem", color:"#8A6520", letterSpacing:"0.06em" }}>{badge}</div>
+                  <div key={i} style={{ background:"rgba(201,150,26,0.06)", border:"1px solid rgba(201,150,26,0.15)", padding:"6px 13px", borderRadius:2, fontSize:"0.67rem", color:"#8A6520" }}>{badge}</div>
                 ))}
               </div>
             </div>
@@ -510,11 +510,9 @@ export default function Index() {
               ))}
             </div>
 
-            <a
-              href={`https://wa.me/${c(content,"contact_whatsapp") || "254728683027"}`}
-              target="_blank" rel="noopener noreferrer"
-              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"#25D366", color:"#fff", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", boxShadow:"0 8px 24px rgba(37,211,102,0.25)" }}>
-              💬 WhatsApp Us Now
+            <a href="#contact"
+              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"linear-gradient(135deg,#C9961A,#E8B84B)", color:"#1A0101", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase" }}>
+              Send Us a Message →
             </a>
 
             {/* SEO-friendly area text */}
@@ -532,9 +530,9 @@ export default function Index() {
       <style>{`
         @media(max-width:900px){
           .ah-two-col{grid-template-columns:1fr!important;}
-          .ah-two-col>div:first-child{display:none;}
           .ah-process-grid{grid-template-columns:repeat(2,1fr)!important;gap:48px!important;}
           .ah-process-line{display:none!important;}
+          .ah-ceo-grid{grid-template-columns:1fr!important;}
         }
         @media(max-width:500px){
           .ah-process-grid{grid-template-columns:1fr!important;}
@@ -583,7 +581,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [touchStart, setTouchStart] = useState<number|null>(null);
-  const [form, setForm] = useState({ name:"", email:"", phone:"", message:"" });
+  const [form, setForm] = useState({ name:"", email:"", phone:"", message:"", preferred_contact:"call" });
   const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
 
   const media = buildMedia(p);
@@ -602,7 +600,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
   const submitEnquiry = async (e: React.FormEvent) => {
     e.preventDefault(); setStatus("loading");
     try {
-      await fetch(`${API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ ...form, interest: p.title, message: form.message || `Enquiry about: ${p.title} — ${p.price}` }) });
+      await fetch(`${API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ ...form, interest: p.title, source: "property_modal", message: form.message || `Enquiry about: ${p.title} — ${p.price}` }) });
       setStatus("success");
     } catch { setStatus("error"); }
   };
@@ -625,7 +623,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
           {/* ─── LEFT ─── */}
           <div>
             {/* Gallery */}
-            <div style={{ position:"relative", aspectRatio:"16/9", background:"#050000", userSelect:"none" }}
+            <div style={{ position:"relative", aspectRatio:"4/3", background:"#050000", userSelect:"none" }}
               onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
               onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
@@ -710,13 +708,9 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                 </div>
               )}
 
-              {/* WhatsApp */}
-              <a
-                href={`https://wa.me/254728683027?text=${encodeURIComponent(`Hello Aeton Homes, I'm interested in: ${p.title} — ${p.price}${p.price_suffix||""}. Please share more details.`)}`}
-                target="_blank" rel="noopener noreferrer"
-                style={{ display:"inline-flex", alignItems:"center", gap:9, background:"#25D366", color:"#fff", padding:"10px 22px", borderRadius:2, textDecoration:"none", fontSize:"0.76rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", boxShadow:"0 6px 20px rgba(37,211,102,0.2)" }}>
-                💬 WhatsApp About This
-              </a>
+              <p style={{ fontSize:"0.72rem", color:"#6B4F20", lineHeight:1.6, marginTop:4 }}>
+                Fill in the enquiry form → choose how you'd like us to contact you.
+              </p>
             </div>
           </div>
 
@@ -735,26 +729,40 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
               </div>
             ) : (
               <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:13, flex:1 }}>
-                {[
-                  { key:"name", label:"Full Name *", placeholder:"Your name", required:true },
-                  { key:"phone", label:"Phone *", placeholder:"+254...", required:true },
-                  { key:"email", label:"Email", placeholder:"your@email.com", type:"email" },
-                ].map(f => (
-                  <div key={f.key}>
-                    <label className="ah-label">{f.label}</label>
-                    <input type={f.type||"text"} required={f.required} value={(form as any)[f.key]} onChange={e=>setForm({...form,[f.key]:e.target.value})} className="ah-input" placeholder={f.placeholder} />
+                <div>
+                  <label className="ah-label">Full Name *</label>
+                  <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
+                </div>
+                <div>
+                  <label className="ah-label">Phone *</label>
+                  <input required value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} className="ah-input" placeholder="+254..." />
+                </div>
+                <div>
+                  <label className="ah-label">Email</label>
+                  <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
+                </div>
+                {/* Preferred contact method */}
+                <div>
+                  <label className="ah-label">How should we contact you? *</label>
+                  <div style={{ display:"flex", gap:7, flexWrap:"wrap" }}>
+                    {[{v:"call",label:"📞 Call"},{v:"whatsapp",label:"💬 WhatsApp"},{v:"sms",label:"✉️ SMS"},{v:"telegram",label:"✈️ Telegram"},{v:"email",label:"📧 Email"}].map(opt=>(
+                      <button key={opt.v} type="button" onClick={()=>setForm({...form,preferred_contact:opt.v})}
+                        style={{ padding:"7px 12px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.03)", color:form.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.72rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s" }}>
+                        {opt.label}
+                      </button>
+                    ))}
                   </div>
-                ))}
+                </div>
                 <div style={{ flex:1 }}>
                   <label className="ah-label">Message</label>
-                  <textarea rows={3} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Preferred viewing time, questions..." />
+                  <textarea rows={3} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Viewing time, questions, budget..." />
                 </div>
                 {status==="error" && <p style={{color:"#f87171",fontSize:"0.76rem"}}>Something went wrong. Please try again.</p>}
                 <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{width:"100%",padding:13}}>
                   {status==="loading" ? "Sending…" : "Send Enquiry"}
                 </button>
                 <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
-                  Typically replied within a few hours · Mon–Sat 8am–7pm
+                  We'll reach you via <strong style={{color:"#6B4F20"}}>{form.preferred_contact}</strong> · Mon–Sat 8am–7pm
                 </p>
               </form>
             )}
@@ -806,7 +814,7 @@ function PropCard({ p }: { p: any }) {
         onMouseLeave={e=>{ const el=e.currentTarget; el.style.transform=""; el.style.borderColor="rgba(201,150,26,0.12)"; el.style.boxShadow=""; }}>
 
         {/* Image area */}
-        <div style={{ position:"relative", height:230, overflow:"hidden", background:"#0A0101", userSelect:"none", flexShrink:0 }}
+        <div style={{ position:"relative", aspectRatio:"4/3", overflow:"hidden", background:"#0A0101", userSelect:"none", flexShrink:0 }}
           onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
           onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
@@ -1004,14 +1012,14 @@ function PublicReviewForm() {
 // CONTACT FORM
 // ══════════════════════════════════════════════════════════
 function ContactForm() {
-  const [form, setForm] = useState({ name:"", email:"", phone:"", interest:"", message:"" });
+  const [form, setForm] = useState({ name:"", email:"", phone:"", interest:"", message:"", preferred_contact:"call" });
   const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setStatus("loading");
     try {
       const _API = import.meta.env.VITE_API_URL || "";
-      await fetch(`${_API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(form) });
-      setStatus("success"); setForm({name:"",email:"",phone:"",interest:"",message:""});
+      await fetch(`${_API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({...form, source:"contact_form"}) });
+      setStatus("success"); setForm({name:"",email:"",phone:"",interest:"",message:"",preferred_contact:"call"});
     } catch { setStatus("error"); }
   };
 
@@ -1019,14 +1027,21 @@ function ContactForm() {
     <div style={{ padding:"60px 0", textAlign:"center" }}>
       <div style={{ fontSize:"2.5rem", marginBottom:16 }}>✅</div>
       <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#E8B84B", marginBottom:8 }}>Message received!</p>
-      <p style={{ fontSize:"0.82rem", color:"#8A6520" }}>Our team will be in touch very soon.</p>
+      <p style={{ fontSize:"0.82rem", color:"#8A6520" }}>Our team will be in touch via {form.preferred_contact} very soon.</p>
     </div>
   );
+
+  const contactOpts = [
+    {v:"call", label:"📞 Phone Call"},
+    {v:"whatsapp", label:"💬 WhatsApp"},
+    {v:"sms", label:"✉️ SMS"},
+    {v:"telegram", label:"✈️ Telegram"},
+    {v:"email", label:"📧 Email"},
+  ];
 
   return (
     <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:16 }}>
       <div>
-        <span style={T.eyebrow}>{}</span>
         <h2 style={{...T.h2, fontSize:"clamp(1.6rem,3vw,2.2rem)"}}>Send Us a <em style={T.em}>Message</em></h2>
         <p style={{...T.sub, marginBottom:28}}>Tell us what you're looking for and we'll match you with the perfect property.</p>
       </div>
@@ -1050,6 +1065,20 @@ function ContactForm() {
           {["","Buying a Home","Renting a Property","Commercial Space","Investment Property","Land Purchase","General Enquiry"].map(o=><option key={o} value={o} style={{background:"#0E0101"}}>{o||"Select..."}</option>)}
         </select>
       </div>
+
+      {/* Preferred contact method */}
+      <div>
+        <label className="ah-label">How should we contact you? *</label>
+        <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:2 }}>
+          {contactOpts.map(opt => (
+            <button key={opt.v} type="button" onClick={()=>setForm({...form,preferred_contact:opt.v})}
+              style={{ padding:"9px 14px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:form.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.76rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div>
         <label className="ah-label">Message</label>
         <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Budget, preferred location, timeline, requirements…" />
@@ -1059,7 +1088,7 @@ function ContactForm() {
         {status==="loading"?"Sending…":"Send Message"}
       </button>
       <p style={{ fontSize:"0.68rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
-        By submitting you agree to be contacted by Aeton Homes regarding your enquiry.
+        We'll contact you via <strong style={{color:"#6B4F20"}}>{contactOpts.find(o=>o.v===form.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
       </p>
     </form>
   );
