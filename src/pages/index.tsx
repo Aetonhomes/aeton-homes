@@ -416,30 +416,264 @@ function getEmbedUrl(v: { type: string; url: string }): string {
     const id = v.url.match(/vimeo\.com\/(\d+)/)?.[1];
     return id ? `https://player.vimeo.com/video/${id}?autoplay=1` : v.url;
   }
-  return v.url; // mp4 — handled via <video>
+  return v.url;
+}
+
+function buildMedia(p: any): MediaSlide[] {
+  let imgs: string[] = [];
+  try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images || '[]'); } catch { imgs = []; }
+  if (p.image_url && !imgs.includes(p.image_url)) imgs = [p.image_url, ...imgs];
+  if (!imgs.length) imgs = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"];
+  let vids: { type: string; url: string }[] = [];
+  try { vids = Array.isArray(p.property_videos) ? p.property_videos : JSON.parse(p.property_videos || '[]'); } catch { vids = []; }
+  vids = vids.filter(v => v.url?.trim());
+  const result: MediaSlide[] = imgs.map(url => ({ kind: "image", url }));
+  vids.forEach(v => result.push({ kind: "video", url: v.url, embedUrl: getEmbedUrl(v) }));
+  return result;
+}
+
+// ── Property Detail Modal ──────────────────────────────────
+function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
+  const API = import.meta.env.VITE_API_URL || "";
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [touchStart, setTouchStart] = useState<number|null>(null);
+  const [form, setForm] = useState({ name:"", email:"", phone:"", message:"" });
+  const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
+
+  const media = buildMedia(p);
+  const total = media.length;
+  const current = media[idx];
+
+  const go = (dir: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setPlaying(false);
+    setIdx(i => (i + dir + total) % total);
+  };
+
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  // Escape key
+  useEffect(() => {
+    const fn = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, []);
+
+  const submitEnquiry = async (e: React.FormEvent) => {
+    e.preventDefault(); setStatus("loading");
+    try {
+      await fetch(`${API}/api/enquiries`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, interest: p.title, message: form.message || `Enquiry about: ${p.title} — ${p.price}` }),
+      });
+      setStatus("success");
+    } catch { setStatus("error"); }
+  };
+
+  return (
+    <div onClick={onClose} style={{
+      position:"fixed", inset:0, zIndex:9000,
+      background:"rgba(0,0,0,0.88)", backdropFilter:"blur(6px)",
+      overflowY:"auto", padding:"20px 16px",
+      display:"flex", alignItems:"flex-start", justifyContent:"center",
+    }}>
+      <div onClick={e=>e.stopPropagation()} style={{
+        width:"100%", maxWidth:960,
+        background:"linear-gradient(135deg,#100202,#1E0404)",
+        border:"1px solid rgba(201,150,26,0.2)",
+        borderRadius:6, overflow:"hidden",
+        position:"relative", marginTop:20, marginBottom:40,
+        animation:"fadeInUp 0.3s ease",
+      }}>
+        {/* Close */}
+        <button onClick={onClose} style={{
+          position:"absolute", top:14, right:14, zIndex:10,
+          width:36, height:36, borderRadius:"50%",
+          background:"rgba(0,0,0,0.6)", border:"1px solid rgba(201,150,26,0.25)",
+          color:"#E8B84B", fontSize:"1.2rem", cursor:"pointer",
+          display:"flex", alignItems:"center", justifyContent:"center",
+          lineHeight:1,
+        }}>×</button>
+
+        <div className="ah-modal-grid" style={{ display:"grid", gridTemplateColumns:"1fr 380px" }}>
+
+          {/* ── LEFT: Gallery + Info ── */}
+          <div>
+            {/* Main gallery */}
+            <div style={{ position:"relative", aspectRatio:"16/9", background:"#0A0101", userSelect:"none" }}
+              onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
+              onTouchEnd={e=>{
+                if (touchStart===null) return;
+                const diff = touchStart - e.changedTouches[0].clientX;
+                if (Math.abs(diff)>40) go(diff>0?1:-1);
+                setTouchStart(null);
+              }}>
+
+              {current.kind === "image" ? (
+                <img src={current.url} alt={p.title}
+                  style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+                  onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80";}} />
+              ) : playing ? (
+                current.url.includes(".mp4") ? (
+                  <video src={current.url} autoPlay controls style={{ width:"100%", height:"100%", background:"#000" }} />
+                ) : (
+                  <iframe src={current.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
+                )
+              ) : (
+                <div style={{ width:"100%", height:"100%", background:"#0D0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
+                  onClick={()=>setPlaying(true)}>
+                  <div style={{ width:64, height:64, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 30px rgba(0,0,0,0.6)" }}>
+                    <span style={{ color:"#3D0A0A", fontSize:"1.6rem", marginLeft:5 }}>▶</span>
+                  </div>
+                  <span style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", fontSize:"0.68rem", color:"rgba(255,255,255,0.45)", letterSpacing:"0.12em", textTransform:"uppercase" }}>🎬 Property Video</span>
+                </div>
+              )}
+
+              {/* Arrows */}
+              {total > 1 && !playing && (<>
+                <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"1px solid rgba(255,255,255,0.1)",color:"#E8B84B",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+                <button onClick={e=>go(1,e)} style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"1px solid rgba(255,255,255,0.1)",color:"#E8B84B",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+                <div style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,0.65)",color:"#E8B84B",fontSize:"0.68rem",padding:"3px 9px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
+                  {current.kind==="video"&&<span>🎬</span>}{idx+1}/{total}
+                </div>
+              </>)}
+
+              {/* Type badge */}
+              <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"5px 14px",borderRadius:2,fontSize:"0.64rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2 }}>
+                {p.type==="sale"?"For Sale":"For Rent"}
+              </span>
+            </div>
+
+            {/* Thumbnail strip */}
+            {total > 1 && (
+              <div style={{ display:"flex", gap:6, padding:"10px 12px", overflowX:"auto", background:"rgba(0,0,0,0.3)", scrollbarWidth:"none" }}>
+                {media.map((m, i) => (
+                  <div key={i} onClick={()=>{setIdx(i);setPlaying(false);}} style={{
+                    flexShrink:0, width:68, height:48, borderRadius:3, overflow:"hidden", cursor:"pointer",
+                    border: i===idx ? "2px solid #C9961A" : "2px solid transparent",
+                    opacity: i===idx ? 1 : 0.55, transition:"all 0.2s",
+                    background:"#1A0404", display:"flex", alignItems:"center", justifyContent:"center",
+                  }}>
+                    {m.kind==="image"
+                      ? <img src={m.url} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e=>{(e.target as HTMLImageElement).style.display="none";}} />
+                      : <span style={{ fontSize:"1.2rem" }}>🎬</span>
+                    }
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Property info */}
+            <div style={{ padding:"24px 28px" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:12, marginBottom:16 }}>
+                <div>
+                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.6rem,3vw,2.2rem)", fontWeight:400, color:"#FDF8EF", marginBottom:4 }}>{p.title}</h2>
+                  {p.subtitle && <p style={{ fontSize:"0.88rem", color:"#C4A97A", fontStyle:"italic" }}>{p.subtitle}</p>}
+                  <div style={{ fontSize:"0.82rem", color:"#8A6520", marginTop:6 }}>📍 {p.location}</div>
+                </div>
+                <div style={{ textAlign:"right" }}>
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.6rem,3vw,2.2rem)", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>
+                    {p.price}<span style={{ fontSize:"0.8rem", fontFamily:"'Jost',sans-serif", fontWeight:300, color:"#C4A97A" }}>{p.price_suffix}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Specs row */}
+              <div style={{ display:"flex", gap:0, marginBottom:20, borderTop:"1px solid rgba(201,150,26,0.1)", borderBottom:"1px solid rgba(201,150,26,0.1)", padding:"14px 0" }}>
+                {[
+                  { icon:"🛏", label:"Bedrooms", val: p.beds },
+                  { icon:"🚿", label:"Bathrooms", val: p.baths },
+                  { icon:"📐", label:"Size", val: `${p.sqm} m²` },
+                ].map((s,i) => (
+                  <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<2 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"6px 0" }}>
+                    <div style={{ fontSize:"1.3rem", marginBottom:4 }}>{s.icon}</div>
+                    <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.3rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}</div>
+                    <div style={{ fontSize:"0.62rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#8A6520", marginTop:3 }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Description */}
+              {p.description && (
+                <div style={{ marginBottom:20 }}>
+                  <h4 style={{ fontSize:"0.68rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#C9961A", marginBottom:10 }}>About This Property</h4>
+                  <p style={{ fontSize:"0.88rem", color:"#C4A97A", lineHeight:1.85, whiteSpace:"pre-wrap" }}>{p.description}</p>
+                </div>
+              )}
+
+              {/* WhatsApp shortcut */}
+              <a href={`https://wa.me/254728683027?text=${encodeURIComponent(`Hello Aeton Homes, I'm interested in: ${p.title} — ${p.price}${p.price_suffix}. Please share more details.`)}`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ display:"inline-flex", alignItems:"center", gap:10, background:"#25D366", color:"#fff", padding:"11px 22px", borderRadius:2, textDecoration:"none", fontSize:"0.8rem", fontWeight:500, letterSpacing:"0.08em", textTransform:"uppercase" }}>
+                💬 WhatsApp Us About This
+              </a>
+            </div>
+          </div>
+
+          {/* ── RIGHT: Enquiry form ── */}
+          <div style={{ borderLeft:"1px solid rgba(201,150,26,0.1)", padding:"28px 24px", display:"flex", flexDirection:"column" }}>
+            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.5rem", color:"#FDF8EF", marginBottom:6 }}>Book a Viewing</h3>
+            <p style={{ fontSize:"0.78rem", color:"#8A6520", marginBottom:22, lineHeight:1.6 }}>Interested in <strong style={{ color:"#C4A97A" }}>{p.title}</strong>? Fill in your details and we'll get back to you within 24 hours.</p>
+
+            {status === "success" ? (
+              <div style={{ textAlign:"center", padding:"40px 0", flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12 }}>
+                <div style={{ fontSize:"2.5rem" }}>✅</div>
+                <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Enquiry sent!</p>
+                <p style={{ fontSize:"0.8rem", color:"#C4A97A" }}>We'll be in touch shortly.</p>
+              </div>
+            ) : (
+              <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:14, flex:1 }}>
+                <div>
+                  <label className="ah-label">Full Name *</label>
+                  <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
+                </div>
+                <div>
+                  <label className="ah-label">Phone *</label>
+                  <input required value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} className="ah-input" placeholder="+254..." />
+                </div>
+                <div>
+                  <label className="ah-label">Email</label>
+                  <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
+                </div>
+                <div style={{ flex:1 }}>
+                  <label className="ah-label">Message</label>
+                  <textarea rows={3} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{ resize:"vertical" }} placeholder="When can you view? Any questions?" />
+                </div>
+                {status==="error" && <p style={{ color:"#f87171", fontSize:"0.78rem" }}>Something went wrong. Try again.</p>}
+                <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{ width:"100%", padding:13 }}>
+                  {status==="loading" ? "Sending..." : "Send Enquiry"}
+                </button>
+                <p style={{ fontSize:"0.68rem", color:"#6B4F20", textAlign:"center", lineHeight:1.5 }}>
+                  We typically respond within a few hours during business hours.
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 700px) {
+          .ah-modal-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </div>
+  );
 }
 
 function PropCard({ p }: { p: any }) {
   const [idx, setIdx] = useState(0);
   const [touchStart, setTouchStart] = useState<number|null>(null);
   const [playing, setPlaying] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  // Build unified media array: images first, then videos
-  const media: MediaSlide[] = (() => {
-    let imgs: string[] = [];
-    try { imgs = Array.isArray(p.images) ? p.images : JSON.parse(p.images || '[]'); } catch { imgs = []; }
-    if (p.image_url && !imgs.includes(p.image_url)) imgs = [p.image_url, ...imgs];
-    if (!imgs.length) imgs = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80"];
-
-    let vids: { type: string; url: string }[] = [];
-    try { vids = Array.isArray(p.property_videos) ? p.property_videos : JSON.parse(p.property_videos || '[]'); } catch { vids = []; }
-    vids = vids.filter(v => v.url?.trim());
-
-    const result: MediaSlide[] = imgs.map(url => ({ kind: "image", url }));
-    vids.forEach(v => result.push({ kind: "video", url: v.url, embedUrl: getEmbedUrl(v) }));
-    return result;
-  })();
-
+  const media = buildMedia(p);
   const total = media.length;
   const current = media[idx];
 
@@ -450,80 +684,80 @@ function PropCard({ p }: { p: any }) {
   };
 
   return (
-    <div className="ah-card" style={{ overflow:"hidden", cursor:"pointer", transition:"transform 0.4s,border-color 0.4s,box-shadow 0.4s" }}
-      onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-8px)";el.style.borderColor="rgba(201,150,26,0.4)";el.style.boxShadow="0 24px 60px rgba(0,0,0,0.4)";}}
-      onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(201,150,26,0.12)";el.style.boxShadow="";}}>
+    <>
+      {showModal && <PropertyModal p={p} onClose={()=>setShowModal(false)} />}
 
-      {/* Media swiper */}
-      <div style={{ position:"relative", height:220, overflow:"hidden", background:"#1A0404", userSelect:"none" }}
-        onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
-        onTouchEnd={e=>{
-          if (touchStart===null) return;
-          const diff = touchStart - e.changedTouches[0].clientX;
-          if (Math.abs(diff)>40) go(diff>0?1:-1);
-          setTouchStart(null);
-        }}>
+      <div className="ah-card" style={{ overflow:"hidden", cursor:"pointer", transition:"transform 0.4s,border-color 0.4s,box-shadow 0.4s" }}
+        onClick={()=>setShowModal(true)}
+        onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-8px)";el.style.borderColor="rgba(201,150,26,0.4)";el.style.boxShadow="0 24px 60px rgba(0,0,0,0.4)";}}
+        onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(201,150,26,0.12)";el.style.boxShadow="";}}>
 
-        {/* Current slide */}
-        {current.kind === "image" ? (
-          <img src={current.url} alt={p.title}
-            style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
-            onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
-        ) : playing ? (
-          current.url.endsWith(".mp4") || current.url.includes(".mp4") ? (
-            <video src={current.url} autoPlay controls style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+        {/* Media swiper */}
+        <div style={{ position:"relative", height:220, overflow:"hidden", background:"#1A0404", userSelect:"none" }}
+          onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
+          onTouchEnd={e=>{
+            if (touchStart===null) return;
+            const diff = touchStart - e.changedTouches[0].clientX;
+            if (Math.abs(diff)>40) go(diff>0?1:-1);
+            setTouchStart(null);
+          }}>
+
+          {current.kind === "image" ? (
+            <img src={current.url} alt={p.title}
+              style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+              onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
+          ) : playing ? (
+            current.url.includes(".mp4") ? (
+              <video src={current.url} autoPlay controls style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+            ) : (
+              <iframe src={current.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
+            )
           ) : (
-            <iframe src={current.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
-          )
-        ) : (
-          /* Video thumbnail / play button */
-          <div style={{ width:"100%", height:"100%", background:"linear-gradient(135deg,#1A0404,#2A0808)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
-            onClick={e=>{e.stopPropagation(); setPlaying(true);}}>
-            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <div style={{ width:54, height:54, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.5)" }}>
-                <span style={{ color:"#3D0A0A", fontSize:"1.3rem", marginLeft:4 }}>▶</span>
+            <div style={{ width:"100%", height:"100%", background:"linear-gradient(135deg,#1A0404,#2A0808)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
+              onClick={e=>{e.stopPropagation(); setPlaying(true);}}>
+              <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                <div style={{ width:54, height:54, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.5)" }}>
+                  <span style={{ color:"#3D0A0A", fontSize:"1.3rem", marginLeft:4 }}>▶</span>
+                </div>
               </div>
+              <span style={{ position:"absolute", bottom:12, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.5)", letterSpacing:"0.1em", textTransform:"uppercase", whiteSpace:"nowrap" }}>🎬 Property Video</span>
             </div>
-            <span style={{ position:"absolute", bottom:12, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.5)", letterSpacing:"0.1em", textTransform:"uppercase", whiteSpace:"nowrap" }}>
-              🎬 Property Video
-            </span>
-          </div>
-        )}
+          )}
 
-        {/* Nav arrows */}
-        {total > 1 && !playing && (<>
-          <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
-          <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
-          {/* Dots */}
-          <div style={{ position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"center",gap:5,zIndex:2 }}>
-            {media.map((m,i)=>(
-              <button key={i} onClick={e=>{e.stopPropagation();setPlaying(false);setIdx(i);}}
-                style={{ width:i===idx?16:6, height:6, borderRadius:3, background:i===idx?"#E8B84B":m.kind==="video"?"rgba(201,150,26,0.5)":"rgba(255,255,255,0.4)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
-            ))}
-          </div>
-          {/* Counter + type indicator */}
-          <div style={{ position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",color:"#E8B84B",fontSize:"0.65rem",padding:"2px 7px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
-            {current.kind==="video" && <span>🎬</span>}
-            {idx+1}/{total}
-          </div>
-        </>)}
+          {total > 1 && !playing && (<>
+            <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+            <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.55)",border:"none",color:"#E8B84B",width:28,height:28,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+            <div style={{ position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"center",gap:5,zIndex:2 }}>
+              {media.map((m,i)=>(
+                <button key={i} onClick={e=>{e.stopPropagation();setPlaying(false);setIdx(i);}}
+                  style={{ width:i===idx?16:6, height:6, borderRadius:3, background:i===idx?"#E8B84B":m.kind==="video"?"rgba(201,150,26,0.5)":"rgba(255,255,255,0.4)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
+              ))}
+            </div>
+            <div style={{ position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",color:"#E8B84B",fontSize:"0.65rem",padding:"2px 7px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
+              {current.kind==="video" && <span>🎬</span>}{idx+1}/{total}
+            </div>
+          </>)}
 
-        <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.62rem",fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",zIndex:2 }}>
-          {p.type==="sale"?"For Sale":"For Rent"}
-        </span>
-      </div>
+          <span style={{ position:"absolute",top:14,left:14,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.2)",color:p.type==="sale"?"#3D0A0A":"#E8B84B",border:p.type==="rent"?"1px solid #8A6520":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.62rem",fontWeight:600,letterSpacing:"0.12em",textTransform:"uppercase",zIndex:2 }}>
+            {p.type==="sale"?"For Sale":"For Rent"}
+          </span>
+        </div>
 
-      <div style={{ padding:20 }}>
-        <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",fontWeight:600,color:"#E8B84B",marginBottom:5 }}>{p.price}{p.price_suffix&&<span style={{ fontSize:"0.78rem",fontFamily:"'Jost',sans-serif",fontWeight:300,color:"#C4A97A" }}>{p.price_suffix}</span>}</div>
-        <div style={{ fontSize:"0.97rem",fontWeight:500,color:"#FDF8EF",marginBottom:5 }}>{p.title}</div>
-        <div style={{ fontSize:"0.78rem",color:"#C4A97A",marginBottom:16 }}>📍 {p.location}</div>
-        <div style={{ display:"flex",gap:18,paddingTop:16,borderTop:"1px solid rgba(201,150,26,0.1)" }}>
-          {[{i:"🛏",v:`${p.beds} Beds`},{i:"🚿",v:`${p.baths} Baths`},{i:"📐",v:`${p.sqm} m²`}].map((f,i)=>(
-            <div key={i} style={{ display:"flex",alignItems:"center",gap:5,fontSize:"0.74rem",color:"#C4A97A" }}><span>{f.i}</span>{f.v}</div>
-          ))}
+        <div style={{ padding:20 }}>
+          <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.6rem",fontWeight:600,color:"#E8B84B",marginBottom:5 }}>{p.price}{p.price_suffix&&<span style={{ fontSize:"0.78rem",fontFamily:"'Jost',sans-serif",fontWeight:300,color:"#C4A97A" }}>{p.price_suffix}</span>}</div>
+          <div style={{ fontSize:"0.97rem",fontWeight:500,color:"#FDF8EF",marginBottom:5 }}>{p.title}</div>
+          <div style={{ fontSize:"0.78rem",color:"#C4A97A",marginBottom:16 }}>📍 {p.location}</div>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:16, borderTop:"1px solid rgba(201,150,26,0.1)" }}>
+            <div style={{ display:"flex", gap:18 }}>
+              {[{i:"🛏",v:`${p.beds} Beds`},{i:"🚿",v:`${p.baths} Baths`},{i:"📐",v:`${p.sqm} m²`}].map((f,i)=>(
+                <div key={i} style={{ display:"flex",alignItems:"center",gap:5,fontSize:"0.74rem",color:"#C4A97A" }}><span>{f.i}</span>{f.v}</div>
+              ))}
+            </div>
+            <span style={{ fontSize:"0.68rem", color:"#C9961A", letterSpacing:"0.1em", textTransform:"uppercase" }}>View →</span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
