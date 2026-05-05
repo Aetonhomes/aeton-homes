@@ -647,19 +647,19 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
           {/* ─── LEFT ─── */}
           <div>
             {/* Gallery */}
-            <div style={{ position:"relative", aspectRatio:"4/3", background:"#050000", userSelect:"none" }}
+            <div className="ah-modal-img-wrap" style={{ position:"relative", background:"#050000", userSelect:"none" }}
               onTouchStart={e=>setTouchStart(e.touches[0].clientX)}
               onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
               {cur.kind === "image" ? (
-                <img src={cur.url} alt={p.title} style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#050000" }}
+                <img src={cur.url} alt={p.title} className="ah-modal-main-img" style={{ width:"100%", height:"auto", display:"block", background:"#050000" }}
                   onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80";}} />
               ) : playing ? (
                 cur.url.includes(".mp4")
-                  ? <video src={cur.url} autoPlay controls style={{ width:"100%", height:"100%", background:"#000" }} />
-                  : <iframe src={cur.embedUrl} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen />
+                  ? <video src={cur.url} autoPlay controls style={{ width:"100%", aspectRatio:"16/9", display:"block", background:"#000" }} />
+                  : <div style={{ position:"relative", aspectRatio:"16/9", width:"100%" }}><iframe src={cur.embedUrl} style={{ position:"absolute", inset:0, width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen /></div>
               ) : (
-                <div style={{ width:"100%", height:"100%", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }} onClick={()=>setPlaying(true)}>
+                <div style={{ width:"100%", aspectRatio:"16/9", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", position:"relative" }} onClick={()=>setPlaying(true)}>
                   <div style={{ width:60, height:60, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 32px rgba(0,0,0,0.7)" }}>
                     <span style={{ color:"#1A0101", fontSize:"1.4rem", marginLeft:5 }}>▶</span>
                   </div>
@@ -867,9 +867,11 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
       </div>
 
       <style>{`
+        .ah-modal-main-img { width:100%; height:auto; display:block; }
         @media(max-width:700px){
           .ah-modal-grid{grid-template-columns:1fr!important;}
           .ah-modal-grid > div:last-child { border-left: none !important; border-top: 1px solid rgba(201,150,26,0.12) !important; }
+          .ah-modal-img-wrap img.ah-modal-main-img { max-height:none !important; height:auto !important; }
         }
       `}</style>
     </div>
