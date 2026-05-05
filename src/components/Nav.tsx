@@ -65,15 +65,7 @@ export default function Nav({ content }: { content: Record<string, string> }) {
               marginLeft: 6,
             }}>{l.label}</a>
           ))}
-          <Link href="/admin" style={{
-            fontSize: "0.68rem", color: "#8A6520", textDecoration: "none",
-            letterSpacing: "0.15em", textTransform: "uppercase",
-            padding: "8px 10px", whiteSpace: "nowrap", flexShrink: 0,
-            transition: "color 0.2s",
-          }}
-            onMouseEnter={(e: any) => (e.currentTarget.style.color = "#E8B84B")}
-            onMouseLeave={(e: any) => (e.currentTarget.style.color = "#8A6520")}
-          >Admin ↗</Link>
+
         </div>
       </nav>
 

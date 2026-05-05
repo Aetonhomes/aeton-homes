@@ -341,19 +341,30 @@ export default function Index() {
             ))}
           </div>
         ) : (
-          <div className="reveal" style={{ display:"grid",gridTemplateColumns:"340px 1fr",gap:60,alignItems:"start",maxWidth:1100 }} >
+          <div className="reveal" style={{ display:"grid",gridTemplateColumns:"300px 1fr",gap:50,alignItems:"start",maxWidth:960 }}>
             <div style={{ borderRadius:4,overflow:"hidden",border:"1px solid rgba(201,150,26,0.25)",boxShadow:"0 24px 60px rgba(0,0,0,0.4)" }}>
-              <div style={{ aspectRatio:"3/4",background:"linear-gradient(135deg,#2A0606,#1A0404)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"5rem",opacity:0.1 }}>👤</div>
+              <div style={{ aspectRatio:"3/4",background:"linear-gradient(135deg,#3A0A0A,#2A0606)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                <div style={{ textAlign:"center" }}>
+                  <div style={{ width:90,height:90,borderRadius:"50%",background:"linear-gradient(135deg,rgba(201,150,26,0.3),rgba(201,150,26,0.1))",border:"2px solid rgba(201,150,26,0.4)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:"2.5rem" }}>👤</div>
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.3rem",color:"#E8B84B",fontStyle:"italic" }}>Aeton Homes</div>
+                </div>
+              </div>
             </div>
             <div style={{ paddingTop:10 }}>
-              <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"2rem",color:"#FDF8EF",marginBottom:6 }}>Our Chief Executive</h3>
-              <p style={{ fontSize:"0.72rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"#C9961A",marginBottom:24 }}>Founder & CEO, Aeton Homes</p>
-              <p style={{ fontSize:"0.88rem",color:"#C4A97A",lineHeight:1.85,marginBottom:18 }}>
+              <div style={{ display:"inline-block",background:"rgba(201,150,26,0.1)",border:"1px solid rgba(201,150,26,0.25)",padding:"4px 14px",borderRadius:2,fontSize:"0.62rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"#C9961A",marginBottom:18 }}>Leadership</div>
+              <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"2.2rem",fontWeight:400,color:"#FDF8EF",marginBottom:6,lineHeight:1.2 }}>Our Chief Executive</h3>
+              <p style={{ fontSize:"0.72rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"#C9961A",marginBottom:28,borderBottom:"1px solid rgba(201,150,26,0.1)",paddingBottom:20 }}>Founder & CEO, Aeton Homes</p>
+              <p style={{ fontSize:"0.9rem",color:"#C4A97A",lineHeight:1.9,marginBottom:20 }}>
                 With over 12 years of experience in Kenya's luxury real estate market, our CEO founded Aeton Homes with a singular vision: to make premium property accessible, transparent, and rewarding for every client.
               </p>
-              <p style={{ fontSize:"0.88rem",color:"#C4A97A",lineHeight:1.85,fontStyle:"italic" }}>
+              <p style={{ fontSize:"0.9rem",color:"#C4A97A",lineHeight:1.9,fontStyle:"italic",borderLeft:"2px solid rgba(201,150,26,0.3)",paddingLeft:18,marginBottom:28 }}>
                 "Every property transaction is a life decision. We treat it with the gravity it deserves."
               </p>
+              <div style={{ display:"flex",gap:16,flexWrap:"wrap" }}>
+                {["12+ Years Experience","50+ Luxury Sales","Trusted by 200+ Families"].map((badge,i)=>(
+                  <div key={i} style={{ background:"rgba(201,150,26,0.08)",border:"1px solid rgba(201,150,26,0.18)",padding:"7px 16px",borderRadius:2,fontSize:"0.72rem",color:"#E8B84B",letterSpacing:"0.08em" }}>{badge}</div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -584,20 +595,26 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                 </div>
               </div>
 
-              {/* Specs row */}
-              <div style={{ display:"flex", gap:0, marginBottom:20, borderTop:"1px solid rgba(201,150,26,0.1)", borderBottom:"1px solid rgba(201,150,26,0.1)", padding:"14px 0" }}>
-                {[
+              {/* Specs row — only show fields that have values > 0 */}
+              {(() => {
+                const specs = [
                   { icon:"🛏", label:"Bedrooms", val: p.beds },
                   { icon:"🚿", label:"Bathrooms", val: p.baths },
-                  { icon:"📐", label:"Size", val: `${p.sqm} m²` },
-                ].map((s,i) => (
-                  <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<2 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"6px 0" }}>
-                    <div style={{ fontSize:"1.3rem", marginBottom:4 }}>{s.icon}</div>
-                    <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.3rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}</div>
-                    <div style={{ fontSize:"0.62rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#8A6520", marginTop:3 }}>{s.label}</div>
+                  { icon:"📐", label:"Size", val: p.sqm, suffix:" m²" },
+                ].filter(s => s.val && Number(s.val) > 0);
+                if (!specs.length) return null;
+                return (
+                  <div style={{ display:"flex", gap:0, marginBottom:20, borderTop:"1px solid rgba(201,150,26,0.1)", borderBottom:"1px solid rgba(201,150,26,0.1)", padding:"14px 0" }}>
+                    {specs.map((s,i) => (
+                      <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"6px 0" }}>
+                        <div style={{ fontSize:"1.3rem", marginBottom:4 }}>{s.icon}</div>
+                        <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.3rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
+                        <div style={{ fontSize:"0.62rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#8A6520", marginTop:3 }}>{s.label}</div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                );
+              })()}
 
               {/* Description */}
               {p.description && (
@@ -748,10 +765,14 @@ function PropCard({ p }: { p: any }) {
           <div style={{ fontSize:"0.97rem",fontWeight:500,color:"#FDF8EF",marginBottom:5 }}>{p.title}</div>
           <div style={{ fontSize:"0.78rem",color:"#C4A97A",marginBottom:16 }}>📍 {p.location}</div>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:16, borderTop:"1px solid rgba(201,150,26,0.1)" }}>
-            <div style={{ display:"flex", gap:18 }}>
-              {[{i:"🛏",v:`${p.beds} Beds`},{i:"🚿",v:`${p.baths} Baths`},{i:"📐",v:`${p.sqm} m²`}].map((f,i)=>(
-                <div key={i} style={{ display:"flex",alignItems:"center",gap:5,fontSize:"0.74rem",color:"#C4A97A" }}><span>{f.i}</span>{f.v}</div>
-              ))}
+            <div style={{ display:"flex", gap:18, flexWrap:"wrap" }}>
+              {[{i:"🛏",v:p.beds,label:"Beds"},{i:"🚿",v:p.baths,label:"Baths"},{i:"📐",v:p.sqm,label:"m²",suffix:" m²"}]
+                .filter(f => f.v && Number(f.v) > 0)
+                .map((f,i)=>(
+                  <div key={i} style={{ display:"flex",alignItems:"center",gap:5,fontSize:"0.74rem",color:"#C4A97A" }}>
+                    <span>{f.i}</span>{f.v}{f.suffix||` ${f.label}`}
+                  </div>
+                ))}
             </div>
             <span style={{ fontSize:"0.68rem", color:"#C9961A", letterSpacing:"0.1em", textTransform:"uppercase" }}>View →</span>
           </div>
