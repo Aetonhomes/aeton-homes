@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import Particles from "../components/Particles";
@@ -9,6 +9,16 @@ const CATS = ["All","Tour","Promo","Testimonial","Development Update","Aerial"];
 export default function Videos() {
   const { content } = useContent();
   const [cat, setCat] = useState("All");
+
+  // Visit tracking
+  useEffect(() => {
+    const _API = import.meta.env.VITE_API_URL || "";
+    fetch(`${_API}/api/track`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: "/videos", referrer: document.referrer, screen_width: window.innerWidth }),
+    }).catch(() => {});
+  }, []);
   const { data: videos, loading } = useApi<any[]>(`/api/videos?category=${encodeURIComponent(cat)}`, [cat]);
   const [active, setActive] = useState<any>(null);
 

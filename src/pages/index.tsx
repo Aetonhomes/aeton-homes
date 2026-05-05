@@ -15,6 +15,16 @@ export default function Index() {
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [tab, setTab] = useState("Buy");
 
+  // Visit tracking — fire and forget
+  useEffect(() => {
+    const _API = import.meta.env.VITE_API_URL || "";
+    fetch(`${_API}/api/track`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: "/", referrer: document.referrer, screen_width: window.innerWidth }),
+    }).catch(() => {});
+  }, []);
+
   // Reveal
   useEffect(() => {
     const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); }), { threshold: 0.1 });
@@ -582,7 +592,7 @@ function PublicReviewForm() {
     <div className="ah-card" style={{ padding:36,textAlign:"center" }}>
       <div style={{ fontSize:"3rem",marginBottom:14 }}>✨</div>
       <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.4rem",color:"#E8B84B",marginBottom:10 }}>Thank you!</p>
-      <p style={{ fontSize:"0.84rem",color:"#C4A97A",lineHeight:1.7 }}>Your review has been submitted and will appear once approved.</p>
+      <p style={{ fontSize:"0.84rem",color:"#C4A97A",lineHeight:1.7 }}>Your review has been submitted and is now live on the site — thank you!</p>
       <button onClick={()=>{setStatus("idle");setForm({name:"",email:"",quote:"",stars:5});}} className="ah-btn-outline" style={{ marginTop:20,padding:"10px 24px" }}>Leave Another</button>
     </div>
   );
@@ -614,7 +624,7 @@ function PublicReviewForm() {
         </div>
         {status==="error"&&<p style={{ color:"#f87171",fontSize:"0.8rem",marginBottom:12 }}>Something went wrong. Please try again.</p>}
         <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{ width:"100%",padding:13 }}>{status==="loading"?"Submitting...":"Submit Review"}</button>
-        <p style={{ fontSize:"0.7rem",color:"#8A6520",marginTop:10,textAlign:"center" }}>Reviews are moderated before appearing publicly</p>
+        <p style={{ fontSize:"0.7rem",color:"#8A6520",marginTop:10,textAlign:"center" }}>Your review will appear instantly on the site</p>
       </form>
     </div>
   );

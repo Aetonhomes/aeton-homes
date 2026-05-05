@@ -6,20 +6,22 @@ import TestimonialsTab from "./TestimonialsTab";
 import TeamTab from "./TeamTab";
 import EnquiriesTab from "./EnquiriesTab";
 import ReviewsTab from "./ReviewsTab";
+import AnalyticsTab from "./AnalyticsTab";
 
 const TABS = [
+  { id:"analytics", label:"📊 Analytics" },
+  { id:"enquiries", label:"📩 Enquiries" },
   { id:"content", label:"✏️ Site Content" },
   { id:"properties", label:"🏠 Properties" },
   { id:"reviews", label:"⭐ Reviews" },
   { id:"videos", label:"🎬 Videos" },
   { id:"testimonials", label:"💬 Testimonials" },
   { id:"team", label:"👤 Team" },
-  { id:"enquiries", label:"📩 Enquiries" },
 ];
 
 export default function Admin() {
   const [token, setToken] = useState<string|null>(localStorage.getItem("ah_token"));
-  const [tab, setTab] = useState("content");
+  const [tab, setTab] = useState("analytics");
 
   if (!token) return <Login onLogin={setToken} />;
 
@@ -54,6 +56,7 @@ export default function Admin() {
       {/* Main */}
       <div style={{ flex:1,overflow:"auto",minWidth:0 }}>
         <div style={{ padding:"24px 20px",minHeight:"100vh" }}>
+          {tab==="analytics"    && <AnalyticsTab token={token}/>}
           {tab==="content"      && <ContentEditor token={token}/>}
           {tab==="properties"   && <PropertiesTab token={token}/>}
           {tab==="reviews"      && <ReviewsTab token={token}/>}
