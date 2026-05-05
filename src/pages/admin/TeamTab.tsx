@@ -17,11 +17,24 @@ export default function TeamTab({ token }: { token: string }) {
   const load = () => { setLoading(true); fetch(`${API}/api/team/all`,{headers:{"Authorization":`Bearer ${token}`}}).then(r=>r.json()).then(d=>{setList(d);setLoading(false);}); };
   useEffect(()=>load(),[]);
 
+  const compressImage = (file: File): Promise<Blob> => new Promise((resolve) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 1200; let {width,height} = img;
+      if (width>MAX||height>MAX){if(width>height){height=Math.round(height*MAX/width);width=MAX;}else{width=Math.round(width*MAX/height);height=MAX;}}
+      const canvas=document.createElement("canvas"); canvas.width=width; canvas.height=height;
+      canvas.getContext("2d")!.drawImage(img,0,0,width,height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(b=>resolve(b!),"image/jpeg",0.78);
+    }; img.src=url;
+  });
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
     setUploading(true);
     try {
-      const fd = new FormData(); fd.append("image", file);
+      const compressed = await compressImage(file);
+      const fd = new FormData(); fd.append("image", compressed, "photo.jpg");
       const res = await fetch(`${API}/api/upload`,{method:"POST",headers:{"Authorization":`Bearer ${token}`},body:fd});
       const {url} = await res.json();
       setForm((f:any)=>({...f,photo_url:url}));
