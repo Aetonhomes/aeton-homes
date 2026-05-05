@@ -5,6 +5,7 @@ import VideosTab from "./VideosTab";
 import TestimonialsTab from "./TestimonialsTab";
 import TeamTab from "./TeamTab";
 import EnquiriesTab from "./EnquiriesTab";
+import BookingsTab from "./BookingsTab";
 import ReviewsTab from "./ReviewsTab";
 import AnalyticsTab from "./AnalyticsTab";
 import ActivityTab from "./ActivityTab";
@@ -12,6 +13,7 @@ import ActivityTab from "./ActivityTab";
 const TABS = [
   { id:"activity",     label:"Activity",     icon:"🔴" },
   { id:"analytics",    label:"Analytics",    icon:"📊" },
+  { id:"bookings",     label:"Bookings",     icon:"📅" },
   { id:"enquiries",    label:"Enquiries",    icon:"📩" },
   { id:"content",      label:"Content",      icon:"✏️" },
   { id:"properties",   label:"Properties",   icon:"🏠" },
@@ -107,6 +109,7 @@ export default function Admin() {
         <div style={{ padding:"24px 20px", flex:1 }}>
           {tab==="activity"     && <ActivityTab token={token}/>}
           {tab==="analytics"    && <AnalyticsTab token={token}/>}
+          {tab==="bookings"     && <BookingsTab token={token}/>}
           {tab==="content"      && <ContentEditor token={token}/>}
           {tab==="properties"   && <PropertiesTab token={token}/>}
           {tab==="reviews"      && <ReviewsTab token={token}/>}

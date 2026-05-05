@@ -190,11 +190,50 @@ img { max-width: 100%; height: auto; }
 
   /* Tables */
   table { font-size: 0.75rem; }
+
+  /* Modal */
+  .ah-modal-grid { grid-template-columns: 1fr !important; }
+  .ah-modal-grid > div:last-child {
+    border-left: none !important;
+    border-top: 1px solid rgba(201,150,26,0.12) !important;
+  }
+
+  /* CEO / about grid — stack on mobile */
+  .ah-ceo-grid { grid-template-columns: 1fr !important; }
+
+  /* Contact section two-col */
+  .ah-contact-grid { grid-template-columns: 1fr !important; }
+
+  /* Inline 1fr 1fr grids in forms → stack */
+  .ah-form-2col { grid-template-columns: 1fr !important; }
+
+  /* Hero bottom stats pill */
+  .ah-hero-stats {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 60px !important;
+    transform: translateX(-50%) !important;
+    white-space: nowrap !important;
+    max-width: 90vw !important;
+    overflow: hidden !important;
+  }
+
+  /* Search bar */
+  .ah-search-bar {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 16px !important;
+  }
+  .ah-search-bar > * { width: 100% !important; }
+  .ah-search-bar button { width: 100% !important; }
 }
 
 @media (max-width: 480px) {
   .ah-stats { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
   .ah-team-grid { grid-template-columns: 1fr !important; }
+  .ah-ceo-grid { grid-template-columns: 1fr !important; }
+  /* Name+phone row in contact form */
+  .ah-name-phone-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ── Admin responsive ── */

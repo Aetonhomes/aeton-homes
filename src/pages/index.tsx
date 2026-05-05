@@ -577,12 +577,20 @@ function buildMedia(p: any): MediaSlide[] {
 // PROPERTY MODAL
 // ══════════════════════════════════════════════════════════
 function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
+
   const API = import.meta.env.VITE_API_URL || "";
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [touchStart, setTouchStart] = useState<number|null>(null);
-  const [form, setForm] = useState({ name:"", email:"", phone:"", message:"", preferred_contact:"call" });
-  const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
+  const [rightTab, setRightTab] = useState<"enquiry"|"booking">("booking");
+
+  // Enquiry form
+  const [eForm, setEForm] = useState({ name:"", email:"", phone:"", message:"", preferred_contact:"call" });
+  const [eStatus, setEStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
+
+  // Booking form
+  const [bForm, setBForm] = useState({ name:"", email:"", phone:"", viewing_date:"", message:"", preferred_contact:"whatsapp" });
+  const [bStatus, setBStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
 
   const media = buildMedia(p);
   const total = media.length;
@@ -598,11 +606,22 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
   }, []);
 
   const submitEnquiry = async (e: React.FormEvent) => {
-    e.preventDefault(); setStatus("loading");
+    e.preventDefault(); setEStatus("loading");
     try {
-      await fetch(`${API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ ...form, interest: p.title, source: "property_modal", message: form.message || `Enquiry about: ${p.title} — ${p.price}` }) });
-      setStatus("success");
-    } catch { setStatus("error"); }
+      await fetch(`${API}/api/enquiries`, { method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ ...eForm, interest: p.title, source: "property_modal",
+          message: eForm.message || `General enquiry about: ${p.title} — ${p.price}` }) });
+      setEStatus("success");
+    } catch { setEStatus("error"); }
+  };
+
+  const submitBooking = async (e: React.FormEvent) => {
+    e.preventDefault(); setBStatus("loading");
+    try {
+      await fetch(`${API}/api/bookings`, { method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ ...bForm, property_title: p.title, property_id: p.id || null }) });
+      setBStatus("success");
+    } catch { setBStatus("error"); }
   };
 
   const specs = [
@@ -611,12 +630,17 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
     { icon:"📐", label:"Size", val: p.sqm, suffix:" m²" },
   ].filter(s => s.val && Number(s.val) > 0);
 
+  const contactOpts = [
+    {v:"call",label:"📞 Call"},{v:"whatsapp",label:"💬 WhatsApp"},
+    {v:"sms",label:"✉️ SMS"},{v:"telegram",label:"✈️ Telegram"},{v:"email",label:"📧 Email"},
+  ];
+
   return (
-    <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:9000, background:"rgba(0,0,0,0.92)", backdropFilter:"blur(8px)", overflowY:"auto", padding:"16px", display:"flex", alignItems:"flex-start", justifyContent:"center" }}>
-      <div onClick={e=>e.stopPropagation()} style={{ width:"100%", maxWidth:980, background:"#100101", border:"1px solid rgba(201,150,26,0.18)", borderRadius:6, overflow:"hidden", position:"relative", marginTop:24, marginBottom:40, animation:"fadeInUp 0.28s ease", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
+    <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:9000, background:"rgba(0,0,0,0.92)", backdropFilter:"blur(8px)", overflowY:"auto", padding:"8px", display:"flex", alignItems:"flex-start", justifyContent:"center" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ width:"100%", maxWidth:980, background:"#100101", border:"1px solid rgba(201,150,26,0.18)", borderRadius:6, overflow:"hidden", position:"relative", marginTop:16, marginBottom:32, animation:"fadeInUp 0.28s ease", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
 
         {/* Close */}
-        <button onClick={onClose} title="Close" style={{ position:"absolute", top:12, right:12, zIndex:10, width:34, height:34, borderRadius:"50%", background:"rgba(0,0,0,0.7)", border:"1px solid rgba(201,150,26,0.2)", color:"#E8B84B", fontSize:"1.1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
+        <button onClick={onClose} title="Close" style={{ position:"absolute", top:10, right:10, zIndex:10, width:34, height:34, borderRadius:"50%", background:"rgba(0,0,0,0.7)", border:"1px solid rgba(201,150,26,0.2)", color:"#E8B84B", fontSize:"1.1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
 
         <div className="ah-modal-grid" style={{ display:"grid", gridTemplateColumns:"1fr 360px" }}>
 
@@ -639,14 +663,14 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                   <div style={{ width:60, height:60, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 32px rgba(0,0,0,0.7)" }}>
                     <span style={{ color:"#1A0101", fontSize:"1.4rem", marginLeft:5 }}>▶</span>
                   </div>
-                  <span style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.12em", textTransform:"uppercase" }}>🎬 Property Video</span>
+                  <span style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.12em", textTransform:"uppercase", whiteSpace:"nowrap" }}>🎬 Property Video</span>
                 </div>
               )}
 
               {total > 1 && !playing && (<>
                 <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#E8B84B",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
                 <button onClick={e=>go(1,e)} style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#E8B84B",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
-                <div style={{ position:"absolute",top:10,right:10,background:"rgba(0,0,0,0.7)",color:"#E8B84B",fontSize:"0.65rem",padding:"3px 10px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
+                <div style={{ position:"absolute",top:10,right:50,background:"rgba(0,0,0,0.7)",color:"#E8B84B",fontSize:"0.65rem",padding:"3px 10px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
                   {cur.kind==="video"&&<span>🎬</span>}{idx+1}/{total}
                 </div>
               </>)}
@@ -671,101 +695,173 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
             )}
 
             {/* Info */}
-            <div style={{ padding:"22px 26px 26px" }}>
-              {/* Title row */}
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, marginBottom:14, flexWrap:"wrap" }}>
-                <div>
-                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.5rem,3vw,2rem)", fontWeight:400, color:"#FDF8EF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h2>
-                  {p.subtitle && <p style={{ fontSize:"0.84rem", color:"#C4A97A", fontStyle:"italic", marginBottom:4 }}>{p.subtitle}</p>}
-                  <div style={{ fontSize:"0.78rem", color:"#6B4F20" }}>📍 {p.location}</div>
+            <div style={{ padding:"20px 22px 24px" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:10, marginBottom:12, flexWrap:"wrap" }}>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,3vw,1.9rem)", fontWeight:400, color:"#FDF8EF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h2>
+                  {p.subtitle && <p style={{ fontSize:"0.82rem", color:"#C4A97A", fontStyle:"italic", marginBottom:4 }}>{p.subtitle}</p>}
+                  <div style={{ fontSize:"0.75rem", color:"#6B4F20" }}>📍 {p.location}</div>
                 </div>
                 <div style={{ textAlign:"right", flexShrink:0 }}>
-                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.5rem,2.5vw,2rem)", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>
-                    {p.price}
-                  </div>
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,2.5vw,1.8rem)", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{p.price}</div>
                   {p.price_suffix && <div style={{ fontSize:"0.72rem", color:"#8A6520", marginTop:2 }}>{p.price_suffix}</div>}
                 </div>
               </div>
 
-              {/* Specs */}
               {specs.length > 0 && (
-                <div style={{ display:"flex", gap:0, marginBottom:20, background:"rgba(201,150,26,0.04)", border:"1px solid rgba(201,150,26,0.1)", borderRadius:3 }}>
+                <div style={{ display:"flex", gap:0, marginBottom:16, background:"rgba(201,150,26,0.04)", border:"1px solid rgba(201,150,26,0.1)", borderRadius:3 }}>
                   {specs.map((s,i) => (
-                    <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"12px 8px" }}>
-                      <div style={{ fontSize:"1.2rem", marginBottom:3 }}>{s.icon}</div>
-                      <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
-                      <div style={{ fontSize:"0.58rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#6B4F20", marginTop:3 }}>{s.label}</div>
+                    <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"10px 6px" }}>
+                      <div style={{ fontSize:"1.1rem", marginBottom:2 }}>{s.icon}</div>
+                      <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
+                      <div style={{ fontSize:"0.56rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#6B4F20", marginTop:2 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* Description — always show if exists */}
               {p.description && (
-                <div style={{ marginBottom:22, padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(201,150,26,0.08)", borderRadius:3 }}>
-                  <div style={{ fontSize:"0.58rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:10 }}>About This Property</div>
-                  <p style={{ fontSize:"0.86rem", color:"#C4A97A", lineHeight:1.9, whiteSpace:"pre-wrap", margin:0 }}>{p.description}</p>
+                <div style={{ padding:"14px 16px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(201,150,26,0.08)", borderRadius:3 }}>
+                  <div style={{ fontSize:"0.56rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:8 }}>About This Property</div>
+                  <p style={{ fontSize:"0.83rem", color:"#C4A97A", lineHeight:1.85, whiteSpace:"pre-wrap", margin:0 }}>{p.description}</p>
                 </div>
               )}
-
-              <p style={{ fontSize:"0.72rem", color:"#6B4F20", lineHeight:1.6, marginTop:4 }}>
-                Fill in the enquiry form → choose how you'd like us to contact you.
-              </p>
             </div>
           </div>
 
-          {/* ─── RIGHT: Enquiry ─── */}
-          <div style={{ borderLeft:"1px solid rgba(201,150,26,0.08)", padding:"26px 22px", display:"flex", flexDirection:"column", background:"rgba(0,0,0,0.25)" }}>
-            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#FDF8EF", marginBottom:5 }}>Book a Viewing</h3>
-            <p style={{ fontSize:"0.75rem", color:"#6B4F20", marginBottom:22, lineHeight:1.65 }}>
-              Interested in <strong style={{color:"#8A6520"}}>{p.title}</strong>? Leave your details and we'll respond within hours.
-            </p>
+          {/* ─── RIGHT: Tabbed forms ─── */}
+          <div style={{ borderLeft:"1px solid rgba(201,150,26,0.08)", display:"flex", flexDirection:"column", background:"rgba(0,0,0,0.25)" }}>
 
-            {status === "success" ? (
-              <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, textAlign:"center", padding:"30px 0" }}>
-                <div style={{ fontSize:"2.5rem" }}>✅</div>
-                <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Enquiry sent!</p>
-                <p style={{ fontSize:"0.78rem", color:"#8A6520" }}>We'll be in touch shortly.</p>
-              </div>
-            ) : (
-              <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:13, flex:1 }}>
-                <div>
-                  <label className="ah-label">Full Name *</label>
-                  <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
-                </div>
-                <div>
-                  <label className="ah-label">Phone *</label>
-                  <input required value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} className="ah-input" placeholder="+254..." />
-                </div>
-                <div>
-                  <label className="ah-label">Email</label>
-                  <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
-                </div>
-                {/* Preferred contact method */}
-                <div>
-                  <label className="ah-label">How should we contact you? *</label>
-                  <div style={{ display:"flex", gap:7, flexWrap:"wrap" }}>
-                    {[{v:"call",label:"📞 Call"},{v:"whatsapp",label:"💬 WhatsApp"},{v:"sms",label:"✉️ SMS"},{v:"telegram",label:"✈️ Telegram"},{v:"email",label:"📧 Email"}].map(opt=>(
-                      <button key={opt.v} type="button" onClick={()=>setForm({...form,preferred_contact:opt.v})}
-                        style={{ padding:"7px 12px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.03)", color:form.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.72rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s" }}>
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div style={{ flex:1 }}>
-                  <label className="ah-label">Message</label>
-                  <textarea rows={3} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Viewing time, questions, budget..." />
-                </div>
-                {status==="error" && <p style={{color:"#f87171",fontSize:"0.76rem"}}>Something went wrong. Please try again.</p>}
-                <button type="submit" disabled={status==="loading"} className="ah-btn-gold" style={{width:"100%",padding:13}}>
-                  {status==="loading" ? "Sending…" : "Send Enquiry"}
+            {/* Tabs */}
+            <div style={{ display:"flex", borderBottom:"1px solid rgba(201,150,26,0.12)" }}>
+              {([["booking","📅 Book Viewing"],["enquiry","📩 Enquire"]] as const).map(([id, label]) => (
+                <button key={id} onClick={()=>setRightTab(id)} style={{
+                  flex:1, padding:"14px 8px", background: rightTab===id ? "rgba(201,150,26,0.1)" : "transparent",
+                  border:"none", borderBottom: rightTab===id ? "2px solid #C9961A" : "2px solid transparent",
+                  color: rightTab===id ? "#E8B84B" : "#6B4F20", cursor:"pointer",
+                  fontFamily:"'Jost',sans-serif", fontSize:"0.72rem", letterSpacing:"0.1em",
+                  textTransform:"uppercase", transition:"all 0.2s",
+                }}>
+                  {label}
                 </button>
-                <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
-                  We'll reach you via <strong style={{color:"#6B4F20"}}>{form.preferred_contact}</strong> · Mon–Sat 8am–7pm
-                </p>
-              </form>
-            )}
+              ))}
+            </div>
+
+            <div style={{ flex:1, padding:"20px 18px", overflowY:"auto" }}>
+
+              {/* ── BOOKING TAB ── */}
+              {rightTab === "booking" && (
+                bStatus === "success" ? (
+                  <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, textAlign:"center", padding:"40px 0" }}>
+                    <div style={{ fontSize:"2.5rem" }}>📅</div>
+                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Viewing requested!</p>
+                    <p style={{ fontSize:"0.78rem", color:"#8A6520", lineHeight:1.6 }}>We'll confirm via {bForm.preferred_contact} within hours.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={submitBooking} style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                    <div>
+                      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"#FDF8EF", marginBottom:4 }}>
+                        Book a Viewing
+                      </p>
+                      <p style={{ fontSize:"0.72rem", color:"#6B4F20", lineHeight:1.6, marginBottom:4 }}>
+                        <strong style={{color:"#8A6520"}}>{p.title}</strong> — we'll confirm a time that works.
+                      </p>
+                    </div>
+                    <div>
+                      <label className="ah-label">Full Name *</label>
+                      <input required value={bForm.name} onChange={e=>setBForm({...bForm,name:e.target.value})} className="ah-input" placeholder="Your name" />
+                    </div>
+                    <div>
+                      <label className="ah-label">Phone *</label>
+                      <input required value={bForm.phone} onChange={e=>setBForm({...bForm,phone:e.target.value})} className="ah-input" placeholder="+254..." inputMode="tel" />
+                    </div>
+                    <div>
+                      <label className="ah-label">Email</label>
+                      <input type="email" value={bForm.email} onChange={e=>setBForm({...bForm,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
+                    </div>
+                    <div>
+                      <label className="ah-label">Preferred Viewing Date</label>
+                      <input type="date" value={bForm.viewing_date} onChange={e=>setBForm({...bForm,viewing_date:e.target.value})} className="ah-input" style={{colorScheme:"dark"}} />
+                    </div>
+                    <div>
+                      <label className="ah-label">How should we confirm? *</label>
+                      <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginTop:2 }}>
+                        {contactOpts.map(opt=>(
+                          <button key={opt.v} type="button" onClick={()=>setBForm({...bForm,preferred_contact:opt.v})}
+                            style={{ padding:"7px 11px", borderRadius:2, border:`1px solid ${bForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:bForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:bForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="ah-label">Notes (optional)</label>
+                      <textarea rows={2} value={bForm.message} onChange={e=>setBForm({...bForm,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Preferred time, access needs, questions…" />
+                    </div>
+                    {bStatus==="error" && <p style={{color:"#f87171",fontSize:"0.75rem"}}>Something went wrong. Try again.</p>}
+                    <button type="submit" disabled={bStatus==="loading"} className="ah-btn-gold" style={{padding:"13px 0",width:"100%",fontSize:"0.78rem"}}>
+                      {bStatus==="loading" ? "Sending…" : "Request Viewing"}
+                    </button>
+                    <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
+                      We'll confirm via <strong style={{color:"#6B4F20"}}>{contactOpts.find(o=>o.v===bForm.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
+                    </p>
+                  </form>
+                )
+              )}
+
+              {/* ── ENQUIRY TAB ── */}
+              {rightTab === "enquiry" && (
+                eStatus === "success" ? (
+                  <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, textAlign:"center", padding:"40px 0" }}>
+                    <div style={{ fontSize:"2.5rem" }}>✅</div>
+                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Enquiry sent!</p>
+                    <p style={{ fontSize:"0.78rem", color:"#8A6520" }}>We'll be in touch via {eForm.preferred_contact} shortly.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                    <div>
+                      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"#FDF8EF", marginBottom:4 }}>General Enquiry</p>
+                      <p style={{ fontSize:"0.72rem", color:"#6B4F20", lineHeight:1.6, marginBottom:4 }}>Questions about pricing, availability, or this property.</p>
+                    </div>
+                    <div>
+                      <label className="ah-label">Full Name *</label>
+                      <input required value={eForm.name} onChange={e=>setEForm({...eForm,name:e.target.value})} className="ah-input" placeholder="Your name" />
+                    </div>
+                    <div>
+                      <label className="ah-label">Phone *</label>
+                      <input required value={eForm.phone} onChange={e=>setEForm({...eForm,phone:e.target.value})} className="ah-input" placeholder="+254..." inputMode="tel" />
+                    </div>
+                    <div>
+                      <label className="ah-label">Email</label>
+                      <input type="email" value={eForm.email} onChange={e=>setEForm({...eForm,email:e.target.value})} className="ah-input" placeholder="your@email.com" />
+                    </div>
+                    <div>
+                      <label className="ah-label">How should we contact you? *</label>
+                      <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginTop:2 }}>
+                        {contactOpts.map(opt=>(
+                          <button key={opt.v} type="button" onClick={()=>setEForm({...eForm,preferred_contact:opt.v})}
+                            style={{ padding:"7px 11px", borderRadius:2, border:`1px solid ${eForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:eForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:eForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="ah-label">Message</label>
+                      <textarea rows={3} value={eForm.message} onChange={e=>setEForm({...eForm,message:e.target.value})} className="ah-input" style={{resize:"vertical"}} placeholder="Viewing time, questions, budget..." />
+                    </div>
+                    {eStatus==="error" && <p style={{color:"#f87171",fontSize:"0.75rem"}}>Something went wrong. Try again.</p>}
+                    <button type="submit" disabled={eStatus==="loading"} className="ah-btn-gold" style={{padding:"13px 0",width:"100%",fontSize:"0.78rem"}}>
+                      {eStatus==="loading" ? "Sending…" : "Send Enquiry"}
+                    </button>
+                    <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
+                      We'll reach you via <strong style={{color:"#6B4F20"}}>{contactOpts.find(o=>o.v===eForm.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
+                    </p>
+                  </form>
+                )
+              )}
+
+            </div>
           </div>
         </div>
       </div>
@@ -773,11 +869,13 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
       <style>{`
         @media(max-width:700px){
           .ah-modal-grid{grid-template-columns:1fr!important;}
+          .ah-modal-grid > div:last-child { border-left: none !important; border-top: 1px solid rgba(201,150,26,0.12) !important; }
         }
       `}</style>
     </div>
   );
 }
+
 
 // ══════════════════════════════════════════════════════════
 // PROP CARD
@@ -1045,7 +1143,7 @@ function ContactForm() {
         <h2 style={{...T.h2, fontSize:"clamp(1.6rem,3vw,2.2rem)"}}>Send Us a <em style={T.em}>Message</em></h2>
         <p style={{...T.sub, marginBottom:28}}>Tell us what you're looking for and we'll match you with the perfect property.</p>
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
+      <div className="ah-name-phone-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
         <div>
           <label className="ah-label">Full Name *</label>
           <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
