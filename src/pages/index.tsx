@@ -528,7 +528,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
 
               {current.kind === "image" ? (
                 <img src={current.url} alt={p.title}
-                  style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+                  style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#0A0101" }}
                   onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80";}} />
               ) : playing ? (
                 current.url.includes(".mp4") ? (
@@ -572,7 +572,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                     background:"#1A0404", display:"flex", alignItems:"center", justifyContent:"center",
                   }}>
                     {m.kind==="image"
-                      ? <img src={m.url} style={{ width:"100%", height:"100%", objectFit:"cover" }} onError={e=>{(e.target as HTMLImageElement).style.display="none";}} />
+                      ? <img src={m.url} style={{ width:"100%", height:"100%", objectFit:"contain", background:"#1A0404" }} onError={e=>{(e.target as HTMLImageElement).style.display="none";}} />
                       : <span style={{ fontSize:"1.2rem" }}>🎬</span>
                     }
                   </div>
@@ -721,7 +721,7 @@ function PropCard({ p }: { p: any }) {
 
           {current.kind === "image" ? (
             <img src={current.url} alt={p.title}
-              style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
+              style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#1A0404" }}
               onError={(e)=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
           ) : playing ? (
             current.url.includes(".mp4") ? (
