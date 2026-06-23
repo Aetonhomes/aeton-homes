@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import WhatsAppButton from "../components/WhatsAppButton";
+
 import Particles from "../components/Particles";
 import { useContent, useApi } from "../lib/useContent";
 import { c, DEFAULTS } from "../lib/defaults";
@@ -590,7 +590,6 @@ export default function Index() {
         </div>
       </section>
 
-      <WhatsAppButton />
       <Footer content={content} />
 
       <style>{`

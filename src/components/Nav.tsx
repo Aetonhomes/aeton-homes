@@ -129,9 +129,7 @@ export default function Nav({ content }: { content: Record<string, string> }) {
           <a href="tel:+254728683027" style={{ display: "flex", alignItems: "center", gap: 10, color: "#C4A97A", textDecoration: "none", fontSize: "0.82rem", marginBottom: 12 }}>
             <span style={{ fontSize: "1rem" }}>📞</span> +254 728 683 027
           </a>
-          <a href="https://wa.me/254728683027" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, color: "#C4A97A", textDecoration: "none", fontSize: "0.82rem" }}>
-            <span style={{ fontSize: "1rem" }}>💬</span> WhatsApp Us
-          </a>
+
         </div>
       </div>
 
