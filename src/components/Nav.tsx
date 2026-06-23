@@ -43,7 +43,7 @@ export default function Nav({ content }: { content: Record<string, string> }) {
       }}>
         {/* Logo */}
         <a href="/" style={{ display: "flex", alignItems: "center", flexShrink: 0, textDecoration: "none", zIndex: 2 }}>
-          <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes"
+          <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes" className="ah-nav-logo"
             style={{ height: 42, width: "auto", objectFit: "contain", borderRadius: 3 }} />
         </a>
 
@@ -127,7 +127,10 @@ export default function Nav({ content }: { content: Record<string, string> }) {
         <div style={{ marginTop: 40 }}>
           <p style={{ fontSize: "0.58rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", marginBottom: 16 }}>Contact Us</p>
           <a href="tel:+254728683027" style={{ display: "flex", alignItems: "center", gap: 10, color: "#C4A97A", textDecoration: "none", fontSize: "0.82rem", marginBottom: 12 }}>
-            <span style={{ fontSize: "1rem" }}>📞</span> +254 728 683 027
+            <span style={{ width:32, height:32, background:"rgba(201,150,26,0.08)", border:"1px solid rgba(201,150,26,0.2)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style={{ color:"#C9961A" }}><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            </span>
+            +254 728 683 027
           </a>
 
         </div>

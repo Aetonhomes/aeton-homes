@@ -183,12 +183,10 @@ export default function Index() {
           }}>{c(content, "hero_subtitle")}</p>
 
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap", animation: "fadeInUp 0.9s 0.6s ease both" }}>
-            <a href="#properties"
-              style={{ background: "linear-gradient(135deg,#C9961A,#E8B84B)", color: "#1E0101", padding: "15px 38px", textDecoration: "none", borderRadius: 2, fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", boxShadow: "0 8px 32px rgba(201,150,26,0.35)" }}>
+            <a href="#properties" className="ah-hero-cta-primary">
               {c(content, "hero_btn1")}
             </a>
-            <a href="#contact"
-              style={{ background: "rgba(255,255,255,0.03)", color: "#E8B84B", padding: "15px 38px", border: "1px solid rgba(201,150,26,0.35)", textDecoration: "none", borderRadius: 2, fontSize: "0.78rem", letterSpacing: "0.18em", textTransform: "uppercase", backdropFilter: "blur(10px)" }}>
+            <a href="#contact" className="ah-hero-cta-secondary">
               {c(content, "hero_btn2")}
             </a>
           </div>
@@ -361,9 +359,7 @@ export default function Index() {
             <p style={{...T.sub, marginBottom:36}}>{c(content,"why_subtitle") || "Kenya's most trusted luxury property consultants — combining deep market knowledge with white-glove service."}</p>
             <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
               {[1,2,3,4].map(i => (
-                <div key={i} style={{ display:"flex", gap:16, alignItems:"flex-start", padding:"18px 20px", border:"1px solid rgba(201,150,26,0.08)", borderRadius:4, background:"rgba(255,255,255,0.015)", transition:"border-color 0.3s" }}
-                  onMouseEnter={e=>(e.currentTarget.style.borderColor="rgba(201,150,26,0.22)")}
-                  onMouseLeave={e=>(e.currentTarget.style.borderColor="rgba(201,150,26,0.08)")}>
+                <div key={i} className="ah-why-feat">
                   <div style={{ width:40, height:40, flexShrink:0, background:"rgba(201,150,26,0.07)", border:"1px solid rgba(201,150,26,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1.1rem" }}>
                     {c(content,`why_feat_${i}_icon`) || ["🛡️","🚀","🕐","📊"][i-1]}
                   </div>
@@ -443,7 +439,7 @@ export default function Index() {
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:22 }}>
             {testimonialsList.map((t:any, i:number) => (
-              <div key={t.id||i} className="reveal ah-card" style={{ padding:28, position:"relative" }}>
+              <div key={t.id||i} className="reveal ah-card ah-testi-card" style={{ padding:28, position:"relative" }}>
                 <div style={{ fontSize:"1.8rem", color:"rgba(201,150,26,0.18)", fontFamily:"Georgia,serif", lineHeight:1, marginBottom:6, userSelect:"none" }}>"</div>
                 <div style={{ color:"#C9961A", fontSize:"0.8rem", marginBottom:12, letterSpacing:3 }}>{"★".repeat(t.stars||5)}</div>
                 <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.05rem", fontStyle:"italic", color:"#F0E6CE", lineHeight:1.75, marginBottom:22 }}>{t.quote}</p>
@@ -975,11 +971,9 @@ function PropCard({ p }: { p: any }) {
     <>
       {showModal && <PropertyModal p={p} onClose={()=>setShowModal(false)} />}
 
-      <article className="ah-card" itemScope itemType="https://schema.org/RealEstateListing"
-        style={{ overflow:"hidden", cursor:"pointer", transition:"transform 0.35s,border-color 0.35s,box-shadow 0.35s", display:"flex", flexDirection:"column" }}
-        onClick={()=>setShowModal(true)}
-        onMouseEnter={e=>{ const el=e.currentTarget; el.style.transform="translateY(-6px)"; el.style.borderColor="rgba(201,150,26,0.35)"; el.style.boxShadow="0 28px 64px rgba(0,0,0,0.5)"; }}
-        onMouseLeave={e=>{ const el=e.currentTarget; el.style.transform=""; el.style.borderColor="rgba(201,150,26,0.12)"; el.style.boxShadow=""; }}>
+      <article className="ah-card ah-propcard" itemScope itemType="https://schema.org/RealEstateListing"
+        style={{ overflow:"hidden", cursor:"pointer", display:"flex", flexDirection:"column" }}
+        onClick={()=>setShowModal(true)}>
 
         {/* Image area */}
         <div style={{ position:"relative", aspectRatio:"4/3", overflow:"hidden", background:"#0A0101", userSelect:"none", flexShrink:0 }}
@@ -987,8 +981,8 @@ function PropCard({ p }: { p: any }) {
           onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
           {cur.kind === "image" ? (
-            <img src={cur.url} alt={p.title} itemProp="image"
-              style={{ width:"100%", height:"100%", objectFit:"contain", display:"block", background:"#0A0101" }}
+            <img src={cur.url} alt={p.title} itemProp="image" className="ah-card-img"
+              style={{ display:"block", background:"#0A0101" }}
               onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
           ) : playing ? (
             cur.url.includes(".mp4")
