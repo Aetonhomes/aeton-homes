@@ -41,14 +41,14 @@ const SOCIALS = [
 
 export default function Footer({ content }: { content: Record<string, string> }) {
   return (
-    <footer style={{ background: "#080101", borderTop: "1px solid rgba(201,150,26,0.15)", padding: "60px 5% 30px" }}>
+    <footer style={{ background: "#080101", borderTop: "1px solid rgba(212,164,34,0.15)", padding: "60px 5% 30px" }}>
       <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 50, marginBottom: 48 }}
         className="ah-footer-grid">
         <div>
           <a href="/" style={{ display: "flex", alignItems: "center", marginBottom: 14, textDecoration: "none" }}>
             <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes" style={{ height: 48, objectFit: "contain", borderRadius: 3 }} />
           </a>
-          <p style={{ fontSize: "0.82rem", color: "#C4A97A", lineHeight: 1.8, maxWidth: 260 }}>
+          <p style={{ fontSize: "0.82rem", color: "#E2C99A", lineHeight: 1.8, maxWidth: 260 }}>
             {c(content, "footer_desc")}
           </p>
           {/* Social icons */}
@@ -58,13 +58,13 @@ export default function Footer({ content }: { content: Record<string, string> })
                 title={s.label}
                 style={{
                   width: 36, height: 36, borderRadius: 4,
-                  background: "rgba(201,150,26,0.08)", border: "1px solid rgba(201,150,26,0.2)",
+                  background: "rgba(212,164,34,0.08)", border: "1px solid rgba(212,164,34,0.2)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "#E8B84B", textDecoration: "none",
+                  color: "#F0C355", textDecoration: "none",
                   transition: "background 0.2s, border-color 0.2s, transform 0.2s",
                 }}
-                onMouseEnter={e => { const el = e.currentTarget; el.style.background = "rgba(201,150,26,0.2)"; el.style.borderColor = "rgba(201,150,26,0.5)"; el.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={e => { const el = e.currentTarget; el.style.background = "rgba(201,150,26,0.08)"; el.style.borderColor = "rgba(201,150,26,0.2)"; el.style.transform = ""; }}
+                onMouseEnter={e => { const el = e.currentTarget; el.style.background = "rgba(212,164,34,0.2)"; el.style.borderColor = "rgba(212,164,34,0.5)"; el.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={e => { const el = e.currentTarget; el.style.background = "rgba(212,164,34,0.08)"; el.style.borderColor = "rgba(212,164,34,0.2)"; el.style.transform = ""; }}
               >
                 {s.icon}
               </a>
@@ -77,35 +77,35 @@ export default function Footer({ content }: { content: Record<string, string> })
           { title: "Company", links: ["About Us","Our Team","Careers","Contact"] },
         ].map((col, i) => (
           <div key={i}>
-            <h5 style={{ fontSize: "0.68rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#C9961A", marginBottom: 18 }}>{col.title}</h5>
+            <h5 style={{ fontSize: "0.68rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#D4A422", marginBottom: 18 }}>{col.title}</h5>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 9 }}>
               {col.links.map((l, j) => (
-                <li key={j}><a href="#" style={{ fontSize: "0.82rem", color: "#C4A97A", textDecoration: "none" }}>{l}</a></li>
+                <li key={j}><a href="#" style={{ fontSize: "0.82rem", color: "#E2C99A", textDecoration: "none" }}>{l}</a></li>
               ))}
             </ul>
           </div>
         ))}
       </div>
-      <div style={{ borderTop: "1px solid rgba(201,150,26,0.1)", paddingTop: 22, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, fontSize: "0.72rem", color: "#C4A97A" }}>
+      <div style={{ borderTop: "1px solid rgba(212,164,34,0.1)", paddingTop: 22, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, fontSize: "0.72rem", color: "#E2C99A" }}>
         <span>© {new Date().getFullYear()} Aeton Homes. All rights reserved.</span>
         <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
           {SOCIALS.map(s => (
             <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
-              style={{ color: "#8A6520", textDecoration: "none", fontSize: "0.7rem", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#E8B84B")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#8A6520")}
+              style={{ color: "#B8892A", textDecoration: "none", fontSize: "0.7rem", transition: "color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#F0C355")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#B8892A")}
             >{s.label}</a>
           ))}
-          <span style={{ color: "rgba(201,150,26,0.2)" }}>|</span>
+          <span style={{ color: "rgba(212,164,34,0.2)" }}>|</span>
           <span style={{ color: "#6B4F20", fontSize: "0.68rem" }}>
             Website by{" "}
             <a
               href="https://materiaprimadesignsea.neocities.org/"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "#8A6520", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#E8B84B")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#8A6520")}
+              style={{ color: "#B8892A", textDecoration: "none", transition: "color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#F0C355")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#B8892A")}
             >Materia Prima Designs</a>
           </span>
         </div>

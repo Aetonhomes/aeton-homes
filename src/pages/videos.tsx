@@ -29,22 +29,22 @@ export default function Videos() {
   };
 
   return (
-    <div style={{ background:"#3D0A0A",color:"#FDF8EF",minHeight:"100vh",overflowX:"hidden",width:"100%" }}>
+    <div style={{ background:"#3D0A0A",color:"#FFFFFF",minHeight:"100vh",overflowX:"hidden",width:"100%" }}>
       <Particles />
       <Nav content={content} />
       <section style={{ position:"relative",padding:"160px 5% 60px",textAlign:"center",background:"linear-gradient(to bottom,#1A0404,#3D0A0A)" }}>
-        <p style={{ fontSize:"0.7rem",letterSpacing:"0.3em",textTransform:"uppercase",color:"#C9961A",marginBottom:12 }}>Visual Tours</p>
-        <h1 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,6vw,5rem)",fontWeight:300,color:"#FDF8EF" }}>
-          Property <em style={{ fontStyle:"italic",color:"#E8B84B" }}>Videos</em>
+        <p style={{ fontSize:"0.7rem",letterSpacing:"0.3em",textTransform:"uppercase",color:"#D4A422",marginBottom:12 }}>Visual Tours</p>
+        <h1 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(2.5rem,6vw,5rem)",fontWeight:300,color:"#FFFFFF" }}>
+          Property <em style={{ fontStyle:"italic",color:"#F0C355" }}>Videos</em>
         </h1>
-        <p style={{ fontSize:"0.9rem",color:"#C4A97A",maxWidth:500,margin:"14px auto 0",lineHeight:1.8 }}>
+        <p style={{ fontSize:"0.9rem",color:"#E2C99A",maxWidth:500,margin:"14px auto 0",lineHeight:1.8 }}>
           Explore Nairobi's finest properties through immersive video tours, aerial views, and client stories.
         </p>
       </section>
 
       <div style={{ padding:"0 5% 50px",display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center" }}>
         {CATS.map(c=>(
-          <button key={c} onClick={()=>setCat(c)} style={{ padding:"8px 20px",border:"1px solid",borderColor:cat===c?"#C9961A":"rgba(201,150,26,0.22)",background:cat===c?"linear-gradient(135deg,#C9961A,#E8B84B)":"transparent",color:cat===c?"#3D0A0A":"#C4A97A",cursor:"pointer",fontFamily:"'Jost',sans-serif",fontSize:"0.74rem",letterSpacing:"0.12em",textTransform:"uppercase",borderRadius:2,transition:"all 0.3s" }}>{c}</button>
+          <button key={c} onClick={()=>setCat(c)} style={{ padding:"8px 20px",border:"1px solid",borderColor:cat===c?"#D4A422":"rgba(212,164,34,0.22)",background:cat===c?"linear-gradient(135deg,#D4A422,#F0C355)":"transparent",color:cat===c?"#3D0A0A":"#E2C99A",cursor:"pointer",fontFamily:"'Jost',sans-serif",fontSize:"0.74rem",letterSpacing:"0.12em",textTransform:"uppercase",borderRadius:2,transition:"all 0.3s" }}>{c}</button>
         ))}
       </div>
 
@@ -56,30 +56,30 @@ export default function Videos() {
         ):!videos||videos.length===0?(
           <div style={{ textAlign:"center",padding:"80px 0" }}>
             <div style={{ fontSize:"4rem",marginBottom:20,opacity:0.2 }}>🎬</div>
-            <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.5rem",color:"#C4A97A",fontStyle:"italic" }}>No videos in this category yet.</p>
+            <p style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.5rem",color:"#E2C99A",fontStyle:"italic" }}>No videos in this category yet.</p>
           </div>
         ):(
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:26 }}>
             {videos.map((v:any)=>(
               <div key={v.id} className="ah-card" style={{ overflow:"hidden",cursor:"pointer",transition:"transform 0.3s,border-color 0.3s" }}
-                onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-6px)";el.style.borderColor="rgba(201,150,26,0.4)";}}
-                onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(201,150,26,0.12)";}}>
+                onMouseEnter={e=>{const el=e.currentTarget;el.style.transform="translateY(-6px)";el.style.borderColor="rgba(212,164,34,0.4)";}}
+                onMouseLeave={e=>{const el=e.currentTarget;el.style.transform="";el.style.borderColor="rgba(212,164,34,0.12)";}}>
                 <div onClick={()=>setActive(v)} style={{ position:"relative",aspectRatio:"16/9",background:"#1A0404",overflow:"hidden" }}>
                   {v.thumbnail_url?<img src={v.thumbnail_url} alt={v.title} style={{ width:"100%",height:"100%",objectFit:"cover" }}/>:<div style={{ width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#2A0606,#1A0404)" }}><span style={{ fontSize:"3rem",opacity:0.2 }}>🎬</span></div>}
                   <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.22)" }}>
-                    <div style={{ width:58,height:58,borderRadius:"50%",background:"linear-gradient(135deg,#C9961A,#E8B84B)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 8px 30px rgba(201,150,26,0.35)" }}>
+                    <div style={{ width:58,height:58,borderRadius:"50%",background:"linear-gradient(135deg,#D4A422,#F0C355)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 8px 30px rgba(212,164,34,0.35)" }}>
                       <span style={{ color:"#3D0A0A",fontSize:"1.3rem",marginLeft:4 }}>▶</span>
                     </div>
                   </div>
-                  {v.featured&&<span style={{ position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#C9961A,#E8B84B)",color:"#3D0A0A",padding:"2px 8px",borderRadius:2,fontSize:"0.58rem",fontWeight:600,textTransform:"uppercase" }}>★ Featured</span>}
+                  {v.featured&&<span style={{ position:"absolute",top:10,right:10,background:"linear-gradient(135deg,#D4A422,#F0C355)",color:"#3D0A0A",padding:"2px 8px",borderRadius:2,fontSize:"0.58rem",fontWeight:600,textTransform:"uppercase" }}>★ Featured</span>}
                 </div>
                 <div style={{ padding:"14px 18px" }}>
                   <div style={{ display:"flex",gap:8,marginBottom:8,flexWrap:"wrap",alignItems:"center" }}>
-                    <span style={{ fontSize:"0.6rem",letterSpacing:"0.1em",textTransform:"uppercase",background:"rgba(201,150,26,0.12)",color:"#E8B84B",padding:"2px 8px",borderRadius:2,border:"1px solid rgba(201,150,26,0.18)" }}>{v.category}</span>
-                    {v.location_tag&&<span style={{ fontSize:"0.72rem",color:"#C4A97A" }}>📍 {v.location_tag}</span>}
+                    <span style={{ fontSize:"0.6rem",letterSpacing:"0.1em",textTransform:"uppercase",background:"rgba(212,164,34,0.12)",color:"#F0C355",padding:"2px 8px",borderRadius:2,border:"1px solid rgba(212,164,34,0.18)" }}>{v.category}</span>
+                    {v.location_tag&&<span style={{ fontSize:"0.72rem",color:"#E2C99A" }}>📍 {v.location_tag}</span>}
                   </div>
-                  <div style={{ fontSize:"0.96rem",fontWeight:500,color:"#FDF8EF",marginBottom:4 }}>{v.title}</div>
-                  {v.description&&<div style={{ fontSize:"0.78rem",color:"#C4A97A",lineHeight:1.6,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical" }}>{v.description}</div>}
+                  <div style={{ fontSize:"0.96rem",fontWeight:500,color:"#FFFFFF",marginBottom:4 }}>{v.title}</div>
+                  {v.description&&<div style={{ fontSize:"0.78rem",color:"#E2C99A",lineHeight:1.6,overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical" }}>{v.description}</div>}
                 </div>
               </div>
             ))}
@@ -95,12 +95,12 @@ export default function Videos() {
             </div>
             <div style={{ marginTop:18,display:"flex",justifyContent:"space-between",alignItems:"flex-start" }}>
               <div>
-                <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.5rem",color:"#FDF8EF" }}>{active.title}</h3>
+                <h3 style={{ fontFamily:"'Cormorant Garamond',serif",fontSize:"1.5rem",color:"#FFFFFF" }}>{active.title}</h3>
                 <div style={{ display:"flex",gap:12,marginTop:6 }}>
-                  <span style={{ fontSize:"0.72rem",color:"#E8B84B",letterSpacing:"0.1em",textTransform:"uppercase" }}>{active.category}</span>
-                  {active.location_tag&&<span style={{ fontSize:"0.72rem",color:"#C4A97A" }}>📍 {active.location_tag}</span>}
+                  <span style={{ fontSize:"0.72rem",color:"#F0C355",letterSpacing:"0.1em",textTransform:"uppercase" }}>{active.category}</span>
+                  {active.location_tag&&<span style={{ fontSize:"0.72rem",color:"#E2C99A" }}>📍 {active.location_tag}</span>}
                 </div>
-                {active.description&&<p style={{ fontSize:"0.85rem",color:"#C4A97A",marginTop:8,lineHeight:1.6 }}>{active.description}</p>}
+                {active.description&&<p style={{ fontSize:"0.85rem",color:"#E2C99A",marginTop:8,lineHeight:1.6 }}>{active.description}</p>}
               </div>
               <button onClick={()=>setActive(null)} className="ah-btn-outline" style={{ padding:"8px 16px",whiteSpace:"nowrap" }}>✕ Close</button>
             </div>

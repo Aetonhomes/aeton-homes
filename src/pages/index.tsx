@@ -10,16 +10,16 @@ import { c, DEFAULTS } from "../lib/defaults";
 const T = {
   eyebrow: {
     fontSize: "0.65rem", letterSpacing: "0.28em", textTransform: "uppercase" as const,
-    color: "#C9961A", marginBottom: 14, display: "block",
+    color: "#D4A422", marginBottom: 14, display: "block",
   } as React.CSSProperties,
   h2: {
     fontFamily: "'Cormorant Garamond', serif",
     fontSize: "clamp(2rem,4vw,3rem)", fontWeight: 300, lineHeight: 1.15,
-    color: "#FDF8EF", marginBottom: 16,
+    color: "#FFFFFF", marginBottom: 16,
   } as React.CSSProperties,
-  em: { fontStyle: "italic", color: "#E8B84B" } as React.CSSProperties,
+  em: { fontStyle: "italic", color: "#F0C355" } as React.CSSProperties,
   sub: {
-    fontSize: "0.88rem", color: "#C4A97A", lineHeight: 1.8,
+    fontSize: "0.88rem", color: "#D4B890", lineHeight: 1.8,
     maxWidth: 560, marginBottom: 0,
   } as React.CSSProperties,
 };
@@ -129,7 +129,7 @@ export default function Index() {
   })();
 
   return (
-    <div style={{ background: "#0E0101", color: "#FDF8EF", minHeight: "100vh", overflowX: "hidden" }}>
+    <div style={{ background: "#0E0101", color: "#FFFFFF", minHeight: "100vh", overflowX: "hidden" }}>
       <Particles />
       <Nav content={content} />
 
@@ -149,19 +149,19 @@ export default function Index() {
         }} />
         <div style={{
           position: "absolute", inset: 0, zIndex: 1,
-          backgroundImage: "linear-gradient(rgba(201,150,26,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,150,26,0.04) 1px,transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(212,164,34,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,164,34,0.04) 1px,transparent 1px)",
           backgroundSize: "80px 80px", animation: "gridShift 24s linear infinite",
         }} />
 
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 5%", maxWidth: 960 }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(201,150,26,0.1)", border: "1px solid rgba(201,150,26,0.28)",
+            background: "rgba(212,164,34,0.1)", border: "1px solid rgba(212,164,34,0.28)",
             padding: "6px 20px", borderRadius: 50, fontSize: "0.65rem",
-            letterSpacing: "0.24em", textTransform: "uppercase", color: "#E8B84B",
+            letterSpacing: "0.24em", textTransform: "uppercase", color: "#F0C355",
             marginBottom: 32, animation: "fadeInDown 0.8s ease forwards",
           }}>
-            <span style={{ width: 5, height: 5, background: "#C9961A", borderRadius: "50%", animation: "pulse 2s infinite" }} />
+            <span style={{ width: 5, height: 5, background: "#D4A422", borderRadius: "50%", animation: "pulse 2s infinite" }} />
             {c(content, "hero_badge")}
           </div>
 
@@ -169,15 +169,15 @@ export default function Index() {
           <h1 style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: "clamp(2.8rem, 7.5vw, 6rem)", fontWeight: 300, lineHeight: 1.08,
-            color: "#FDF8EF", animation: "fadeInUp 0.9s 0.2s ease both", letterSpacing: "-0.01em",
+            color: "#FFFFFF", animation: "fadeInUp 0.9s 0.2s ease both", letterSpacing: "-0.01em",
           }}>
             {c(content, "hero_title")}<br />
-            <em style={{ fontStyle: "italic", color: "#E8B84B" }}>{c(content, "hero_title_em")}</em><br />
+            <em style={{ fontStyle: "italic", color: "#F0C355" }}>{c(content, "hero_title_em")}</em><br />
             {c(content, "hero_title_end")}
           </h1>
 
           <p style={{
-            fontSize: "clamp(0.82rem,1.4vw,0.95rem)", color: "#C4A97A",
+            fontSize: "clamp(0.82rem,1.4vw,0.95rem)", color: "#E2C99A",
             letterSpacing: "0.22em", textTransform: "uppercase", margin: "24px 0 44px",
             animation: "fadeInUp 0.9s 0.4s ease both",
           }}>{c(content, "hero_subtitle")}</p>
@@ -194,8 +194,8 @@ export default function Index() {
           {/* Trust badges */}
           <div style={{ display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap", marginTop: 52, animation: "fadeInUp 0.9s 0.8s ease both" }}>
             {["Verified Listings","Bank-Ready Titles","Nairobi's Top Agents"].map((badge, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "0.7rem", color: "#8A6520", letterSpacing: "0.1em" }}>
-                <span style={{ color: "#C9961A", fontSize: "0.75rem" }}>✓</span> {badge}
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "0.7rem", color: "#B8892A", letterSpacing: "0.1em" }}>
+                <span style={{ color: "#D4A422", fontSize: "0.75rem" }}>✓</span> {badge}
               </div>
             ))}
           </div>
@@ -203,10 +203,10 @@ export default function Index() {
 
         {/* Stats */}
         <div ref={statsRef} style={{ position: "absolute", bottom: 56, left: 0, right: 0, zIndex: 2, display: "flex", justifyContent: "center", gap: 0, flexWrap: "wrap", padding: "0 5%", maxWidth: "100%" }}>
-          <div className="ah-stats-bar" style={{ display: "flex", gap: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(16px)", border: "1px solid rgba(201,150,26,0.14)", borderRadius: 4, overflow: "hidden", width: "100%" }}>
+          <div className="ah-stats-bar" style={{ display: "flex", gap: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(16px)", border: "1px solid rgba(212,164,34,0.14)", borderRadius: 4, overflow: "hidden", width: "100%" }}>
             {[1,2,3,4].map((i, idx) => (
-              <div key={i} className="ah-stat-item" style={{ flex: 1, padding: "18px 24px", textAlign: "center", borderRight: idx < 3 ? "1px solid rgba(201,150,26,0.1)" : "none", minWidth: 0 }}>
-                <div data-stat={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(1.4rem, 4vw, 2.2rem)", fontWeight: 600, color: "#E8B84B", lineHeight: 1 }}>
+              <div key={i} className="ah-stat-item" style={{ flex: 1, padding: "18px 24px", textAlign: "center", borderRight: idx < 3 ? "1px solid rgba(212,164,34,0.1)" : "none", minWidth: 0 }}>
+                <div data-stat={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(1.4rem, 4vw, 2.2rem)", fontWeight: 600, color: "#F0C355", lineHeight: 1 }}>
                   {c(content, `stat_${i}_num`)}
                 </div>
                 <div style={{ fontSize: "clamp(0.5rem, 1.5vw, 0.62rem)", letterSpacing: "0.12em", textTransform: "uppercase", color: "#6B4F20", marginTop: 5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -227,11 +227,11 @@ export default function Index() {
           SEARCH — find property for sale rent Nairobi
       ══════════════════════════════════════════════ */}
       <div className="reveal" style={{ position: "relative", zIndex: 10, marginTop: -2, padding: "0 5%" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", background: "rgba(8,0,0,0.97)", border: "1px solid rgba(201,150,26,0.2)", borderRadius: 4, padding: "30px 36px", backdropFilter: "blur(24px)", boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", background: "rgba(8,0,0,0.97)", border: "1px solid rgba(212,164,34,0.2)", borderRadius: 4, padding: "30px 36px", backdropFilter: "blur(24px)", boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}>
           <p style={{ fontSize: "0.62rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", marginBottom: 18 }}>Find Your Property</p>
-          <div style={{ display: "flex", marginBottom: 22, borderBottom: "1px solid rgba(201,150,26,0.12)", gap: 4 }}>
+          <div style={{ display: "flex", marginBottom: 22, borderBottom: "1px solid rgba(212,164,34,0.12)", gap: 4 }}>
             {["Buy","Rent","Commercial","Land"].map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 20px", cursor: "pointer", background: tab===t ? "rgba(201,150,26,0.1)" : "none", fontSize: "0.72rem", letterSpacing: "0.14em", textTransform: "uppercase", border: "none", fontFamily: "'Jost',sans-serif", borderBottom: `2px solid ${tab===t?"#C9961A":"transparent"}`, color: tab===t?"#E8B84B":"#6B4F20", marginBottom: -1, transition: "all 0.25s", borderRadius: "2px 2px 0 0" }}>{t}</button>
+              <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 20px", cursor: "pointer", background: tab===t ? "rgba(212,164,34,0.1)" : "none", fontSize: "0.72rem", letterSpacing: "0.14em", textTransform: "uppercase", border: "none", fontFamily: "'Jost',sans-serif", borderBottom: `2px solid ${tab===t?"#D4A422":"transparent"}`, color: tab===t?"#F0C355":"#6B4F20", marginBottom: -1, transition: "all 0.25s", borderRadius: "2px 2px 0 0" }}>{t}</button>
             ))}
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
@@ -264,11 +264,11 @@ export default function Index() {
       {/* ══════════════════════════════════════════════
           MARQUEE
       ══════════════════════════════════════════════ */}
-      <div style={{ overflow: "hidden", borderTop: "1px solid rgba(201,150,26,0.08)", borderBottom: "1px solid rgba(201,150,26,0.08)", background: "rgba(0,0,0,0.3)", marginTop: 48 }}>
+      <div style={{ overflow: "hidden", borderTop: "1px solid rgba(212,164,34,0.08)", borderBottom: "1px solid rgba(212,164,34,0.08)", background: "rgba(0,0,0,0.3)", marginTop: 48 }}>
         <div className="marquee-track" style={{ display: "flex", width: "max-content", padding: "18px 0" }}>
           {[...Array(2)].flatMap(() => marqueeItems).map((item: string, i: number) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 40px", fontSize: "0.68rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", whiteSpace: "nowrap" }}>
-              <span style={{ width: 4, height: 4, background: "#C9961A", borderRadius: "50%", opacity: 0.7 }} />
+              <span style={{ width: 4, height: 4, background: "#D4A422", borderRadius: "50%", opacity: 0.7 }} />
               {item}
             </div>
           ))}
@@ -296,13 +296,13 @@ export default function Index() {
             <PropCard key={p.id} p={p} />
           ))}
           {properties.length === 0 && (
-            <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"80px 0", color:"#C4A97A" }}>
+            <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"80px 0", color:"#E2C99A" }}>
               <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.6rem", fontStyle:"italic", opacity:0.35, marginBottom:12 }}>
                 {(propertiesRaw && propertiesRaw.length > 0) ? "No properties match your filters" : "Premium listings coming soon"}
               </div>
-              <p style={{ fontSize:"0.8rem", color:"#6B4F20" }}>
+              <p style={{ fontSize:"0.8rem", color:"#B8892A" }}>
                 {(propertiesRaw && propertiesRaw.length > 0)
-                  ? <button onClick={() => { setFilterLocation("All Locations"); setFilterType("All Types"); setFilterBeds("Any"); setFilterBudget("Any"); }} style={{ background:"none", border:"1px solid rgba(201,150,26,0.3)", color:"#C9961A", padding:"8px 20px", borderRadius:2, cursor:"pointer", fontSize:"0.78rem", fontFamily:"'Jost',sans-serif" }}>Clear Filters</button>
+                  ? <button onClick={() => { setFilterLocation("All Locations"); setFilterType("All Types"); setFilterBeds("Any"); setFilterBudget("Any"); }} style={{ background:"none", border:"1px solid rgba(212,164,34,0.3)", color:"#D4A422", padding:"8px 20px", borderRadius:2, cursor:"pointer", fontSize:"0.78rem", fontFamily:"'Jost',sans-serif" }}>Clear Filters</button>
                   : "Check back shortly or contact us directly for available properties."
                 }
               </p>
@@ -328,21 +328,21 @@ export default function Index() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1200, margin: "0 auto" }} className="ah-two-col">
           {/* Visual */}
           <div className="reveal" style={{ position: "relative" }}>
-            <div style={{ aspectRatio: "4/5", maxHeight: 560, background: "linear-gradient(135deg,#1A0303,#2E0808)", border: "1px solid rgba(201,150,26,0.15)", borderRadius: 4, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ aspectRatio: "4/5", maxHeight: 560, background: "linear-gradient(135deg,#1A0303,#2E0808)", border: "1px solid rgba(212,164,34,0.15)", borderRadius: 4, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, padding: 20 }}>
                 {["🏠","💎","📍","🤝","AH","📊","🔑","⭐","🌟"].map((icon,i) => (
                   <div key={i} style={{
-                    width:72, height:72, background: icon==="AH" ? "linear-gradient(135deg,rgba(201,150,26,0.45),rgba(201,150,26,0.2))" : "linear-gradient(135deg,rgba(201,150,26,0.1),rgba(201,150,26,0.03))",
+                    width:72, height:72, background: icon==="AH" ? "linear-gradient(135deg,rgba(212,164,34,0.45),rgba(212,164,34,0.2))" : "linear-gradient(135deg,rgba(212,164,34,0.1),rgba(212,164,34,0.03))",
                     clipPath: "polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)",
                     display:"flex", alignItems:"center", justifyContent:"center",
-                    fontSize: icon==="AH"?"0.95rem":"1.35rem", color: icon==="AH"?"#1A0101":"#E8B84B",
+                    fontSize: icon==="AH"?"0.95rem":"1.35rem", color: icon==="AH"?"#0E0101":"#F0C355",
                     fontFamily: icon==="AH"?"'Cormorant Garamond',serif":undefined, fontWeight: icon==="AH"?700:undefined,
                     animation:`hexPulse 3s ease-in-out ${i*0.3}s infinite`,
                   }}>{icon}</div>
                 ))}
               </div>
               {/* Float card */}
-              <div style={{ position:"absolute", bottom:28, right:-20, background:"linear-gradient(135deg,#C9961A,#E8B84B)", color:"#1A0101", padding:"20px 24px", borderRadius:4, boxShadow:"0 24px 60px rgba(0,0,0,0.5)", animation:"floatBadge 4s ease-in-out infinite" }}>
+              <div style={{ position:"absolute", bottom:28, right:-20, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"20px 24px", borderRadius:4, boxShadow:"0 24px 60px rgba(0,0,0,0.5)", animation:"floatBadge 4s ease-in-out infinite" }}>
                 <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.4rem", fontWeight:700, lineHeight:1 }}>{c(content,"why_badge_num")}</div>
                 <div style={{ fontSize:"0.6rem", letterSpacing:"0.14em", textTransform:"uppercase", marginTop:4 }}>{c(content,"why_badge_label")}</div>
               </div>
@@ -360,12 +360,12 @@ export default function Index() {
             <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
               {[1,2,3,4].map(i => (
                 <div key={i} className="ah-why-feat">
-                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(201,150,26,0.07)", border:"1px solid rgba(201,150,26,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1.1rem" }}>
+                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(212,164,34,0.07)", border:"1px solid rgba(212,164,34,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1.1rem" }}>
                     {c(content,`why_feat_${i}_icon`) || ["🛡️","🚀","🕐","📊"][i-1]}
                   </div>
                   <div>
-                    <div style={{ fontSize:"0.88rem", fontWeight:500, color:"#FDF8EF", marginBottom:4 }}>{c(content,`why_feat_${i}_title`)}</div>
-                    <div style={{ fontSize:"0.8rem", color:"#C4A97A", lineHeight:1.7 }}>{c(content,`why_feat_${i}_desc`)}</div>
+                    <div style={{ fontSize:"0.88rem", fontWeight:500, color:"#FFFFFF", marginBottom:4 }}>{c(content,`why_feat_${i}_title`)}</div>
+                    <div style={{ fontSize:"0.8rem", color:"#E2C99A", lineHeight:1.7 }}>{c(content,`why_feat_${i}_desc`)}</div>
                   </div>
                 </div>
               ))}
@@ -411,14 +411,14 @@ export default function Index() {
 
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:0, position:"relative", maxWidth:1100, margin:"0 auto" }} className="ah-process-grid">
           {/* Connector line */}
-          <div style={{ position:"absolute", top:38, left:"12.5%", right:"12.5%", height:1, background:"linear-gradient(to right,rgba(201,150,26,0.2),rgba(201,150,26,0.5),rgba(201,150,26,0.2))", zIndex:0 }} className="ah-process-line" />
+          <div style={{ position:"absolute", top:38, left:"12.5%", right:"12.5%", height:1, background:"linear-gradient(to right,rgba(212,164,34,0.2),rgba(212,164,34,0.5),rgba(212,164,34,0.2))", zIndex:0 }} className="ah-process-line" />
           {[1,2,3,4].map(i => (
             <div key={i} style={{ padding:"0 24px", textAlign:"center", position:"relative", zIndex:1 }}>
-              <div style={{ width:76, height:76, margin:"0 auto 24px", background:"linear-gradient(135deg,rgba(201,150,26,0.1),rgba(201,150,26,0.04))", border:"1px solid rgba(201,150,26,0.3)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 0 0 6px rgba(201,150,26,0.04)" }}>
-                <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.9rem", fontWeight:600, color:"#E8B84B" }}>{i}</span>
+              <div style={{ width:76, height:76, margin:"0 auto 24px", background:"linear-gradient(135deg,rgba(212,164,34,0.1),rgba(212,164,34,0.04))", border:"1px solid rgba(212,164,34,0.3)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 0 0 6px rgba(212,164,34,0.04)" }}>
+                <span style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.9rem", fontWeight:600, color:"#F0C355" }}>{i}</span>
               </div>
-              <div style={{ fontSize:"0.9rem", fontWeight:500, color:"#FDF8EF", marginBottom:10 }}>{c(content,`process_step_${i}_title`)}</div>
-              <div style={{ fontSize:"0.78rem", color:"#8A6520", lineHeight:1.75 }}>{c(content,`process_step_${i}_desc`)}</div>
+              <div style={{ fontSize:"0.9rem", fontWeight:500, color:"#FFFFFF", marginBottom:10 }}>{c(content,`process_step_${i}_title`)}</div>
+              <div style={{ fontSize:"0.78rem", color:"#B8892A", lineHeight:1.75 }}>{c(content,`process_step_${i}_desc`)}</div>
             </div>
           ))}
         </div>
@@ -440,17 +440,17 @@ export default function Index() {
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:22 }}>
             {testimonialsList.map((t:any, i:number) => (
               <div key={t.id||i} className="reveal ah-card ah-testi-card" style={{ padding:28, position:"relative" }}>
-                <div style={{ fontSize:"1.8rem", color:"rgba(201,150,26,0.18)", fontFamily:"Georgia,serif", lineHeight:1, marginBottom:6, userSelect:"none" }}>"</div>
-                <div style={{ color:"#C9961A", fontSize:"0.8rem", marginBottom:12, letterSpacing:3 }}>{"★".repeat(t.stars||5)}</div>
+                <div style={{ fontSize:"1.8rem", color:"rgba(212,164,34,0.18)", fontFamily:"Georgia,serif", lineHeight:1, marginBottom:6, userSelect:"none" }}>"</div>
+                <div style={{ color:"#D4A422", fontSize:"0.8rem", marginBottom:12, letterSpacing:3 }}>{"★".repeat(t.stars||5)}</div>
                 <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.05rem", fontStyle:"italic", color:"#F0E6CE", lineHeight:1.75, marginBottom:22 }}>{t.quote}</p>
-                <div style={{ display:"flex", alignItems:"center", gap:12, borderTop:"1px solid rgba(201,150,26,0.08)", paddingTop:18 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, borderTop:"1px solid rgba(212,164,34,0.08)", paddingTop:18 }}>
                   {t.avatar_url
                     ? <img src={t.avatar_url} alt={t.name} style={{ width:40, height:40, borderRadius:"50%", objectFit:"cover" }} />
-                    : <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg,#6B4510,#C9961A)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"#0E0101", fontWeight:700 }}>{t.name[0]}</div>
+                    : <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg,#6B4510,#D4A422)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"#0E0101", fontWeight:700 }}>{t.name[0]}</div>
                   }
                   <div>
-                    <div style={{ fontSize:"0.83rem", fontWeight:500, color:"#FDF8EF" }}>{t.name}</div>
-                    <div style={{ fontSize:"0.7rem", color:"#6B4F20", marginTop:2 }}>{t.role}</div>
+                    <div style={{ fontSize:"0.83rem", fontWeight:500, color:"#FFFFFF" }}>{t.name}</div>
+                    <div style={{ fontSize:"0.7rem", color:"#B8892A", marginTop:2 }}>{t.role}</div>
                   </div>
                 </div>
               </div>
@@ -501,10 +501,10 @@ export default function Index() {
                     : <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"3.5rem", opacity:0.1 }}>👤</div>
                   }
                 </div>
-                <div style={{ padding:22, borderTop:"1px solid rgba(201,150,26,0.08)" }}>
-                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", fontWeight:600, color:"#FDF8EF", marginBottom:3 }}>{m.name}</div>
-                  <div style={{ fontSize:"0.65rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:12 }}>{m.role}</div>
-                  <div style={{ fontSize:"0.8rem", color:"#C4A97A", lineHeight:1.75 }}>{m.bio}</div>
+                <div style={{ padding:22, borderTop:"1px solid rgba(212,164,34,0.08)" }}>
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", fontWeight:600, color:"#FFFFFF", marginBottom:3 }}>{m.name}</div>
+                  <div style={{ fontSize:"0.65rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#D4A422", marginBottom:12 }}>{m.role}</div>
+                  <div style={{ fontSize:"0.8rem", color:"#E2C99A", lineHeight:1.75 }}>{m.bio}</div>
                 </div>
               </div>
             ))}
@@ -512,25 +512,25 @@ export default function Index() {
         ) : (
           /* CEO placeholder — stacks vertically on mobile, no hidden columns */
           <div className="reveal ah-ceo-grid" style={{ display:"grid", gridTemplateColumns:"240px 1fr", gap:44, alignItems:"start", maxWidth:860 }}>
-            <div style={{ borderRadius:4, overflow:"hidden", border:"1px solid rgba(201,150,26,0.18)", boxShadow:"0 24px 60px rgba(0,0,0,0.5)" }}>
+            <div style={{ borderRadius:4, overflow:"hidden", border:"1px solid rgba(212,164,34,0.18)", boxShadow:"0 24px 60px rgba(0,0,0,0.5)" }}>
               <div style={{ aspectRatio:"3/4", background:"linear-gradient(160deg,#2A0606,#140202)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:16 }}>
-                <div style={{ width:80, height:80, borderRadius:"50%", background:"rgba(201,150,26,0.12)", border:"1.5px solid rgba(201,150,26,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2rem" }}>👤</div>
-                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"rgba(201,150,26,0.4)", fontStyle:"italic" }}>Aeton Homes</div>
+                <div style={{ width:80, height:80, borderRadius:"50%", background:"rgba(212,164,34,0.12)", border:"1.5px solid rgba(212,164,34,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"2rem" }}>👤</div>
+                <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"rgba(212,164,34,0.4)", fontStyle:"italic" }}>Aeton Homes</div>
               </div>
             </div>
             <div style={{ paddingTop:4 }}>
-              <div style={{ display:"inline-block", background:"rgba(201,150,26,0.08)", border:"1px solid rgba(201,150,26,0.2)", padding:"4px 14px", borderRadius:2, fontSize:"0.6rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:18 }}>Leadership</div>
-              <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.8rem,4vw,2.4rem)", fontWeight:300, color:"#FDF8EF", marginBottom:6, lineHeight:1.15 }}>Our Chief Executive</h3>
-              <p style={{ fontSize:"0.65rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#C9961A", marginBottom:24, paddingBottom:20, borderBottom:"1px solid rgba(201,150,26,0.08)" }}>Founder & CEO — Aeton Homes Kenya</p>
-              <p style={{ fontSize:"0.87rem", color:"#C4A97A", lineHeight:1.9, marginBottom:18 }}>
+              <div style={{ display:"inline-block", background:"rgba(212,164,34,0.08)", border:"1px solid rgba(212,164,34,0.2)", padding:"4px 14px", borderRadius:2, fontSize:"0.6rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#D4A422", marginBottom:18 }}>Leadership</div>
+              <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.8rem,4vw,2.4rem)", fontWeight:300, color:"#FFFFFF", marginBottom:6, lineHeight:1.15 }}>Our Chief Executive</h3>
+              <p style={{ fontSize:"0.65rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#D4A422", marginBottom:24, paddingBottom:20, borderBottom:"1px solid rgba(212,164,34,0.08)" }}>Founder & CEO — Aeton Homes Kenya</p>
+              <p style={{ fontSize:"0.87rem", color:"#E2C99A", lineHeight:1.9, marginBottom:18 }}>
                 With over 12 years of experience in Kenya's luxury real estate market, our CEO founded Aeton Homes with a singular vision: to make premium property accessible, transparent, and rewarding for every client across Nairobi and beyond.
               </p>
-              <blockquote style={{ fontSize:"0.87rem", color:"#C4A97A", lineHeight:1.9, fontStyle:"italic", borderLeft:"2px solid rgba(201,150,26,0.35)", paddingLeft:18, marginBottom:24 }}>
+              <blockquote style={{ fontSize:"0.87rem", color:"#E2C99A", lineHeight:1.9, fontStyle:"italic", borderLeft:"2px solid rgba(212,164,34,0.35)", paddingLeft:18, marginBottom:24 }}>
                 "Every property transaction is a life decision. We treat it with the gravity it deserves."
               </blockquote>
               <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
                 {["12+ Years Experience","50+ Luxury Sales","200+ Families Served","Top Agent — Nairobi"].map((badge,i) => (
-                  <div key={i} style={{ background:"rgba(201,150,26,0.06)", border:"1px solid rgba(201,150,26,0.15)", padding:"6px 13px", borderRadius:2, fontSize:"0.67rem", color:"#8A6520" }}>{badge}</div>
+                  <div key={i} style={{ background:"rgba(212,164,34,0.06)", border:"1px solid rgba(212,164,34,0.15)", padding:"6px 13px", borderRadius:2, fontSize:"0.67rem", color:"#B8892A" }}>{badge}</div>
                 ))}
               </div>
             </div>
@@ -562,24 +562,24 @@ export default function Index() {
                 { icon:"📍", label:"Office", key:"contact_address" },
               ].map((item,i) => (
                 <div key={i} style={{ display:"flex", gap:14, alignItems:"flex-start" }}>
-                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(201,150,26,0.06)", border:"1px solid rgba(201,150,26,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1rem" }}>{item.icon}</div>
+                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(212,164,34,0.06)", border:"1px solid rgba(212,164,34,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1rem" }}>{item.icon}</div>
                   <div>
                     <div className="ah-label" style={{ marginBottom:3 }}>{item.label}</div>
-                    <div style={{ fontSize:"0.9rem", color:"#FDF8EF" }}>{c(content,item.key)}</div>
+                    <div style={{ fontSize:"0.9rem", color:"#FFFFFF" }}>{c(content,item.key)}</div>
                   </div>
                 </div>
               ))}
             </div>
 
             <a href="#contact"
-              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"linear-gradient(135deg,#C9961A,#E8B84B)", color:"#1A0101", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase" }}>
+              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase" }}>
               Send Us a Message →
             </a>
 
             {/* SEO-friendly area text */}
-            <div style={{ marginTop:40, padding:"20px 22px", background:"rgba(201,150,26,0.04)", border:"1px solid rgba(201,150,26,0.1)", borderRadius:4 }}>
-              <p style={{ fontSize:"0.75rem", color:"#6B4F20", lineHeight:1.8 }}>
-                Aeton Homes serves clients across <strong style={{color:"#8A6520"}}>Westlands, Karen, Kilimani, Lavington, Runda, Muthaiga</strong> and all of Nairobi. We specialise in <strong style={{color:"#8A6520"}}>luxury apartments, villas, townhouses, commercial property</strong> and prime land — for sale and rent in Kenya.
+            <div style={{ marginTop:40, padding:"20px 22px", background:"rgba(212,164,34,0.04)", border:"1px solid rgba(212,164,34,0.1)", borderRadius:4 }}>
+              <p style={{ fontSize:"0.75rem", color:"#B8892A", lineHeight:1.8 }}>
+                Aeton Homes serves clients across <strong style={{color:"#B8892A"}}>Westlands, Karen, Kilimani, Lavington, Runda, Muthaiga</strong> and all of Nairobi. We specialise in <strong style={{color:"#B8892A"}}>luxury apartments, villas, townhouses, commercial property</strong> and prime land — for sale and rent in Kenya.
               </p>
             </div>
           </div>
@@ -701,10 +701,10 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
 
   return (
     <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:9000, background:"rgba(0,0,0,0.92)", backdropFilter:"blur(8px)", overflowY:"auto", padding:"8px", display:"flex", alignItems:"flex-start", justifyContent:"center" }}>
-      <div onClick={e=>e.stopPropagation()} style={{ width:"100%", maxWidth:980, background:"#100101", border:"1px solid rgba(201,150,26,0.18)", borderRadius:6, overflow:"hidden", position:"relative", marginTop:16, marginBottom:32, animation:"fadeInUp 0.28s ease", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ width:"100%", maxWidth:980, background:"#100101", border:"1px solid rgba(212,164,34,0.18)", borderRadius:6, overflow:"hidden", position:"relative", marginTop:16, marginBottom:32, animation:"fadeInUp 0.28s ease", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
 
         {/* Close */}
-        <button onClick={onClose} title="Close" style={{ position:"absolute", top:10, right:10, zIndex:10, width:34, height:34, borderRadius:"50%", background:"rgba(0,0,0,0.7)", border:"1px solid rgba(201,150,26,0.2)", color:"#E8B84B", fontSize:"1.1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
+        <button onClick={onClose} title="Close" style={{ position:"absolute", top:10, right:10, zIndex:10, width:34, height:34, borderRadius:"50%", background:"rgba(0,0,0,0.7)", border:"1px solid rgba(212,164,34,0.2)", color:"#F0C355", fontSize:"1.1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>×</button>
 
         <div className="ah-modal-grid" style={{ display:"grid", gridTemplateColumns:"1fr 360px" }}>
 
@@ -724,22 +724,22 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                   : <div style={{ position:"relative", aspectRatio:"16/9", width:"100%" }}><iframe src={cur.embedUrl} style={{ position:"absolute", inset:0, width:"100%", height:"100%", border:"none" }} allow="autoplay; fullscreen" allowFullScreen /></div>
               ) : (
                 <div style={{ width:"100%", aspectRatio:"16/9", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", position:"relative" }} onClick={()=>setPlaying(true)}>
-                  <div style={{ width:60, height:60, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 32px rgba(0,0,0,0.7)" }}>
-                    <span style={{ color:"#1A0101", fontSize:"1.4rem", marginLeft:5 }}>▶</span>
+                  <div style={{ width:60, height:60, borderRadius:"50%", background:"linear-gradient(135deg,#D4A422,#F0C355)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 8px 32px rgba(0,0,0,0.7)" }}>
+                    <span style={{ color:"#0E0101", fontSize:"1.4rem", marginLeft:5 }}>▶</span>
                   </div>
                   <span style={{ position:"absolute", bottom:14, left:"50%", transform:"translateX(-50%)", fontSize:"0.65rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.12em", textTransform:"uppercase", whiteSpace:"nowrap" }}>🎬 Property Video</span>
                 </div>
               )}
 
               {total > 1 && !playing && (<>
-                <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#E8B84B",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
-                <button onClick={e=>go(1,e)} style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#E8B84B",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
-                <div style={{ position:"absolute",top:10,right:50,background:"rgba(0,0,0,0.7)",color:"#E8B84B",fontSize:"0.65rem",padding:"3px 10px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
+                <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#F0C355",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+                <button onClick={e=>go(1,e)} style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.65)",border:"none",color:"#F0C355",width:34,height:34,borderRadius:"50%",cursor:"pointer",fontSize:"1.1rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+                <div style={{ position:"absolute",top:10,right:50,background:"rgba(0,0,0,0.7)",color:"#F0C355",fontSize:"0.65rem",padding:"3px 10px",borderRadius:10,zIndex:2,display:"flex",alignItems:"center",gap:4 }}>
                   {cur.kind==="video"&&<span>🎬</span>}{idx+1}/{total}
                 </div>
               </>)}
 
-              <span style={{ position:"absolute",top:12,left:12,background:p.type==="sale"?"#C9961A":"rgba(201,150,26,0.15)",color:p.type==="sale"?"#1A0101":"#E8B84B",border:p.type==="rent"?"1px solid rgba(201,150,26,0.4)":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2 }}>
+              <span style={{ position:"absolute",top:12,left:12,background:p.type==="sale"?"#D4A422":"rgba(212,164,34,0.15)",color:p.type==="sale"?"#0E0101":"#F0C355",border:p.type==="rent"?"1px solid rgba(212,164,34,0.4)":"none",padding:"4px 12px",borderRadius:2,fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2 }}>
                 {p.type==="sale"?"For Sale":"For Rent"}
               </span>
             </div>
@@ -748,7 +748,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
             {total > 1 && (
               <div style={{ display:"flex", gap:5, padding:"8px 10px", overflowX:"auto", background:"rgba(0,0,0,0.5)", scrollbarWidth:"none" }}>
                 {media.map((m,i) => (
-                  <div key={i} onClick={()=>{setIdx(i);setPlaying(false);}} style={{ flexShrink:0, width:64, height:44, borderRadius:3, overflow:"hidden", cursor:"pointer", border: i===idx ? "2px solid #C9961A" : "2px solid rgba(255,255,255,0.05)", opacity: i===idx ? 1 : 0.5, transition:"all 0.2s", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <div key={i} onClick={()=>{setIdx(i);setPlaying(false);}} style={{ flexShrink:0, width:64, height:44, borderRadius:3, overflow:"hidden", cursor:"pointer", border: i===idx ? "2px solid #D4A422" : "2px solid rgba(255,255,255,0.05)", opacity: i===idx ? 1 : 0.5, transition:"all 0.2s", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center" }}>
                     {m.kind==="image"
                       ? <img src={m.url} style={{ width:"100%", height:"100%", objectFit:"contain", background:"#0A0101" }} onError={e=>{(e.target as HTMLImageElement).style.display="none";}} />
                       : <span style={{ fontSize:"1rem" }}>🎬</span>
@@ -762,47 +762,47 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
             <div style={{ padding:"20px 22px 24px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:10, marginBottom:12, flexWrap:"wrap" }}>
                 <div style={{ flex:1, minWidth:0 }}>
-                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,3vw,1.9rem)", fontWeight:400, color:"#FDF8EF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h2>
-                  {p.subtitle && <p style={{ fontSize:"0.82rem", color:"#C4A97A", fontStyle:"italic", marginBottom:4 }}>{p.subtitle}</p>}
-                  <div style={{ fontSize:"0.75rem", color:"#6B4F20" }}>📍 {p.location}</div>
+                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,3vw,1.9rem)", fontWeight:400, color:"#FFFFFF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h2>
+                  {p.subtitle && <p style={{ fontSize:"0.82rem", color:"#E2C99A", fontStyle:"italic", marginBottom:4 }}>{p.subtitle}</p>}
+                  <div style={{ fontSize:"0.75rem", color:"#B8892A" }}>📍 {p.location}</div>
                 </div>
                 <div style={{ textAlign:"right", flexShrink:0 }}>
-                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,2.5vw,1.8rem)", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{p.price}</div>
-                  {p.price_suffix && <div style={{ fontSize:"0.72rem", color:"#8A6520", marginTop:2 }}>{p.price_suffix}</div>}
+                  <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,2.5vw,1.8rem)", fontWeight:600, color:"#F0C355", lineHeight:1 }}>{p.price}</div>
+                  {p.price_suffix && <div style={{ fontSize:"0.72rem", color:"#B8892A", marginTop:2 }}>{p.price_suffix}</div>}
                 </div>
               </div>
 
               {specs.length > 0 && (
-                <div style={{ display:"flex", gap:0, marginBottom:16, background:"rgba(201,150,26,0.04)", border:"1px solid rgba(201,150,26,0.1)", borderRadius:3 }}>
+                <div style={{ display:"flex", gap:0, marginBottom:16, background:"rgba(212,164,34,0.04)", border:"1px solid rgba(212,164,34,0.1)", borderRadius:3 }}>
                   {specs.map((s,i) => (
-                    <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(201,150,26,0.1)" : "none", padding:"10px 6px" }}>
+                    <div key={i} style={{ flex:1, textAlign:"center", borderRight: i<specs.length-1 ? "1px solid rgba(212,164,34,0.1)" : "none", padding:"10px 6px" }}>
                       <div style={{ fontSize:"1.1rem", marginBottom:2 }}>{s.icon}</div>
-                      <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", fontWeight:600, color:"#E8B84B", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
-                      <div style={{ fontSize:"0.56rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#6B4F20", marginTop:2 }}>{s.label}</div>
+                      <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", fontWeight:600, color:"#F0C355", lineHeight:1 }}>{s.val}{s.suffix||""}</div>
+                      <div style={{ fontSize:"0.56rem", letterSpacing:"0.14em", textTransform:"uppercase", color:"#B8892A", marginTop:2 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
               )}
 
               {p.description && (
-                <div style={{ padding:"14px 16px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(201,150,26,0.08)", borderRadius:3 }}>
-                  <div style={{ fontSize:"0.56rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#C9961A", marginBottom:8 }}>About This Property</div>
-                  <p style={{ fontSize:"0.83rem", color:"#C4A97A", lineHeight:1.85, whiteSpace:"pre-wrap", margin:0 }}>{p.description}</p>
+                <div style={{ padding:"14px 16px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(212,164,34,0.08)", borderRadius:3 }}>
+                  <div style={{ fontSize:"0.56rem", letterSpacing:"0.22em", textTransform:"uppercase", color:"#D4A422", marginBottom:8 }}>About This Property</div>
+                  <p style={{ fontSize:"0.83rem", color:"#E2C99A", lineHeight:1.85, whiteSpace:"pre-wrap", margin:0 }}>{p.description}</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* ─── RIGHT: Tabbed forms ─── */}
-          <div style={{ borderLeft:"1px solid rgba(201,150,26,0.08)", display:"flex", flexDirection:"column", background:"rgba(0,0,0,0.25)" }}>
+          <div style={{ borderLeft:"1px solid rgba(212,164,34,0.08)", display:"flex", flexDirection:"column", background:"rgba(0,0,0,0.25)" }}>
 
             {/* Tabs */}
-            <div style={{ display:"flex", borderBottom:"1px solid rgba(201,150,26,0.12)" }}>
+            <div style={{ display:"flex", borderBottom:"1px solid rgba(212,164,34,0.12)" }}>
               {([["booking","📅 Book Viewing"],["enquiry","📩 Enquire"]] as const).map(([id, label]) => (
                 <button key={id} onClick={()=>setRightTab(id)} style={{
-                  flex:1, padding:"14px 8px", background: rightTab===id ? "rgba(201,150,26,0.1)" : "transparent",
-                  border:"none", borderBottom: rightTab===id ? "2px solid #C9961A" : "2px solid transparent",
-                  color: rightTab===id ? "#E8B84B" : "#6B4F20", cursor:"pointer",
+                  flex:1, padding:"14px 8px", background: rightTab===id ? "rgba(212,164,34,0.1)" : "transparent",
+                  border:"none", borderBottom: rightTab===id ? "2px solid #D4A422" : "2px solid transparent",
+                  color: rightTab===id ? "#F0C355" : "#6B4F20", cursor:"pointer",
                   fontFamily:"'Jost',sans-serif", fontSize:"0.72rem", letterSpacing:"0.1em",
                   textTransform:"uppercase", transition:"all 0.2s",
                 }}>
@@ -818,17 +818,17 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                 bStatus === "success" ? (
                   <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, textAlign:"center", padding:"40px 0" }}>
                     <div style={{ fontSize:"2.5rem" }}>📅</div>
-                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Viewing requested!</p>
-                    <p style={{ fontSize:"0.78rem", color:"#8A6520", lineHeight:1.6 }}>We'll confirm via {bForm.preferred_contact} within hours.</p>
+                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#F0C355" }}>Viewing requested!</p>
+                    <p style={{ fontSize:"0.78rem", color:"#B8892A", lineHeight:1.6 }}>We'll confirm via {bForm.preferred_contact} within hours.</p>
                   </div>
                 ) : (
                   <form onSubmit={submitBooking} style={{ display:"flex", flexDirection:"column", gap:12 }}>
                     <div>
-                      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"#FDF8EF", marginBottom:4 }}>
+                      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"#FFFFFF", marginBottom:4 }}>
                         Book a Viewing
                       </p>
-                      <p style={{ fontSize:"0.72rem", color:"#6B4F20", lineHeight:1.6, marginBottom:4 }}>
-                        <strong style={{color:"#8A6520"}}>{p.title}</strong> — we'll confirm a time that works.
+                      <p style={{ fontSize:"0.72rem", color:"#B8892A", lineHeight:1.6, marginBottom:4 }}>
+                        <strong style={{color:"#B8892A"}}>{p.title}</strong> — we'll confirm a time that works.
                       </p>
                     </div>
                     <div>
@@ -852,7 +852,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                       <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginTop:2 }}>
                         {contactOpts.map(opt=>(
                           <button key={opt.v} type="button" onClick={()=>setBForm({...bForm,preferred_contact:opt.v})}
-                            style={{ display:"flex", alignItems:"center", gap:5, padding:"7px 11px", borderRadius:2, border:`1px solid ${bForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:bForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:bForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+                            style={{ display:"flex", alignItems:"center", gap:5, padding:"7px 11px", borderRadius:2, border:`1px solid ${bForm.preferred_contact===opt.v?"#D4A422":"rgba(212,164,34,0.2)"}`, background:bForm.preferred_contact===opt.v?"rgba(212,164,34,0.15)":"rgba(255,255,255,0.02)", color:bForm.preferred_contact===opt.v?"#F0C355":"#B8892A", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
                             {opt.icon}{opt.label}
                           </button>
                         ))}
@@ -867,7 +867,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                       {bStatus==="loading" ? "Sending…" : "Request Viewing"}
                     </button>
                     <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
-                      We'll confirm via <strong style={{color:"#6B4F20"}}>{contactOpts.find(o=>o.v===bForm.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
+                      We'll confirm via <strong style={{color:"#B8892A"}}>{contactOpts.find(o=>o.v===bForm.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
                     </p>
                   </form>
                 )
@@ -878,14 +878,14 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                 eStatus === "success" ? (
                   <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12, textAlign:"center", padding:"40px 0" }}>
                     <div style={{ fontSize:"2.5rem" }}>✅</div>
-                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Enquiry sent!</p>
-                    <p style={{ fontSize:"0.78rem", color:"#8A6520" }}>We'll be in touch via {eForm.preferred_contact} shortly.</p>
+                    <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#F0C355" }}>Enquiry sent!</p>
+                    <p style={{ fontSize:"0.78rem", color:"#B8892A" }}>We'll be in touch via {eForm.preferred_contact} shortly.</p>
                   </div>
                 ) : (
                   <form onSubmit={submitEnquiry} style={{ display:"flex", flexDirection:"column", gap:12 }}>
                     <div>
-                      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"#FDF8EF", marginBottom:4 }}>General Enquiry</p>
-                      <p style={{ fontSize:"0.72rem", color:"#6B4F20", lineHeight:1.6, marginBottom:4 }}>Questions about pricing, availability, or this property.</p>
+                      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.1rem", color:"#FFFFFF", marginBottom:4 }}>General Enquiry</p>
+                      <p style={{ fontSize:"0.72rem", color:"#B8892A", lineHeight:1.6, marginBottom:4 }}>Questions about pricing, availability, or this property.</p>
                     </div>
                     <div>
                       <label className="ah-label">Full Name *</label>
@@ -904,7 +904,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                       <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginTop:2 }}>
                         {contactOpts.map(opt=>(
                           <button key={opt.v} type="button" onClick={()=>setEForm({...eForm,preferred_contact:opt.v})}
-                            style={{ display:"flex", alignItems:"center", gap:5, padding:"7px 11px", borderRadius:2, border:`1px solid ${eForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:eForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:eForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+                            style={{ display:"flex", alignItems:"center", gap:5, padding:"7px 11px", borderRadius:2, border:`1px solid ${eForm.preferred_contact===opt.v?"#D4A422":"rgba(212,164,34,0.2)"}`, background:eForm.preferred_contact===opt.v?"rgba(212,164,34,0.15)":"rgba(255,255,255,0.02)", color:eForm.preferred_contact===opt.v?"#F0C355":"#B8892A", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
                             {opt.icon}{opt.label}
                           </button>
                         ))}
@@ -919,7 +919,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                       {eStatus==="loading" ? "Sending…" : "Send Enquiry"}
                     </button>
                     <p style={{ fontSize:"0.65rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
-                      We'll reach you via <strong style={{color:"#6B4F20"}}>{contactOpts.find(o=>o.v===eForm.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
+                      We'll reach you via <strong style={{color:"#B8892A"}}>{contactOpts.find(o=>o.v===eForm.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
                     </p>
                   </form>
                 )
@@ -934,7 +934,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
         .ah-modal-main-img { width:100%; height:auto; display:block; }
         @media(max-width:700px){
           .ah-modal-grid{grid-template-columns:1fr!important;}
-          .ah-modal-grid > div:last-child { border-left: none !important; border-top: 1px solid rgba(201,150,26,0.12) !important; }
+          .ah-modal-grid > div:last-child { border-left: none !important; border-top: 1px solid rgba(212,164,34,0.12) !important; }
           .ah-modal-img-wrap img.ah-modal-main-img { max-height:none !important; height:auto !important; }
         }
       `}</style>
@@ -991,32 +991,32 @@ function PropCard({ p }: { p: any }) {
           ) : (
             <div style={{ width:"100%", height:"100%", background:"#0A0101", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}
               onClick={e=>{ e.stopPropagation(); setPlaying(true); }}>
-              <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.6)" }}>
-                <span style={{ color:"#1A0101", fontSize:"1.2rem", marginLeft:4 }}>▶</span>
+              <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#D4A422,#F0C355)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 20px rgba(0,0,0,0.6)" }}>
+                <span style={{ color:"#0E0101", fontSize:"1.2rem", marginLeft:4 }}>▶</span>
               </div>
               <span style={{ position:"absolute", bottom:10, left:"50%", transform:"translateX(-50%)", fontSize:"0.62rem", color:"rgba(255,255,255,0.45)", letterSpacing:"0.1em", textTransform:"uppercase", whiteSpace:"nowrap" }}>🎬 Tour Video</span>
             </div>
           )}
 
           {total > 1 && !playing && (<>
-            <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"none",color:"#E8B84B",width:26,height:26,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
-            <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"none",color:"#E8B84B",width:26,height:26,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
+            <button onClick={e=>go(-1,e)} style={{ position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"none",color:"#F0C355",width:26,height:26,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>‹</button>
+            <button onClick={e=>go(1,e)} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"rgba(0,0,0,0.6)",border:"none",color:"#F0C355",width:26,height:26,borderRadius:"50%",cursor:"pointer",fontSize:"0.85rem",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2 }}>›</button>
             <div style={{ position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"center",gap:5,zIndex:2 }}>
               {media.map((_,i) => (
                 <button key={i} onClick={e=>{ e.stopPropagation(); setPlaying(false); setIdx(i); }}
-                  style={{ width:i===idx?14:5, height:5, borderRadius:3, background:i===idx?"#E8B84B":"rgba(255,255,255,0.3)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
+                  style={{ width:i===idx?14:5, height:5, borderRadius:3, background:i===idx?"#F0C355":"rgba(255,255,255,0.3)", border:"none", cursor:"pointer", padding:0, transition:"all 0.25s" }}/>
               ))}
             </div>
           </>)}
 
           {/* Status badge */}
-          <span style={{ position:"absolute",top:12,left:12,background:p.type==="sale"?"#C9961A":"rgba(10,1,1,0.8)",color:p.type==="sale"?"#1A0101":"#E8B84B",border:p.type==="rent"?"1px solid rgba(201,150,26,0.4)":"none",padding:"4px 11px",borderRadius:2,fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2,backdropFilter:"blur(4px)" }}>
+          <span style={{ position:"absolute",top:12,left:12,background:p.type==="sale"?"#D4A422":"rgba(10,1,1,0.8)",color:p.type==="sale"?"#0E0101":"#F0C355",border:p.type==="rent"?"1px solid rgba(212,164,34,0.4)":"none",padding:"4px 11px",borderRadius:2,fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",zIndex:2,backdropFilter:"blur(4px)" }}>
             {p.type==="sale"?"For Sale":"For Rent"}
           </span>
 
           {/* Image count */}
           {total > 1 && (
-            <span style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,0.65)",color:"#E8B84B",fontSize:"0.6rem",padding:"3px 8px",borderRadius:10,zIndex:2 }}>
+            <span style={{ position:"absolute",top:12,right:12,background:"rgba(0,0,0,0.65)",color:"#F0C355",fontSize:"0.6rem",padding:"3px 8px",borderRadius:10,zIndex:2 }}>
               {total} {cur.kind==="video"?"🎬":"📷"}
             </span>
           )}
@@ -1025,34 +1025,34 @@ function PropCard({ p }: { p: any }) {
         {/* Card body */}
         <div style={{ padding:"18px 20px 20px", display:"flex", flexDirection:"column", flex:1 }}>
           {/* Price */}
-          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.55rem", fontWeight:600, color:"#E8B84B", lineHeight:1, marginBottom:6 }} itemProp="price">
+          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.55rem", fontWeight:600, color:"#F0C355", lineHeight:1, marginBottom:6 }} itemProp="price">
             {p.price}
-            {p.price_suffix && <span style={{ fontSize:"0.72rem", fontFamily:"'Jost',sans-serif", fontWeight:300, color:"#8A6520", marginLeft:4 }}>{p.price_suffix}</span>}
+            {p.price_suffix && <span style={{ fontSize:"0.72rem", fontFamily:"'Jost',sans-serif", fontWeight:300, color:"#B8892A", marginLeft:4 }}>{p.price_suffix}</span>}
           </div>
 
           {/* Title */}
-          <div style={{ fontSize:"0.95rem", fontWeight:500, color:"#FDF8EF", marginBottom:4, lineHeight:1.3 }} itemProp="name">{p.title}</div>
+          <div style={{ fontSize:"0.95rem", fontWeight:500, color:"#FFFFFF", marginBottom:4, lineHeight:1.3 }} itemProp="name">{p.title}</div>
 
           {/* Location */}
-          <div style={{ fontSize:"0.75rem", color:"#6B4F20", marginBottom:12, display:"flex", alignItems:"center", gap:4 }}>
+          <div style={{ fontSize:"0.75rem", color:"#B8892A", marginBottom:12, display:"flex", alignItems:"center", gap:4 }}>
             <span>📍</span><span itemProp="address">{p.location}</span>
           </div>
 
           {/* Description preview — always visible */}
           {descPreview && (
-            <p style={{ fontSize:"0.78rem", color:"#8A6520", lineHeight:1.7, marginBottom:14, flexGrow:1 }}>{descPreview}</p>
+            <p style={{ fontSize:"0.78rem", color:"#B8892A", lineHeight:1.7, marginBottom:14, flexGrow:1 }}>{descPreview}</p>
           )}
 
           {/* Divider */}
-          <div style={{ borderTop:"1px solid rgba(201,150,26,0.08)", paddingTop:14, marginTop: descPreview ? 0 : "auto", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <div style={{ borderTop:"1px solid rgba(212,164,34,0.08)", paddingTop:14, marginTop: descPreview ? 0 : "auto", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
             <div style={{ display:"flex", gap:14, flexWrap:"wrap" }}>
               {specs.map((f,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"center", gap:4, fontSize:"0.72rem", color:"#8A6520" }}>
+                <div key={i} style={{ display:"flex", alignItems:"center", gap:4, fontSize:"0.72rem", color:"#B8892A" }}>
                   <span>{f.i}</span>{f.v}{f.suffix}
                 </div>
               ))}
             </div>
-            <span style={{ fontSize:"0.65rem", color:"#C9961A", letterSpacing:"0.12em", textTransform:"uppercase", flexShrink:0, marginLeft:8 }}>Details →</span>
+            <span style={{ fontSize:"0.65rem", color:"#D4A422", letterSpacing:"0.12em", textTransform:"uppercase", flexShrink:0, marginLeft:8 }}>Details →</span>
           </div>
         </div>
       </article>
@@ -1083,16 +1083,16 @@ function VideoCard({ video }: { video: any }) {
             : <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#1A0303,#0A0101)" }}><span style={{ fontSize:"2.5rem", opacity:0.15 }}>🎬</span></div>
           }
           <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.3)" }}>
-            <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#C9961A,#E8B84B)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 24px rgba(0,0,0,0.5)" }}>
-              <span style={{ color:"#1A0101", fontSize:"1.1rem", marginLeft:3 }}>▶</span>
+            <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#D4A422,#F0C355)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 6px 24px rgba(0,0,0,0.5)" }}>
+              <span style={{ color:"#0E0101", fontSize:"1.1rem", marginLeft:3 }}>▶</span>
             </div>
           </div>
         </>)}
       </div>
       <div style={{ padding:"14px 18px" }}>
-        {video.category && <span style={{ fontSize:"0.58rem", letterSpacing:"0.12em", textTransform:"uppercase", background:"rgba(201,150,26,0.1)", color:"#E8B84B", padding:"2px 8px", borderRadius:2 }}>{video.category}</span>}
-        <div style={{ fontSize:"0.93rem", fontWeight:500, color:"#FDF8EF", marginTop:8, marginBottom:2 }}>{video.title}</div>
-        {video.location_tag && <div style={{ fontSize:"0.73rem", color:"#6B4F20" }}>📍 {video.location_tag}</div>}
+        {video.category && <span style={{ fontSize:"0.58rem", letterSpacing:"0.12em", textTransform:"uppercase", background:"rgba(212,164,34,0.1)", color:"#F0C355", padding:"2px 8px", borderRadius:2 }}>{video.category}</span>}
+        <div style={{ fontSize:"0.93rem", fontWeight:500, color:"#FFFFFF", marginTop:8, marginBottom:2 }}>{video.title}</div>
+        {video.location_tag && <div style={{ fontSize:"0.73rem", color:"#B8892A" }}>📍 {video.location_tag}</div>}
       </div>
     </div>
   );
@@ -1104,16 +1104,16 @@ function VideoCard({ video }: { video: any }) {
 function PublicReviewsList() {
   const { data: reviews } = useApi<any[]>("/api/reviews");
   if (!reviews || reviews.length === 0)
-    return <div style={{ color:"#6B4F20", fontSize:"0.82rem", paddingTop:20 }}>No reviews yet — be the first!</div>;
+    return <div style={{ color:"#B8892A", fontSize:"0.82rem", paddingTop:20 }}>No reviews yet — be the first!</div>;
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:18 }}>
       {reviews.slice(0,6).map((r:any,i:number) => (
-        <div key={r.id||i} style={{ padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(201,150,26,0.08)", borderRadius:4 }}>
-          <div style={{ color:"#C9961A", fontSize:"0.78rem", marginBottom:8, letterSpacing:2 }}>{"★".repeat(r.rating||5)}<span style={{color:"rgba(201,150,26,0.25)"}}>{"★".repeat(5-(r.rating||5))}</span></div>
-          <p style={{ fontSize:"0.84rem", color:"#C4A97A", lineHeight:1.75, marginBottom:12, fontStyle:"italic" }}>"{r.review}"</p>
+        <div key={r.id||i} style={{ padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(212,164,34,0.08)", borderRadius:4 }}>
+          <div style={{ color:"#D4A422", fontSize:"0.78rem", marginBottom:8, letterSpacing:2 }}>{"★".repeat(r.rating||5)}<span style={{color:"rgba(212,164,34,0.25)"}}>{"★".repeat(5-(r.rating||5))}</span></div>
+          <p style={{ fontSize:"0.84rem", color:"#E2C99A", lineHeight:1.75, marginBottom:12, fontStyle:"italic" }}>"{r.review}"</p>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-            <span style={{ fontSize:"0.78rem", fontWeight:500, color:"#FDF8EF" }}>{r.name}</span>
-            {r.property_ref && <span style={{ fontSize:"0.65rem", color:"#6B4F20" }}>📍 {r.property_ref}</span>}
+            <span style={{ fontSize:"0.78rem", fontWeight:500, color:"#FFFFFF" }}>{r.name}</span>
+            {r.property_ref && <span style={{ fontSize:"0.65rem", color:"#B8892A" }}>📍 {r.property_ref}</span>}
           </div>
         </div>
       ))}
@@ -1135,12 +1135,12 @@ function PublicReviewForm() {
   if (status === "success") return (
     <div style={{ padding:"40px 0", textAlign:"center" }}>
       <div style={{ fontSize:"2rem", marginBottom:12 }}>🙏</div>
-      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#E8B84B" }}>Thank you for your review!</p>
+      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.2rem", color:"#F0C355" }}>Thank you for your review!</p>
     </div>
   );
   return (
     <form onSubmit={submit} style={{ display:"flex", flexDirection:"column", gap:14 }}>
-      <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#FDF8EF", marginBottom:4 }}>Leave a Review</h3>
+      <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#FFFFFF", marginBottom:4 }}>Leave a Review</h3>
       <div>
         <label className="ah-label">Your Name *</label>
         <input required value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="ah-input" placeholder="Your name" />
@@ -1150,7 +1150,7 @@ function PublicReviewForm() {
         <div style={{ display:"flex", gap:6 }}>
           {[1,2,3,4,5].map(n => (
             <button key={n} type="button" onClick={()=>setForm({...form,rating:n})}
-              style={{ background:"none", border:"none", cursor:"pointer", fontSize:"1.3rem", color:n<=form.rating?"#C9961A":"rgba(201,150,26,0.2)", padding:0, transition:"color 0.2s" }}>★</button>
+              style={{ background:"none", border:"none", cursor:"pointer", fontSize:"1.3rem", color:n<=form.rating?"#D4A422":"rgba(212,164,34,0.2)", padding:0, transition:"color 0.2s" }}>★</button>
           ))}
         </div>
       </div>
@@ -1188,8 +1188,8 @@ function ContactForm() {
   if (status === "success") return (
     <div style={{ padding:"60px 0", textAlign:"center" }}>
       <div style={{ fontSize:"2.5rem", marginBottom:16 }}>✅</div>
-      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#E8B84B", marginBottom:8 }}>Message received!</p>
-      <p style={{ fontSize:"0.82rem", color:"#8A6520" }}>Our team will be in touch via {form.preferred_contact} very soon.</p>
+      <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.4rem", color:"#F0C355", marginBottom:8 }}>Message received!</p>
+      <p style={{ fontSize:"0.82rem", color:"#B8892A" }}>Our team will be in touch via {form.preferred_contact} very soon.</p>
     </div>
   );
 
@@ -1234,7 +1234,7 @@ function ContactForm() {
         <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:2 }}>
           {contactOpts.map(opt => (
             <button key={opt.v} type="button" onClick={()=>setForm({...form,preferred_contact:opt.v})}
-              style={{ display:"flex", alignItems:"center", gap:6, padding:"9px 14px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:form.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.76rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+              style={{ display:"flex", alignItems:"center", gap:6, padding:"9px 14px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#D4A422":"rgba(212,164,34,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(212,164,34,0.15)":"rgba(255,255,255,0.02)", color:form.preferred_contact===opt.v?"#F0C355":"#B8892A", fontSize:"0.76rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
               {opt.icon}{opt.label}
             </button>
           ))}
@@ -1250,7 +1250,7 @@ function ContactForm() {
         {status==="loading"?"Sending…":"Send Message"}
       </button>
       <p style={{ fontSize:"0.68rem", color:"#4A2E10", textAlign:"center", lineHeight:1.5 }}>
-        We'll contact you via <strong style={{color:"#6B4F20"}}>{contactOpts.find(o=>o.v===form.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
+        We'll contact you via <strong style={{color:"#B8892A"}}>{contactOpts.find(o=>o.v===form.preferred_contact)?.label}</strong> · Mon–Sat 8am–7pm
       </p>
     </form>
   );
