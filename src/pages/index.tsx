@@ -328,24 +328,8 @@ export default function Index() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1200, margin: "0 auto" }} className="ah-two-col">
           {/* Visual */}
           <div className="reveal" style={{ position: "relative" }}>
-            <div style={{ aspectRatio: "4/5", maxHeight: 560, background: "linear-gradient(135deg,#1A0303,#2E0808)", border: "1px solid rgba(212,164,34,0.15)", borderRadius: 4, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, padding: 20 }}>
-                {[0,1,2,3,"logo",4,5,6,7].map((item,i) => (
-                  <div key={i} style={{
-                    width:72, height:72,
-                    background: item==="logo" ? "linear-gradient(135deg,rgba(212,164,34,0.45),rgba(212,164,34,0.2))" : "linear-gradient(135deg,rgba(212,164,34,0.08),rgba(212,164,34,0.02))",
-                    clipPath: "polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)",
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    animation:`hexPulse 3s ease-in-out ${i*0.3}s infinite`,
-                    overflow:"hidden",
-                  }}>
-                    {item==="logo"
-                      ? <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes" style={{ width:"70%", height:"70%", objectFit:"contain" }} />
-                      : null
-                    }
-                  </div>
-                ))}
-              </div>
+            <div style={{ aspectRatio: "4/5", maxHeight: 560, border: "1px solid rgba(212,164,34,0.2)", borderRadius: 4, overflow: "hidden", position: "relative" }}>
+              <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
               {/* Float card */}
               <div style={{ position:"absolute", bottom:28, right:-20, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"20px 24px", borderRadius:4, boxShadow:"0 24px 60px rgba(0,0,0,0.5)", animation:"floatBadge 4s ease-in-out infinite" }}>
                 <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.4rem", fontWeight:700, lineHeight:1 }}>{c(content,"why_badge_num")}</div>
