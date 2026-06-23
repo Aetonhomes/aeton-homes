@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import WhatsAppButton from "../components/WhatsAppButton";
 import Particles from "../components/Particles";
 import { useContent, useApi } from "../lib/useContent";
 import { c, DEFAULTS } from "../lib/defaults";
@@ -25,13 +26,64 @@ const T = {
 
 export default function Index() {
   const { content, loading } = useContent();
-  const { data: properties } = useApi<any[]>("/api/properties");
+  const { data: propertiesRaw } = useApi<any[]>("/api/properties");
   const { data: testimonialsList } = useApi<any[]>("/api/testimonials");
   const { data: teamList } = useApi<any[]>("/api/team");
   const { data: featuredVideos } = useApi<any[]>("/api/videos");
   const statsRef = useRef<HTMLDivElement>(null);
   const [statsAnimated, setStatsAnimated] = useState(false);
   const [tab, setTab] = useState("Buy");
+
+  // ── Search / filter state ──────────────────────────────
+  const [filterLocation, setFilterLocation] = useState("All Locations");
+  const [filterType, setFilterType] = useState("All Types");
+  const [filterBeds, setFilterBeds] = useState("Any");
+  const [filterBudget, setFilterBudget] = useState("Any");
+
+  // Derive filtered list from raw API data
+  const properties = (propertiesRaw ?? []).filter((p: any) => {
+    // Location
+    if (filterLocation !== "All Locations") {
+      const loc = (p.location || "").toLowerCase();
+      if (!loc.includes(filterLocation.toLowerCase())) return false;
+    }
+    // Type (sale/rent/commercial/land)
+    if (filterType !== "All Types") {
+      const t = filterType.toLowerCase();
+      const pType = (p.type || "").toLowerCase();
+      const pCategory = (p.category || p.property_type || "").toLowerCase();
+      const combo = pType + " " + pCategory;
+      if (t === "apartment" && !combo.includes("apartment")) return false;
+      if (t === "villa" && !combo.includes("villa")) return false;
+      if (t === "townhouse" && !combo.includes("townhouse")) return false;
+      if (t === "bungalow" && !combo.includes("bungalow")) return false;
+      if (t === "penthouse" && !combo.includes("penthouse")) return false;
+      if (t === "office" && !combo.includes("office") && !combo.includes("commercial")) return false;
+      if (t === "land" && !combo.includes("land")) return false;
+    }
+    // Bedrooms
+    if (filterBeds !== "Any") {
+      const beds = Number(p.beds) || 0;
+      if (filterBeds === "Studio" && beds !== 0) return false;
+      if (filterBeds === "1 Bed" && beds !== 1) return false;
+      if (filterBeds === "2 Beds" && beds !== 2) return false;
+      if (filterBeds === "3 Beds" && beds !== 3) return false;
+      if (filterBeds === "4 Beds" && beds !== 4) return false;
+      if (filterBeds === "5+ Beds" && beds < 5) return false;
+    }
+    // Budget — parse price string (KES 5,000,000 → 5000000)
+    if (filterBudget !== "Any") {
+      const raw = (p.price || "").replace(/[^0-9]/g, "");
+      const price = parseInt(raw, 10) || 0;
+      if (filterBudget === "Up to 5M"   && price > 5_000_000) return false;
+      if (filterBudget === "5M–15M"     && (price < 5_000_000  || price > 15_000_000)) return false;
+      if (filterBudget === "15M–30M"    && (price < 15_000_000 || price > 30_000_000)) return false;
+      if (filterBudget === "30M–60M"    && (price < 30_000_000 || price > 60_000_000)) return false;
+      if (filterBudget === "60M–100M"   && (price < 60_000_000 || price > 100_000_000)) return false;
+      if (filterBudget === "100M+"      && price < 100_000_000) return false;
+    }
+    return true;
+  });
 
   useEffect(() => {
     const _API = import.meta.env.VITE_API_URL || "";
@@ -186,19 +238,25 @@ export default function Index() {
           </div>
           <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
             {[
-              {label:"Location",opts:["All Locations","Westlands","Karen","Kilimani","Lavington","Runda","Muthaiga","Kileleshwa","Spring Valley"]},
-              {label:"Property Type",opts:["All Types","Apartment","Villa","Townhouse","Bungalow","Penthouse","Office","Land"]},
-              {label:"Bedrooms",opts:["Any","Studio","1 Bed","2 Beds","3 Beds","4 Beds","5+ Beds"]},
-              {label:"Budget (KES)",opts:["Any","Up to 5M","5M–15M","15M–30M","30M–60M","60M–100M","100M+"]},
+              {label:"Location", opts:["All Locations","Westlands","Karen","Kilimani","Lavington","Runda","Muthaiga","Kileleshwa","Spring Valley"], val:filterLocation, set:setFilterLocation},
+              {label:"Property Type", opts:["All Types","Apartment","Villa","Townhouse","Bungalow","Penthouse","Office","Land"], val:filterType, set:setFilterType},
+              {label:"Bedrooms", opts:["Any","Studio","1 Bed","2 Beds","3 Beds","4 Beds","5+ Beds"], val:filterBeds, set:setFilterBeds},
+              {label:"Budget (KES)", opts:["Any","Up to 5M","5M–15M","15M–30M","30M–60M","60M–100M","100M+"], val:filterBudget, set:setFilterBudget},
             ].map((f,i) => (
               <div key={i} style={{ flex: 1, minWidth: 140 }}>
                 <label className="ah-label">{f.label}</label>
-                <select className="ah-input" style={{ appearance: "none", cursor: "pointer" }}>
+                <select
+                  className="ah-input"
+                  style={{ appearance: "none", cursor: "pointer" }}
+                  value={f.val}
+                  onChange={e => { f.set(e.target.value); document.getElementById("properties")?.scrollIntoView({behavior:"smooth"}); }}
+                >
                   {f.opts.map(o => <option key={o} style={{background:"#0E0101"}}>{o}</option>)}
                 </select>
               </div>
             ))}
-            <button className="ah-btn-gold" style={{ padding: "11px 32px", whiteSpace: "nowrap", flexShrink: 0 }}>
+            <button className="ah-btn-gold" style={{ padding: "11px 32px", whiteSpace: "nowrap", flexShrink: 0 }}
+              onClick={() => document.getElementById("properties")?.scrollIntoView({behavior:"smooth"})}>
               Search Properties
             </button>
           </div>
@@ -239,10 +297,17 @@ export default function Index() {
           {(properties && properties.length > 0 ? properties : []).map((p: any) => (
             <PropCard key={p.id} p={p} />
           ))}
-          {(!properties || properties.length === 0) && (
+          {properties.length === 0 && (
             <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"80px 0", color:"#C4A97A" }}>
-              <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.6rem", fontStyle:"italic", opacity:0.35, marginBottom:12 }}>Premium listings coming soon</div>
-              <p style={{ fontSize:"0.8rem", color:"#6B4F20" }}>Check back shortly or contact us directly for available properties.</p>
+              <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.6rem", fontStyle:"italic", opacity:0.35, marginBottom:12 }}>
+                {(propertiesRaw && propertiesRaw.length > 0) ? "No properties match your filters" : "Premium listings coming soon"}
+              </div>
+              <p style={{ fontSize:"0.8rem", color:"#6B4F20" }}>
+                {(propertiesRaw && propertiesRaw.length > 0)
+                  ? <button onClick={() => { setFilterLocation("All Locations"); setFilterType("All Types"); setFilterBeds("Any"); setFilterBudget("Any"); }} style={{ background:"none", border:"1px solid rgba(201,150,26,0.3)", color:"#C9961A", padding:"8px 20px", borderRadius:2, cursor:"pointer", fontSize:"0.78rem", fontFamily:"'Jost',sans-serif" }}>Clear Filters</button>
+                  : "Check back shortly or contact us directly for available properties."
+                }
+              </p>
             </div>
           )}
         </div>
@@ -525,6 +590,7 @@ export default function Index() {
         </div>
       </section>
 
+      <WhatsAppButton />
       <Footer content={content} />
 
       <style>{`

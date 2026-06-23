@@ -344,3 +344,42 @@ img { max-width: 100%; height: auto; }
 
   .ah-main-content > div { padding: 12px 10px !important; }
 }
+
+/* ── Modal image — cap height on mobile ── */
+@media (max-width: 700px) {
+  .ah-modal-main-img {
+    max-height: 60vw !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  .ah-modal-img-wrap {
+    max-height: 62vw;
+    overflow: hidden;
+  }
+}
+
+/* ── Footer — full single col on small phones ── */
+@media (max-width: 480px) {
+  .ah-footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 36px !important;
+  }
+}
+
+/* ── PropCard hover lift ── */
+.ah-propcard {
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s, border-color 0.28s !important;
+}
+.ah-propcard:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,150,26,0.25) !important;
+  border-color: rgba(201,150,26,0.28) !important;
+}
+
+/* ── WhatsApp pulse ── */
+@keyframes waPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37,211,102,0.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+}
+.ah-wa-btn { animation: waPulse 2s ease-in-out infinite !important; }
