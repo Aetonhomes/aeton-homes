@@ -205,13 +205,13 @@ export default function Index() {
 
         {/* Stats */}
         <div ref={statsRef} style={{ position: "absolute", bottom: 56, left: 0, right: 0, zIndex: 2, display: "flex", justifyContent: "center", gap: 0, flexWrap: "wrap", padding: "0 5%", maxWidth: "100%" }}>
-          <div style={{ display: "flex", gap: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(16px)", border: "1px solid rgba(201,150,26,0.14)", borderRadius: 4, overflow: "hidden" }}>
+          <div className="ah-stats-bar" style={{ display: "flex", gap: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(16px)", border: "1px solid rgba(201,150,26,0.14)", borderRadius: 4, overflow: "hidden", width: "100%" }}>
             {[1,2,3,4].map((i, idx) => (
-              <div key={i} style={{ padding: "18px 36px", textAlign: "center", borderRight: idx < 3 ? "1px solid rgba(201,150,26,0.1)" : "none" }}>
-                <div data-stat={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.2rem", fontWeight: 600, color: "#E8B84B", lineHeight: 1 }}>
+              <div key={i} className="ah-stat-item" style={{ flex: 1, padding: "18px 24px", textAlign: "center", borderRight: idx < 3 ? "1px solid rgba(201,150,26,0.1)" : "none", minWidth: 0 }}>
+                <div data-stat={i} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(1.4rem, 4vw, 2.2rem)", fontWeight: 600, color: "#E8B84B", lineHeight: 1 }}>
                   {c(content, `stat_${i}_num`)}
                 </div>
-                <div style={{ fontSize: "0.62rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#6B4F20", marginTop: 5 }}>
+                <div style={{ fontSize: "clamp(0.5rem, 1.5vw, 0.62rem)", letterSpacing: "0.12em", textTransform: "uppercase", color: "#6B4F20", marginTop: 5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {c(content, `stat_${i}_label`)}
                 </div>
               </div>
@@ -696,8 +696,11 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
   ].filter(s => s.val && Number(s.val) > 0);
 
   const contactOpts = [
-    {v:"call",label:"📞 Call"},{v:"whatsapp",label:"💬 WhatsApp"},
-    {v:"sms",label:"✉️ SMS"},{v:"telegram",label:"✈️ Telegram"},{v:"email",label:"📧 Email"},
+    {v:"call",label:"Phone Call",icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>},
+    {v:"whatsapp",label:"WhatsApp",icon:<svg viewBox="0 0 32 32" fill="currentColor" width="14" height="14"><path d="M16 2C8.27 2 2 8.27 2 16c0 2.44.64 4.73 1.76 6.72L2 30l7.44-1.74A13.9 13.9 0 0 0 16 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm6.29 19.47c-.34-.17-2.02-.99-2.33-1.1-.31-.12-.54-.17-.77.17-.23.34-.88 1.1-1.08 1.33-.2.23-.4.25-.74.08-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.08-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59l-.66-.01c-.23 0-.6.08-.91.4s-1.2 1.17-1.2 2.85c0 1.68 1.23 3.31 1.4 3.54.17.23 2.41 3.68 5.84 5.16.82.35 1.45.56 1.95.72.82.26 1.57.22 2.16.13.66-.1 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.31-.22-.65-.39z"/></svg>},
+    {v:"sms",label:"SMS",icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h10v2H7zm0-3h10v2H7zm0 6h7v2H7z"/></svg>},
+    {v:"telegram",label:"Telegram",icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>},
+    {v:"email",label:"Email",icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>},
   ];
 
   return (
@@ -853,8 +856,8 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                       <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginTop:2 }}>
                         {contactOpts.map(opt=>(
                           <button key={opt.v} type="button" onClick={()=>setBForm({...bForm,preferred_contact:opt.v})}
-                            style={{ padding:"7px 11px", borderRadius:2, border:`1px solid ${bForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:bForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:bForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
-                            {opt.label}
+                            style={{ display:"flex", alignItems:"center", gap:5, padding:"7px 11px", borderRadius:2, border:`1px solid ${bForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:bForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:bForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+                            {opt.icon}{opt.label}
                           </button>
                         ))}
                       </div>
@@ -905,8 +908,8 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
                       <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginTop:2 }}>
                         {contactOpts.map(opt=>(
                           <button key={opt.v} type="button" onClick={()=>setEForm({...eForm,preferred_contact:opt.v})}
-                            style={{ padding:"7px 11px", borderRadius:2, border:`1px solid ${eForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:eForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:eForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
-                            {opt.label}
+                            style={{ display:"flex", alignItems:"center", gap:5, padding:"7px 11px", borderRadius:2, border:`1px solid ${eForm.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:eForm.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:eForm.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.7rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+                            {opt.icon}{opt.label}
                           </button>
                         ))}
                       </div>
@@ -1197,11 +1200,11 @@ function ContactForm() {
   );
 
   const contactOpts = [
-    {v:"call", label:"📞 Phone Call"},
-    {v:"whatsapp", label:"💬 WhatsApp"},
-    {v:"sms", label:"✉️ SMS"},
-    {v:"telegram", label:"✈️ Telegram"},
-    {v:"email", label:"📧 Email"},
+    {v:"call", label:"Phone Call", icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>},
+    {v:"whatsapp", label:"WhatsApp", icon:<svg viewBox="0 0 32 32" fill="currentColor" width="14" height="14"><path d="M16 2C8.27 2 2 8.27 2 16c0 2.44.64 4.73 1.76 6.72L2 30l7.44-1.74A13.9 13.9 0 0 0 16 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm6.29 19.47c-.34-.17-2.02-.99-2.33-1.1-.31-.12-.54-.17-.77.17-.23.34-.88 1.1-1.08 1.33-.2.23-.4.25-.74.08-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.08-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59l-.66-.01c-.23 0-.6.08-.91.4s-1.2 1.17-1.2 2.85c0 1.68 1.23 3.31 1.4 3.54.17.23 2.41 3.68 5.84 5.16.82.35 1.45.56 1.95.72.82.26 1.57.22 2.16.13.66-.1 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.31-.22-.65-.39z"/></svg>},
+    {v:"sms", label:"SMS", icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h10v2H7zm0-3h10v2H7zm0 6h7v2H7z"/></svg>},
+    {v:"telegram", label:"Telegram", icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>},
+    {v:"email", label:"Email", icon:<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>},
   ];
 
   return (
@@ -1237,8 +1240,8 @@ function ContactForm() {
         <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:2 }}>
           {contactOpts.map(opt => (
             <button key={opt.v} type="button" onClick={()=>setForm({...form,preferred_contact:opt.v})}
-              style={{ padding:"9px 14px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:form.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.76rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
-              {opt.label}
+              style={{ display:"flex", alignItems:"center", gap:6, padding:"9px 14px", borderRadius:2, border:`1px solid ${form.preferred_contact===opt.v?"#C9961A":"rgba(201,150,26,0.2)"}`, background:form.preferred_contact===opt.v?"rgba(201,150,26,0.15)":"rgba(255,255,255,0.02)", color:form.preferred_contact===opt.v?"#E8B84B":"#8A6520", fontSize:"0.76rem", cursor:"pointer", fontFamily:"'Jost',sans-serif", transition:"all 0.2s", whiteSpace:"nowrap" }}>
+              {opt.icon}{opt.label}
             </button>
           ))}
         </div>
