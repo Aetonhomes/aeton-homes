@@ -330,15 +330,20 @@ export default function Index() {
           <div className="reveal" style={{ position: "relative" }}>
             <div style={{ aspectRatio: "4/5", maxHeight: 560, background: "linear-gradient(135deg,#1A0303,#2E0808)", border: "1px solid rgba(212,164,34,0.15)", borderRadius: 4, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, padding: 20 }}>
-                {["🏠","💎","📍","🤝","AH","📊","🔑","⭐","🌟"].map((icon,i) => (
+                {[0,1,2,3,"logo",4,5,6,7].map((item,i) => (
                   <div key={i} style={{
-                    width:72, height:72, background: icon==="AH" ? "linear-gradient(135deg,rgba(212,164,34,0.45),rgba(212,164,34,0.2))" : "linear-gradient(135deg,rgba(212,164,34,0.1),rgba(212,164,34,0.03))",
+                    width:72, height:72,
+                    background: item==="logo" ? "linear-gradient(135deg,rgba(212,164,34,0.45),rgba(212,164,34,0.2))" : "linear-gradient(135deg,rgba(212,164,34,0.08),rgba(212,164,34,0.02))",
                     clipPath: "polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)",
                     display:"flex", alignItems:"center", justifyContent:"center",
-                    fontSize: icon==="AH"?"0.95rem":"1.35rem", color: icon==="AH"?"#0E0101":"#F0C355",
-                    fontFamily: icon==="AH"?"'Cormorant Garamond',serif":undefined, fontWeight: icon==="AH"?700:undefined,
                     animation:`hexPulse 3s ease-in-out ${i*0.3}s infinite`,
-                  }}>{icon}</div>
+                    overflow:"hidden",
+                  }}>
+                    {item==="logo"
+                      ? <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes" style={{ width:"70%", height:"70%", objectFit:"contain" }} />
+                      : null
+                    }
+                  </div>
                 ))}
               </div>
               {/* Float card */}
@@ -360,11 +365,9 @@ export default function Index() {
             <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
               {[1,2,3,4].map(i => (
                 <div key={i} className="ah-why-feat">
-                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(212,164,34,0.07)", border:"1px solid rgba(212,164,34,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1.1rem" }}>
-                    {c(content,`why_feat_${i}_icon`) || ["🛡️","🚀","🕐","📊"][i-1]}
-                  </div>
+                  <div style={{ width:6, height:6, flexShrink:0, background:"#D4A422", borderRadius:"50%", marginTop:6 }} />
                   <div>
-                    <div style={{ fontSize:"0.88rem", fontWeight:500, color:"#FFFFFF", marginBottom:4 }}>{c(content,`why_feat_${i}_title`)}</div>
+                    <div style={{ fontSize:"0.88rem", fontWeight:600, color:"#FFFFFF", marginBottom:4 }}>{c(content,`why_feat_${i}_title`)}</div>
                     <div style={{ fontSize:"0.8rem", color:"#E2C99A", lineHeight:1.7 }}>{c(content,`why_feat_${i}_desc`)}</div>
                   </div>
                 </div>
@@ -557,12 +560,12 @@ export default function Index() {
 
             <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
               {[
-                { icon:"📞", label:"Phone", key:"contact_phone" },
-                { icon:"✉️", label:"Email", key:"contact_email" },
-                { icon:"📍", label:"Office", key:"contact_address" },
+                { label:"Phone", key:"contact_phone" },
+                { label:"Email", key:"contact_email" },
+                { label:"Office", key:"contact_address" },
               ].map((item,i) => (
                 <div key={i} style={{ display:"flex", gap:14, alignItems:"flex-start" }}>
-                  <div style={{ width:40, height:40, flexShrink:0, background:"rgba(212,164,34,0.06)", border:"1px solid rgba(212,164,34,0.18)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"1rem" }}>{item.icon}</div>
+                  <div style={{ width:3, flexShrink:0, alignSelf:"stretch", background:"linear-gradient(to bottom,#D4A422,transparent)", borderRadius:2 }} />
                   <div>
                     <div className="ah-label" style={{ marginBottom:3 }}>{item.label}</div>
                     <div style={{ fontSize:"0.9rem", color:"#FFFFFF" }}>{c(content,item.key)}</div>
