@@ -217,10 +217,12 @@ export default function Index() {
           </div>
         </div>
 
-        <div style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, color: "#6B4F20", fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase", animation: "bounce 2s infinite" }}>
+        <button
+          onClick={() => document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })}
+          style={{ position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: 6, color: "#6B4F20", fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase", animation: "bounce 2s infinite", background: "none", border: "none", cursor: "pointer", padding: "8px 16px" }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B4F20" strokeWidth="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
           Explore
-        </div>
+        </button>
       </section>
 
       {/* ══════════════════════════════════════════════
@@ -281,7 +283,7 @@ export default function Index() {
       <section
         id="properties"
         aria-label="Luxury properties for sale and rent in Nairobi, Kenya"
-        style={{ position: "relative", zIndex: 2, padding: "110px 5%", background: "linear-gradient(to bottom, #0E0101, #180303)" }}
+        style={{ position: "relative", zIndex: 2, padding: "110px 5%", background: "linear-gradient(to bottom, #0E0101, #180303)", scrollMarginTop: 68 }}
       >
         <div className="reveal" style={{ marginBottom: 64 }}>
           <span style={T.eyebrow}>{c(content,"props_eyebrow") || "Premium Listings"}</span>
@@ -323,7 +325,7 @@ export default function Index() {
       <section
         id="why"
         aria-label="Why choose Aeton Homes — trusted luxury real estate agency Nairobi"
-        style={{ position: "relative", zIndex: 2, padding: "110px 5%", background: "linear-gradient(to bottom,#180303,#0E0101)" }}
+        style={{ position: "relative", zIndex: 2, padding: "110px 5%", background: "linear-gradient(to bottom,#180303,#0E0101)", scrollMarginTop: 68 }}
       >
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", maxWidth: 1200, margin: "0 auto" }} className="ah-two-col">
           {/* Visual */}
@@ -388,7 +390,7 @@ export default function Index() {
       <section
         id="process"
         aria-label="How to buy or rent property in Nairobi Kenya — step by step"
-        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#0E0101)" }}
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#0E0101)", scrollMarginTop: 68 }}
       >
         <div className="reveal" style={{ textAlign:"center", marginBottom:72 }}>
           <span style={T.eyebrow}>{c(content,"process_eyebrow") || "How It Works"}</span>
@@ -418,7 +420,7 @@ export default function Index() {
         <section
           id="testimonials"
           aria-label="Client testimonials — Aeton Homes luxury real estate Kenya"
-          style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)" }}
+          style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)", scrollMarginTop: 68 }}
         >
           <div className="reveal" style={{ textAlign:"center", marginBottom:64 }}>
             <span style={T.eyebrow}>{c(content,"testi_eyebrow") || "Testimonials"}</span>
@@ -452,7 +454,7 @@ export default function Index() {
       <section
         id="reviews"
         aria-label="Real estate client reviews Nairobi Kenya"
-        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#0E0101)" }}
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#0E0101)", scrollMarginTop: 68 }}
       >
         <div className="reveal" style={{ textAlign:"center", marginBottom:64 }}>
           <span style={T.eyebrow}>Client Reviews</span>
@@ -471,7 +473,7 @@ export default function Index() {
       <section
         id="team"
         aria-label="Aeton Homes real estate team — property experts Nairobi Kenya"
-        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)" }}
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#0E0101,#180303)", scrollMarginTop: 68 }}
       >
         <div className="reveal" style={{ marginBottom:64 }}>
           <span style={T.eyebrow}>{c(content,"team_eyebrow") || "Our Team"}</span>
@@ -531,7 +533,7 @@ export default function Index() {
       <section
         id="contact"
         aria-label="Contact Aeton Homes — luxury real estate enquiries Nairobi Kenya"
-        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#050000)" }}
+        style={{ position:"relative", zIndex:2, padding:"110px 5%", background:"linear-gradient(to bottom,#180303,#050000)", scrollMarginTop: 68 }}
       >
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:80, alignItems:"start", maxWidth:1200, margin:"0 auto" }} className="ah-two-col">
           <ContactForm />
@@ -558,9 +560,10 @@ export default function Index() {
               ))}
             </div>
 
-            <a href="#contact"
+            <a href="https://wa.me/254728683027?text=Hello%20Aeton%20Homes%2C%20I%27d%20like%20to%20enquire%20about%20a%20property."
+              target="_blank" rel="noopener"
               style={{ display:"inline-flex", alignItems:"center", gap:10, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase" }}>
-              Send Us a Message →
+              WhatsApp Us →
             </a>
 
             {/* SEO-friendly area text */}
@@ -581,11 +584,41 @@ export default function Index() {
           .ah-process-grid{grid-template-columns:repeat(2,1fr)!important;gap:48px!important;}
           .ah-process-line{display:none!important;}
           .ah-ceo-grid{grid-template-columns:1fr!important;}
+          section[id]{padding:72px 5%!important;}
+          .ah-modal-grid{grid-template-columns:1fr!important;}
+          .ah-name-phone-grid{grid-template-columns:1fr!important;}
         }
         @media(max-width:500px){
           .ah-process-grid{grid-template-columns:1fr!important;}
+          section[id]{padding:60px 4%!important;}
         }
+        /* Smooth scrolling site-wide */
+        html{scroll-behavior:smooth;}
       `}</style>
+
+      {/* Reading progress bar */}
+      <ScrollProgress />
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// SCROLL PROGRESS BAR
+// ══════════════════════════════════════════════════════════
+function ScrollProgress() {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const fn = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setPct(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+    };
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+  return (
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 2, zIndex: 9999, background: "rgba(0,0,0,0.2)", pointerEvents: "none" }}>
+      <div style={{ height: "100%", width: `${pct}%`, background: "linear-gradient(to right,#D4A422,#F0C355)", transition: "width 0.1s linear", boxShadow: "0 0 8px rgba(212,164,34,0.6)" }} />
     </div>
   );
 }

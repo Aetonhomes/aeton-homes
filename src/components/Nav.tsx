@@ -5,30 +5,84 @@ const S = {
   link: { color: "#F0E6CE", textDecoration: "none", fontSize: "0.82rem", fontWeight: 400, letterSpacing: "0.12em", textTransform: "uppercase" } as React.CSSProperties,
 };
 
+// Map nav href → section IDs to watch
+const SECTION_MAP: Record<string, string> = {
+  "#properties": "properties",
+  "#why": "why",
+  "#process": "process",
+  "#testimonials": "testimonials",
+  "#reviews": "reviews",
+  "#team": "team",
+  "#contact": "contact",
+};
+
+function smoothScrollTo(href: string) {
+  if (href.startsWith("#")) {
+    const id = href.slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+  }
+  window.location.href = href;
+}
+
 export default function Nav({ content }: { content: Record<string, string> }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [showBackTop, setShowBackTop] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn);
+    const fn = () => {
+      setScrolled(window.scrollY > 40);
+      setShowBackTop(window.scrollY > 600);
+    };
+    window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  // Close menu on scroll
+  // Active section via IntersectionObserver
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    const sections = Object.values(SECTION_MAP);
+    const els = sections.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (!els.length) return;
+    const obs = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) setActiveSection(e.target.id);
+        });
+      },
+      { rootMargin: "-30% 0px -55% 0px", threshold: 0 }
+    );
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  const links = [1,2,3,4,5].map(i => ({
+  const links = [1, 2, 3, 4, 5].map(i => ({
     label: c(content, `nav_link_${i}_label`),
     href: c(content, `nav_link_${i}_href`),
   })).filter(l => l.label);
+
+  const isActive = (href: string) => {
+    const sectionId = SECTION_MAP[href];
+    return sectionId ? activeSection === sectionId : false;
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      smoothScrollTo(href);
+      setOpen(false);
+    }
+  };
 
   return (
     <>
@@ -49,36 +103,47 @@ export default function Nav({ content }: { content: Record<string, string> }) {
 
         {/* Desktop links */}
         <div className="ah-nav-desktop" style={{
-          display: "flex", alignItems: "center", gap: 4, flex: 1,
+          display: "flex", alignItems: "center", gap: 2, flex: 1,
           justifyContent: "flex-end", paddingLeft: 12,
         }}>
-          {links.map((l, i) => i < links.length - 1 ? (
-            <a key={i} href={l.href} style={{
-              ...S.link, padding: "8px 14px", borderRadius: 2, whiteSpace: "nowrap",
-              transition: "color 0.2s",
-            }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#F0C355")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#F0E6CE")}
-            >{l.label}</a>
-          ) : (
-            <a key={i} href={l.href} style={{
-              ...S.link, background: "linear-gradient(135deg, #D4A422, #F0C355)",
-              color: "#1A0101", padding: "9px 20px", borderRadius: 2,
-              fontWeight: 700, whiteSpace: "nowrap", marginLeft: 8,
-              boxShadow: "0 4px 16px rgba(212,164,34,0.25)",
-              transition: "opacity 0.2s, transform 0.2s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = ""; }}
-            >{l.label}</a>
-          ))}
+          {links.map((l, i) => {
+            const active = isActive(l.href);
+            const isCTA = i === links.length - 1;
+            return isCTA ? (
+              <a key={i} href={l.href}
+                onClick={e => handleNavClick(e, l.href)}
+                style={{
+                  ...S.link, background: "linear-gradient(135deg, #D4A422, #F0C355)",
+                  color: "#1A0101", padding: "9px 20px", borderRadius: 2,
+                  fontWeight: 700, whiteSpace: "nowrap", marginLeft: 8,
+                  boxShadow: "0 4px 16px rgba(212,164,34,0.25)",
+                  transition: "opacity 0.2s, transform 0.2s",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = ""; }}
+              >{l.label}</a>
+            ) : (
+              <a key={i} href={l.href}
+                onClick={e => handleNavClick(e, l.href)}
+                style={{
+                  ...S.link, padding: "8px 13px", borderRadius: 2, whiteSpace: "nowrap",
+                  transition: "color 0.2s",
+                  color: active ? "#F0C355" : "#F0E6CE",
+                  borderBottom: active ? "1.5px solid #D4A422" : "1.5px solid transparent",
+                  paddingBottom: "6px",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = "#F0C355")}
+                onMouseLeave={e => (e.currentTarget.style.color = active ? "#F0C355" : "#F0E6CE")}
+              >{l.label}</a>
+            );
+          })}
         </div>
 
         {/* Mobile hamburger */}
         <button
           className="ah-nav-burger"
           onClick={() => setOpen(o => !o)}
-          aria-label="Toggle menu"
+          aria-label={open ? "Close menu" : "Open menu"}
           style={{
             display: "none", flexDirection: "column", gap: 5, background: "none",
             border: "none", cursor: "pointer", padding: "8px", zIndex: 2,
@@ -91,12 +156,15 @@ export default function Nav({ content }: { content: Record<string, string> }) {
       </nav>
 
       {/* Mobile drawer overlay */}
-      {open && (
-        <div
-          onClick={() => setOpen(false)}
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 998, backdropFilter: "blur(4px)" }}
-        />
-      )}
+      <div
+        onClick={() => setOpen(false)}
+        style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 998,
+          backdropFilter: "blur(4px)", opacity: open ? 1 : 0,
+          pointerEvents: open ? "all" : "none",
+          transition: "opacity 0.28s",
+        }}
+      />
 
       {/* Mobile drawer */}
       <div style={{
@@ -108,33 +176,91 @@ export default function Nav({ content }: { content: Record<string, string> }) {
         transition: "transform 0.32s cubic-bezier(0.4,0,0.2,1)",
         overflowY: "auto",
       }}>
-        {links.map((l, i) => (
-          <a key={i} href={l.href} onClick={() => setOpen(false)}
-            style={{
-              display: "block", padding: "16px 0",
-              borderBottom: "1px solid rgba(212,164,34,0.07)",
-              color: i === links.length - 1 ? "#F0C355" : "#F0E6CE",
-              textDecoration: "none", fontSize: "0.9rem", letterSpacing: "0.14em",
-              textTransform: "uppercase", fontWeight: i === links.length - 1 ? 600 : 300,
-              transition: "color 0.2s, padding-left 0.2s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = "#F0C355"; e.currentTarget.style.paddingLeft = "8px"; }}
-            onMouseLeave={e => { e.currentTarget.style.color = i === links.length - 1 ? "#F0C355" : "#F0E6CE"; e.currentTarget.style.paddingLeft = "0"; }}
-          >{l.label}</a>
-        ))}
+        {links.map((l, i) => {
+          const active = isActive(l.href);
+          const isCTA = i === links.length - 1;
+          return (
+            <a key={i} href={l.href}
+              onClick={e => handleNavClick(e, l.href)}
+              style={{
+                display: "block", padding: "16px 0",
+                borderBottom: "1px solid rgba(212,164,34,0.07)",
+                color: active || isCTA ? "#F0C355" : "#F0E6CE",
+                textDecoration: "none", fontSize: "0.9rem", letterSpacing: "0.14em",
+                textTransform: "uppercase", fontWeight: isCTA ? 600 : 300,
+                transition: "color 0.2s, padding-left 0.2s",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.color = "#F0C355"; e.currentTarget.style.paddingLeft = "8px"; }}
+              onMouseLeave={e => { e.currentTarget.style.color = active || isCTA ? "#F0C355" : "#F0E6CE"; e.currentTarget.style.paddingLeft = "0"; }}
+            >
+              {active && <span style={{ display: "inline-block", width: 4, height: 4, background: "#D4A422", borderRadius: "50%", marginRight: 8, marginBottom: 2, verticalAlign: "middle" }} />}
+              {l.label}
+            </a>
+          );
+        })}
 
         {/* Contact quick links */}
         <div style={{ marginTop: 40 }}>
           <p style={{ fontSize: "0.58rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", marginBottom: 16 }}>Contact Us</p>
           <a href="tel:+254728683027" style={{ display: "flex", alignItems: "center", gap: 10, color: "#E2C99A", textDecoration: "none", fontSize: "0.82rem", marginBottom: 12 }}>
-            <span style={{ width:32, height:32, background:"rgba(212,164,34,0.08)", border:"1px solid rgba(212,164,34,0.2)", borderRadius:2, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style={{ color:"#D4A422" }}><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            <span style={{ width: 32, height: 32, background: "rgba(212,164,34,0.08)", border: "1px solid rgba(212,164,34,0.2)", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style={{ color: "#D4A422" }}><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" /></svg>
             </span>
             +254 728 683 027
           </a>
-
+          <a href="https://wa.me/254728683027" target="_blank" rel="noopener" style={{ display: "flex", alignItems: "center", gap: 10, color: "#E2C99A", textDecoration: "none", fontSize: "0.82rem", marginBottom: 12 }}>
+            <span style={{ width: 32, height: 32, background: "rgba(212,164,34,0.08)", border: "1px solid rgba(212,164,34,0.2)", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <svg viewBox="0 0 32 32" fill="#D4A422" width="14" height="14"><path d="M16 2C8.27 2 2 8.27 2 16c0 2.44.64 4.73 1.76 6.72L2 30l7.44-1.74A13.9 13.9 0 0 0 16 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm6.29 19.47c-.34-.17-2.02-.99-2.33-1.1-.31-.12-.54-.17-.77.17-.23.34-.88 1.1-1.08 1.33-.2.23-.4.25-.74.08-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.08-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59l-.66-.01c-.23 0-.6.08-.91.4s-1.2 1.17-1.2 2.85c0 1.68 1.23 3.31 1.4 3.54.17.23 2.41 3.68 5.84 5.16.82.35 1.45.56 1.95.72.82.26 1.57.22 2.16.13.66-.1 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.31-.22-.65-.39z" /></svg>
+            </span>
+            WhatsApp Us
+          </a>
         </div>
+
+        {/* Bottom CTA in mobile drawer */}
+        <a href="#contact"
+          onClick={e => handleNavClick(e, "#contact")}
+          style={{ marginTop: "auto", display: "block", textAlign: "center", padding: "13px 0", background: "linear-gradient(135deg,#D4A422,#F0C355)", color: "#0E0101", borderRadius: 2, fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", textDecoration: "none" }}>
+          Book a Viewing
+        </a>
       </div>
+
+      {/* Back to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        title="Back to top"
+        style={{
+          position: "fixed", bottom: 88, right: 20, zIndex: 800,
+          width: 40, height: 40, borderRadius: "50%",
+          background: "rgba(14,1,1,0.95)", border: "1px solid rgba(212,164,34,0.35)",
+          color: "#F0C355", cursor: "pointer", fontSize: "1.1rem",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          opacity: showBackTop ? 1 : 0, pointerEvents: showBackTop ? "all" : "none",
+          transition: "opacity 0.3s, transform 0.3s",
+          transform: showBackTop ? "translateY(0)" : "translateY(10px)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+        }}>
+        ↑
+      </button>
+
+      {/* Floating WhatsApp button */}
+      <a href="https://wa.me/254728683027?text=Hello%20Aeton%20Homes%2C%20I%27m%20interested%20in%20a%20property."
+        target="_blank" rel="noopener" title="Chat on WhatsApp"
+        style={{
+          position: "fixed", bottom: 20, right: 20, zIndex: 800,
+          width: 48, height: 48, borderRadius: "50%",
+          background: "#25D366",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          textDecoration: "none",
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.1)"; e.currentTarget.style.boxShadow = "0 6px 28px rgba(37,211,102,0.6)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(37,211,102,0.4)"; }}
+      >
+        <svg viewBox="0 0 32 32" fill="white" width="24" height="24">
+          <path d="M16 2C8.27 2 2 8.27 2 16c0 2.44.64 4.73 1.76 6.72L2 30l7.44-1.74A13.9 13.9 0 0 0 16 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm6.29 19.47c-.34-.17-2.02-.99-2.33-1.1-.31-.12-.54-.17-.77.17-.23.34-.88 1.1-1.08 1.33-.2.23-.4.25-.74.08-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.08-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59l-.66-.01c-.23 0-.6.08-.91.4s-1.2 1.17-1.2 2.85c0 1.68 1.23 3.31 1.4 3.54.17.23 2.41 3.68 5.84 5.16.82.35 1.45.56 1.95.72.82.26 1.57.22 2.16.13.66-.1 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.31-.22-.65-.39z" />
+        </svg>
+      </a>
 
       <style>{`
         @media (max-width: 768px) {
