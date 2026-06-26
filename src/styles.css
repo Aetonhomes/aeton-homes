@@ -459,3 +459,190 @@ img { max-width: 100%; height: auto; }
   max-height: none !important;
   overflow: visible !important;
 }
+
+/* ════════════════════════════════════════════════════════
+   COMPREHENSIVE RESPONSIVE OVERHAUL
+   Mobile-first additions for the public homepage
+════════════════════════════════════════════════════════ */
+
+/* ── Stats bar: 2×2 grid on small screens ── */
+@media (max-width: 560px) {
+  .ah-stats-bar {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+  }
+  .ah-stat-item {
+    border-right: 1px solid rgba(212,164,34,0.1) !important;
+    border-bottom: 1px solid rgba(212,164,34,0.1) !important;
+  }
+  /* Remove right border from right-column items */
+  .ah-stat-item:nth-child(2n) {
+    border-right: none !important;
+  }
+  /* Remove bottom border from bottom-row items */
+  .ah-stat-item:nth-child(3),
+  .ah-stat-item:nth-child(4) {
+    border-bottom: none !important;
+  }
+}
+
+/* ── Hero: tighter on very small screens ── */
+@media (max-width: 480px) {
+  .ah-hero-cta-primary,
+  .ah-hero-cta-secondary {
+    padding: 13px 24px !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.14em !important;
+  }
+}
+
+/* ── Search box: stack everything on mobile ── */
+@media (max-width: 680px) {
+  .ah-search-filters {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .ah-search-filters > * {
+    flex: unset !important;
+    width: 100% !important;
+    min-width: unset !important;
+  }
+  .ah-search-filters button {
+    width: 100% !important;
+  }
+}
+
+/* ── Property grid: narrower card min on phones ── */
+@media (max-width: 600px) {
+  .ah-prop-grid-main {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Why section: reduce gap when stacked ── */
+@media (max-width: 900px) {
+  .ah-two-col {
+    gap: 48px !important;
+  }
+  /* Float badge can overflow on stacked layout — pull it in */
+  .ah-why-badge {
+    right: 0 !important;
+  }
+}
+
+/* ── Reviews / contact two-col: tighter gap when stacked ── */
+@media (max-width: 900px) {
+  .ah-two-col-reviews {
+    gap: 40px !important;
+  }
+}
+
+/* ── Contact section two-col gap ── */
+@media (max-width: 900px) {
+  .ah-contact-two-col {
+    gap: 40px !important;
+  }
+}
+
+/* ── Process: single column on very small screens ── */
+@media (max-width: 480px) {
+  .ah-process-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .ah-process-line {
+    display: none !important;
+  }
+}
+
+/* ── Modal: full width right panel on mobile ── */
+@media (max-width: 700px) {
+  .ah-modal-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ah-modal-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: unset !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(212,164,34,0.1) !important;
+  }
+}
+
+/* ── Footer: 2-col → 1-col on small phones ── */
+@media (max-width: 480px) {
+  .ah-footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* ── Section padding: tighter on mobile ── */
+@media (max-width: 768px) {
+  section[id] {
+    padding-top: 72px !important;
+    padding-bottom: 72px !important;
+  }
+}
+@media (max-width: 480px) {
+  section[id] {
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+  }
+}
+
+/* ── Search container: reduce padding on mobile ── */
+@media (max-width: 600px) {
+  .ah-search-container {
+    padding: 20px 18px !important;
+    margin-left: 4% !important;
+    margin-right: 4% !important;
+  }
+}
+
+/* ── CEO section: shrink photo col on tablet ── */
+@media (max-width: 640px) {
+  .ah-ceo-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Prevent hero stats overflow at all sizes ── */
+.ah-stats-bar {
+  flex-wrap: wrap;
+}
+.ah-stat-item {
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* ── Marquee: no overflow on small screens ── */
+@media (max-width: 480px) {
+  .marquee-track > div {
+    padding: 0 24px !important;
+    font-size: 0.6rem !important;
+  }
+}
+
+/* ── Testimonials and team auto-grid: narrower min on phones ── */
+@media (max-width: 480px) {
+  .ah-testi-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Video grid: single col on small screens ── */
+@media (max-width: 560px) {
+  .ah-videos-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── h2 floor: smaller on very small phones ── */
+@media (max-width: 360px) {
+  h2 { font-size: clamp(1.4rem, 7vw, 2rem) !important; }
+  h1 { font-size: clamp(1.8rem, 9vw, 3rem) !important; }
+}

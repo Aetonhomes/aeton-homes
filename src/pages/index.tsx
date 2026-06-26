@@ -229,14 +229,14 @@ export default function Index() {
           SEARCH — find property for sale rent Nairobi
       ══════════════════════════════════════════════ */}
       <div className="reveal" style={{ position: "relative", zIndex: 10, marginTop: -2, padding: "0 5%" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", background: "rgba(8,0,0,0.97)", border: "1px solid rgba(212,164,34,0.2)", borderRadius: 4, padding: "30px 36px", backdropFilter: "blur(24px)", boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}>
+        <div className="ah-search-container" style={{ maxWidth: 1000, margin: "0 auto", background: "rgba(8,0,0,0.97)", border: "1px solid rgba(212,164,34,0.2)", borderRadius: 4, padding: "30px 36px", backdropFilter: "blur(24px)", boxShadow: "0 40px 100px rgba(0,0,0,0.7)" }}>
           <p style={{ fontSize: "0.62rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#6B4F20", marginBottom: 18 }}>Find Your Property</p>
           <div style={{ display: "flex", marginBottom: 22, borderBottom: "1px solid rgba(212,164,34,0.12)", gap: 4 }}>
             {["Buy","Rent","Commercial","Land"].map(t => (
               <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 20px", cursor: "pointer", background: tab===t ? "rgba(212,164,34,0.1)" : "none", fontSize: "0.72rem", letterSpacing: "0.14em", textTransform: "uppercase", border: "none", fontFamily: "'Jost',sans-serif", borderBottom: `2px solid ${tab===t?"#D4A422":"transparent"}`, color: tab===t?"#F0C355":"#6B4F20", marginBottom: -1, transition: "all 0.25s", borderRadius: "2px 2px 0 0" }}>{t}</button>
             ))}
           </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
+          <div className="ah-search-filters" style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
             {[
               {label:"Location", opts:["All Locations","Westlands","Karen","Kilimani","Lavington","Runda","Muthaiga","Kileleshwa","Spring Valley"], val:filterLocation, set:setFilterLocation},
               {label:"Property Type", opts:["All Types","Apartment","Villa","Townhouse","Bungalow","Penthouse","Office","Land"], val:filterType, set:setFilterType},
@@ -293,7 +293,7 @@ export default function Index() {
           <p style={T.sub}>{c(content,"props_subtitle") || "Curated luxury properties — apartments, villas, townhouses & land — across Nairobi's most sought-after neighbourhoods."}</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: 28 }}>
+        <div className="ah-prop-grid-main" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(340px,100%),1fr))", gap: 28 }}>
           {(properties && properties.length > 0 ? properties : []).map((p: any) => (
             <PropCard key={p.id} p={p} />
           ))}
@@ -580,17 +580,30 @@ export default function Index() {
 
       <style>{`
         @media(max-width:900px){
-          .ah-two-col{grid-template-columns:1fr!important;}
+          .ah-two-col{grid-template-columns:1fr!important;gap:44px!important;}
           .ah-process-grid{grid-template-columns:repeat(2,1fr)!important;gap:48px!important;}
           .ah-process-line{display:none!important;}
           .ah-ceo-grid{grid-template-columns:1fr!important;}
           section[id]{padding:72px 5%!important;}
           .ah-modal-grid{grid-template-columns:1fr!important;}
+          .ah-modal-grid > div:last-child{border-left:none!important;border-top:1px solid rgba(212,164,34,0.1)!important;width:100%!important;min-width:unset!important;}
           .ah-name-phone-grid{grid-template-columns:1fr!important;}
         }
+        @media(max-width:680px){
+          .ah-search-filters{flex-direction:column!important;gap:12px!important;}
+          .ah-search-filters > *{flex:unset!important;width:100%!important;min-width:unset!important;}
+          .ah-search-filters button{width:100%!important;}
+          .ah-search-container{padding:18px 16px!important;}
+        }
         @media(max-width:500px){
-          .ah-process-grid{grid-template-columns:1fr!important;}
-          section[id]{padding:60px 4%!important;}
+          .ah-process-grid{grid-template-columns:1fr!important;gap:36px!important;}
+          .ah-process-line{display:none!important;}
+          section[id]{padding:56px 4%!important;}
+          .ah-prop-grid-main{grid-template-columns:1fr!important;}
+          .ah-stats-bar{display:grid!important;grid-template-columns:1fr 1fr!important;}
+        }
+        @media(max-width:400px){
+          .ah-hero-cta-primary,.ah-hero-cta-secondary{padding:11px 18px!important;font-size:0.7rem!important;letter-spacing:0.12em!important;}
         }
         /* Smooth scrolling site-wide */
         html{scroll-behavior:smooth;}

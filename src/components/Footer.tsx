@@ -110,7 +110,10 @@ export default function Footer({ content }: { content: Record<string, string> })
           </span>
         </div>
       </div>
-      <style>{`@media(max-width:768px){ .ah-footer-grid{ grid-template-columns:1fr 1fr !important; } }`}</style>
+      <style>{`
+        @media(max-width:768px){ .ah-footer-grid{ grid-template-columns:1fr 1fr !important; gap:32px !important; } }
+        @media(max-width:420px){ .ah-footer-grid{ grid-template-columns:1fr !important; gap:28px !important; } }
+      `}</style>
     </footer>
   );
 }
