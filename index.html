@@ -2,11 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Primary SEO -->
-    <title>Aeton Homes | Luxury Real Estate in Nairobi, Kenya — Properties For Sale & Rent</title>
+    <title>Aeton Homes | Luxury Real Estate in Nairobi, Kenya — Properties For Sale &amp; Rent</title>
     <meta name="description" content="Aeton Homes is Nairobi's premier luxury real estate agency. Browse exclusive properties for sale and rent in Karen, Westlands, Kilimani, Lavington, Runda and across Kenya. Apartments, villas, townhouses, commercial spaces and prime land." />
     <meta name="keywords" content="luxury real estate Kenya, property for sale Nairobi, houses for sale Nairobi, apartments for rent Nairobi, Karen property, Westlands property, Kilimani apartments, real estate agents Kenya, luxury homes Kenya, buy property Nairobi, rent house Nairobi, villa for sale Kenya, Aeton Homes, Nairobi real estate, Kenya property investment, Runda homes, Lavington property, Muthaiga homes, townhouses Nairobi, commercial property Nairobi, land for sale Kenya, bedsitter Nairobi, studio apartment Nairobi, 3 bedroom Nairobi, 4 bedroom Nairobi, penthouse Nairobi" />
     <meta name="author" content="Aeton Homes Kenya" />
@@ -23,20 +22,38 @@
     <meta name="geo.position" content="-1.286389;36.817223" />
     <meta name="ICBM" content="-1.286389, 36.817223" />
 
+    <!-- Theme color -->
+    <meta name="theme-color" content="#0E0101" />
+    <meta name="msapplication-TileColor" content="#0E0101" />
+
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Aeton Homes | Luxury Real Estate Nairobi Kenya" />
     <meta property="og:description" content="Browse Nairobi's finest properties — luxury apartments, villas, townhouses and land for sale and rent across Karen, Westlands, Kilimani and beyond." />
     <meta property="og:url" content="https://aetonhomes.co.ke/" />
-    <meta property="og:image" content="https://jewelbookstore.neocities.org/property%208.jpeg" />
+    <meta property="og:image" content="https://aetonhomes.co.ke/og-image.png" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
+    <meta property="og:image:alt" content="Aeton Homes — Luxury Real Estate Nairobi Kenya" />
     <meta property="og:locale" content="en_KE" />
     <meta property="og:site_name" content="Aeton Homes" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Aeton Homes | Luxury Real Estate Nairobi Kenya" />
-    <meta name="twitter:description" content="Exclusive luxury properties for sale and rent in Nairobi Kenya. Apartments, villas, townhouses, commercial & land." />
-    <meta name="twitter:image" content="https://jewelbookstore.neocities.org/property%208.jpeg" />
+    <meta name="twitter:description" content="Exclusive luxury properties for sale and rent in Nairobi Kenya. Apartments, villas, townhouses, commercial &amp; land." />
+    <meta name="twitter:image" content="https://aetonhomes.co.ke/og-image.png" />
+    <meta name="twitter:image:alt" content="Aeton Homes — Luxury Real Estate Nairobi Kenya" />
+
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="en-ke" href="https://aetonhomes.co.ke/" />
+    <link rel="alternate" hreflang="en" href="https://aetonhomes.co.ke/" />
+    <link rel="alternate" hreflang="x-default" href="https://aetonhomes.co.ke/" />
+
+    <!-- Favicons + Apple Touch -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/og-image.png" />
 
     <!-- Schema.org: Real Estate Agent -->
     <script type="application/ld+json">
@@ -46,10 +63,15 @@
       "name": "Aeton Homes",
       "description": "Luxury real estate agency in Nairobi, Kenya specialising in premium properties for sale and rent.",
       "url": "https://aetonhomes.co.ke",
-      "logo": "https://jewelbookstore.neocities.org/logo.jpeg",
-      "image": "https://jewelbookstore.neocities.org/property%208.jpeg",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://aetonhomes.co.ke/logo.svg",
+        "width": 200,
+        "height": 60
+      },
+      "image": "https://aetonhomes.co.ke/og-image.png",
       "telephone": "+254728683027",
-      "email": "777materiaprima@gmail.com",
+      "email": "info@aetonhomes.co.ke",
       "priceRange": "KES",
       "currenciesAccepted": "KES, USD",
       "paymentAccepted": "Cash, Bank Transfer, M-Pesa",
@@ -74,6 +96,8 @@
         {"@type": "Place", "name": "Lavington"},
         {"@type": "Place", "name": "Runda"},
         {"@type": "Place", "name": "Muthaiga"},
+        {"@type": "Place", "name": "Kileleshwa"},
+        {"@type": "Place", "name": "Spring Valley"},
         {"@type": "Country", "name": "Kenya"}
       ],
       "knowsAbout": ["Luxury Real Estate","Property Sales","Property Rentals","Investment Properties","Commercial Real Estate","Land Sales"],
@@ -94,7 +118,7 @@
     }
     </script>
 
-    <!-- Schema.org: Website with SearchAction -->
+    <!-- Schema.org: WebSite with SearchAction -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -103,7 +127,10 @@
       "url": "https://aetonhomes.co.ke",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://aetonhomes.co.ke/?search={search_term_string}",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://aetonhomes.co.ke/?search={search_term_string}"
+        },
         "query-input": "required name=search_term_string"
       }
     }
@@ -117,14 +144,79 @@
       "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://aetonhomes.co.ke/"},
         {"@type": "ListItem", "position": 2, "name": "Properties", "item": "https://aetonhomes.co.ke/#properties"},
-        {"@type": "ListItem", "position": 3, "name": "Videos", "item": "https://aetonhomes.co.ke/videos"}
+        {"@type": "ListItem", "position": 3, "name": "Our Process", "item": "https://aetonhomes.co.ke/#process"},
+        {"@type": "ListItem", "position": 4, "name": "Reviews", "item": "https://aetonhomes.co.ke/#reviews"},
+        {"@type": "ListItem", "position": 5, "name": "Contact", "item": "https://aetonhomes.co.ke/#contact"},
+        {"@type": "ListItem", "position": 6, "name": "Videos", "item": "https://aetonhomes.co.ke/videos"}
       ]
     }
     </script>
 
+    <!-- Schema.org: FAQ — real estate Kenya -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I buy property in Nairobi, Kenya?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Buying property in Nairobi involves finding a property, conducting due diligence on title deeds, making an offer, signing a sale agreement, paying stamp duty, and transferring ownership at the Lands Registry. Aeton Homes guides you through every step of the process."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the best neighbourhoods to buy luxury property in Nairobi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The most sought-after luxury neighbourhoods in Nairobi include Karen, Muthaiga, Runda, Westlands, Kilimani, Lavington, Kileleshwa, and Spring Valley. Each offers a unique lifestyle — from Karen's serene half-acre plots to Kilimani's high-rise apartments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the average price of a luxury apartment in Nairobi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Luxury apartment prices in Nairobi typically range from KES 10 million for a 2-bedroom in Kilimani, to KES 80 million or more for a penthouse in Westlands or Muthaiga. Prices vary significantly by location, size, and amenities."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can foreigners buy property in Kenya?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, foreigners can buy property in Kenya. However, the Constitution of Kenya 2010 restricts foreign ownership to leasehold title (up to 99 years), not freehold. Aeton Homes helps international clients navigate all legal requirements."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I rent a luxury home in Nairobi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To rent a luxury home in Nairobi, contact Aeton Homes to view available listings, select your preferred property, sign a tenancy agreement, and pay a deposit (typically 2–3 months). We handle all paperwork and ensure a smooth handover."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What documents do I need to buy property in Kenya?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You will typically need a national ID or passport, KRA PIN certificate, sale agreement, title deed (verified at Lands Registry), and proof of funds. Aeton Homes connects you with trusted conveyancing lawyers to handle documentation."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Preload hero image for LCP -->
+    <link rel="preload" as="image" href="https://jewelbookstore.neocities.org/property%208.jpeg" fetchpriority="high" />
   </head>
   <body>
     <div id="root"></div>

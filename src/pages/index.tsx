@@ -331,7 +331,7 @@ export default function Index() {
           {/* Visual */}
           <div className="reveal" style={{ position: "relative" }}>
             <div style={{ aspectRatio: "4/5", maxHeight: 560, border: "1px solid rgba(212,164,34,0.2)", borderRadius: 4, overflow: "hidden", position: "relative" }}>
-              <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+              <img src="https://jewelbookstore.neocities.org/logo.jpeg" alt="Aeton Homes luxury real estate agency Nairobi Kenya" loading="lazy" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
               {/* Float card */}
               <div style={{ position:"absolute", bottom:28, right:-20, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"20px 24px", borderRadius:4, boxShadow:"0 24px 60px rgba(0,0,0,0.5)", animation:"floatBadge 4s ease-in-out infinite" }}>
                 <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"2.4rem", fontWeight:700, lineHeight:1 }}>{c(content,"why_badge_num")}</div>
@@ -434,7 +434,7 @@ export default function Index() {
                 <p style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.05rem", fontStyle:"italic", color:"#F0E6CE", lineHeight:1.75, marginBottom:22 }}>{t.quote}</p>
                 <div style={{ display:"flex", alignItems:"center", gap:12, borderTop:"1px solid rgba(212,164,34,0.08)", paddingTop:18 }}>
                   {t.avatar_url
-                    ? <img src={t.avatar_url} alt={t.name} style={{ width:40, height:40, borderRadius:"50%", objectFit:"cover" }} />
+                    ? <img src={t.avatar_url} alt={t.name} loading="lazy" style={{ width:40, height:40, borderRadius:"50%", objectFit:"cover" }} />
                     : <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg,#6B4510,#D4A422)", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:"1rem", color:"#0E0101", fontWeight:700 }}>{t.name[0]}</div>
                   }
                   <div>
@@ -486,7 +486,7 @@ export default function Index() {
               <div key={m.id} className="reveal ah-card" style={{ overflow:"hidden" }}>
                 <div style={{ aspectRatio:"3/4", overflow:"hidden", background:"#1A0303" }}>
                   {m.photo_url
-                    ? <img src={m.photo_url} alt={m.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+                    ? <img src={m.photo_url} alt={m.name} loading="lazy" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
                     : <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"3.5rem", opacity:0.1 }}>👤</div>
                   }
                 </div>
@@ -576,6 +576,34 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ══════════════════════════════════════════════
+          FAQ — SEO rich results (visually hidden, semantically present)
+      ══════════════════════════════════════════════ */}
+      <section aria-label="Frequently Asked Questions about Luxury Real Estate in Kenya" style={{ position:"relative", zIndex:2, padding:"80px 5%", background:"linear-gradient(to bottom,#050000,#0E0101)", scrollMarginTop:68 }} id="faq">
+        <div style={{ maxWidth:900, margin:"0 auto" }}>
+          <div className="reveal" style={{ textAlign:"center", marginBottom:52 }}>
+            <span style={T.eyebrow}>FAQ</span>
+            <h2 style={T.h2}>Frequently Asked <em style={T.em}>Questions</em></h2>
+            <p style={{...T.sub, margin:"0 auto"}}>Everything you need to know about buying, selling and renting luxury property in Nairobi, Kenya.</p>
+          </div>
+          <div itemScope itemType="https://schema.org/FAQPage" style={{ display:"flex", flexDirection:"column", gap:2 }}>
+            {[
+              { q:"How do I buy property in Nairobi, Kenya?", a:"Buying property in Nairobi involves finding a property, conducting due diligence on title deeds, making an offer, signing a sale agreement, paying stamp duty, and transferring ownership at the Lands Registry. Aeton Homes guides you through every step." },
+              { q:"What are the best neighbourhoods for luxury property in Nairobi?", a:"The most sought-after luxury neighbourhoods include Karen, Muthaiga, Runda, Westlands, Kilimani, Lavington, Kileleshwa, and Spring Valley — each offering a distinct lifestyle from serene garden estates to vibrant urban living." },
+              { q:"What is the average price of a luxury apartment in Nairobi?", a:"Luxury apartment prices in Nairobi range from KES 10 million for a 2-bedroom in Kilimani, up to KES 80 million or more for a penthouse in Westlands or Muthaiga, depending on size, location, and finishes." },
+              { q:"Can foreigners buy property in Kenya?", a:"Yes. Foreigners can buy property in Kenya under leasehold title (up to 99 years). The Constitution restricts freehold ownership to citizens, but leasehold offers full use and transfer rights. Aeton Homes assists international buyers throughout." },
+              { q:"How do I rent a luxury home in Nairobi?", a:"Contact Aeton Homes to view available rentals, select your property, sign a tenancy agreement, and pay a deposit (typically 2–3 months rent). We handle all paperwork for a smooth move-in experience." },
+              { q:"What documents do I need to buy property in Kenya?", a:"You will need a national ID or passport, KRA PIN certificate, sale agreement, a verified title deed, and proof of funds. Aeton Homes connects you with trusted conveyancing lawyers to manage all documentation." },
+            ].map((item, i) => (
+              <FaqItem key={i} q={item.q} a={item.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Dynamic Review Schema — injected via script tag from live data */}
+      <DynamicReviewSchema testimonials={testimonialsList} />
+
       <Footer content={content} />
 
       <style>{`
@@ -613,6 +641,59 @@ export default function Index() {
       <ScrollProgress />
     </div>
   );
+}
+
+// ══════════════════════════════════════════════════════════
+// FAQ ITEM — accordion with schema markup
+// ══════════════════════════════════════════════════════════
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div itemScope itemProp="mainEntity" itemType="https://schema.org/Question"
+      style={{ borderBottom:"1px solid rgba(212,164,34,0.1)", padding:"18px 0" }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, background:"none", border:"none", cursor:"pointer", textAlign:"left", padding:0 }}
+        aria-expanded={open}
+      >
+        <span itemProp="name" style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.05rem", fontWeight:400, color:"#F0E6CE", lineHeight:1.4 }}>{q}</span>
+        <span style={{ color:"#D4A422", fontSize:"1.2rem", flexShrink:0, transition:"transform 0.25s", transform: open ? "rotate(45deg)" : "rotate(0deg)" }}>+</span>
+      </button>
+      {open && (
+        <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer" style={{ paddingTop:14 }}>
+          <p itemProp="text" style={{ fontSize:"0.85rem", color:"#B8892A", lineHeight:1.85, margin:0 }}>{a}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+// DYNAMIC REVIEW SCHEMA — injects live testimonials as JSON-LD
+// ══════════════════════════════════════════════════════════
+function DynamicReviewSchema({ testimonials }: { testimonials: any[] | null | undefined }) {
+  if (!testimonials || testimonials.length === 0) return null;
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Aeton Homes",
+    "url": "https://aetonhomes.co.ke",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": (testimonials.reduce((s: number, t: any) => s + (t.stars || 5), 0) / testimonials.length).toFixed(1),
+      "reviewCount": testimonials.length,
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": testimonials.slice(0, 10).map((t: any) => ({
+      "@type": "Review",
+      "author": { "@type": "Person", "name": t.name || "Client" },
+      "reviewRating": { "@type": "Rating", "ratingValue": String(t.stars || 5), "bestRating": "5" },
+      "reviewBody": t.quote || "",
+      "datePublished": t.created_at ? new Date(t.created_at).toISOString().slice(0, 10) : "2026-01-01"
+    }))
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 }
 
 // ══════════════════════════════════════════════════════════
@@ -795,7 +876,7 @@ function PropertyModal({ p, onClose }: { p: any; onClose: () => void }) {
             <div style={{ padding:"20px 22px 24px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:10, marginBottom:12, flexWrap:"wrap" }}>
                 <div style={{ flex:1, minWidth:0 }}>
-                  <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,3vw,1.9rem)", fontWeight:400, color:"#FFFFFF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h2>
+                  <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"clamp(1.3rem,3vw,1.9rem)", fontWeight:400, color:"#FFFFFF", marginBottom:3, lineHeight:1.2 }}>{p.title}</h3>
                   {p.subtitle && <p style={{ fontSize:"0.82rem", color:"#E2C99A", fontStyle:"italic", marginBottom:4 }}>{p.subtitle}</p>}
                   <div style={{ fontSize:"0.75rem", color:"#B8892A" }}>📍 {p.location}</div>
                 </div>
@@ -1014,7 +1095,7 @@ function PropCard({ p }: { p: any }) {
           onTouchEnd={e=>{ if(touchStart===null)return; const d=touchStart-e.changedTouches[0].clientX; if(Math.abs(d)>40)go(d>0?1:-1); setTouchStart(null); }}>
 
           {cur.kind === "image" ? (
-            <img src={cur.url} alt={p.title} itemProp="image" className="ah-card-img"
+            <img src={cur.url} alt={`${p.title} — luxury property ${p.location ? `in ${p.location}` : 'Nairobi Kenya'}`} itemProp="image" loading="lazy" className="ah-card-img"
               style={{ display:"block", background:"#0A0101" }}
               onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80";}} />
           ) : playing ? (
@@ -1112,7 +1193,7 @@ function VideoCard({ video }: { video: any }) {
           <iframe src={getUrl()} style={{ width:"100%", height:"100%", border:"none" }} allow="autoplay;fullscreen" allowFullScreen />
         ) : (<>
           {video.thumbnail_url
-            ? <img src={video.thumbnail_url} alt={video.title} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            ? <img src={video.thumbnail_url} alt={video.title} loading="lazy" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
             : <div style={{ width:"100%", height:"100%", display:"flex", alignItems:"center", justifyContent:"center", background:"linear-gradient(135deg,#1A0303,#0A0101)" }}><span style={{ fontSize:"2.5rem", opacity:0.15 }}>🎬</span></div>
           }
           <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.3)" }}>
