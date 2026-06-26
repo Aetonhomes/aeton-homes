@@ -1134,42 +1134,74 @@ function VideoCard({ video }: { video: any }) {
 // ══════════════════════════════════════════════════════════
 // PUBLIC REVIEWS
 // ══════════════════════════════════════════════════════════
+function ReviewCard({ r, i }: { r: any; i: number }) {
+  return (
+    <div key={r.id||i} style={{ padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(212,164,34,0.08)", borderRadius:4 }}>
+      <div style={{ color:"#D4A422", fontSize:"0.78rem", marginBottom:8, letterSpacing:2 }}>{"★".repeat(r.rating||5)}<span style={{color:"rgba(212,164,34,0.25)"}}>{"★".repeat(5-(r.rating||5))}</span></div>
+      <p style={{ fontSize:"0.84rem", color:"#E2C99A", lineHeight:1.75, marginBottom:12, fontStyle:"italic" }}>"{r.review}"</p>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <span style={{ fontSize:"0.78rem", fontWeight:500, color:"#FFFFFF" }}>{r.name}</span>
+        {r.property_ref && <span style={{ fontSize:"0.65rem", color:"#B8892A" }}>{r.property_ref}</span>}
+      </div>
+    </div>
+  );
+}
+
+function AllReviewsModal({ reviews, onClose }: { reviews: any[]; onClose: () => void }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const fn = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", fn);
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", fn); };
+  }, []);
+  return (
+    <div onClick={onClose} style={{ position:"fixed", inset:0, zIndex:9100, background:"rgba(0,0,0,0.92)", backdropFilter:"blur(8px)", overflowY:"auto", padding:"16px", display:"flex", alignItems:"flex-start", justifyContent:"center" }}>
+      <div onClick={e=>e.stopPropagation()} style={{ width:"100%", maxWidth:760, background:"#100101", border:"1px solid rgba(212,164,34,0.18)", borderRadius:6, overflow:"hidden", position:"relative", marginTop:24, marginBottom:32, animation:"fadeInUp 0.25s ease", boxShadow:"0 40px 100px rgba(0,0,0,0.8)" }}>
+        {/* Header */}
+        <div style={{ padding:"24px 28px 20px", borderBottom:"1px solid rgba(212,164,34,0.1)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <div>
+            <span style={{ fontSize:"0.6rem", letterSpacing:"0.26em", textTransform:"uppercase", color:"#D4A422", display:"block", marginBottom:4 }}>All Reviews</span>
+            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:"1.6rem", fontWeight:300, color:"#FFFFFF", margin:0 }}>
+              What Our <em style={{ fontStyle:"italic", color:"#F0C355" }}>Clients Say</em>
+            </h3>
+          </div>
+          <button onClick={onClose} style={{ width:34, height:34, borderRadius:"50%", background:"rgba(0,0,0,0.5)", border:"1px solid rgba(212,164,34,0.2)", color:"#F0C355", fontSize:"1.1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>×</button>
+        </div>
+        {/* Reviews grid */}
+        <div style={{ padding:"24px 28px", display:"flex", flexDirection:"column", gap:14, maxHeight:"70vh", overflowY:"auto" }}>
+          {reviews.map((r:any,i:number) => <ReviewCard key={r.id||i} r={r} i={i} />)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PublicReviewsList() {
   const { data: reviews } = useApi<any[]>("/api/reviews");
-  const [showAll, setShowAll] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   if (!reviews || reviews.length === 0)
     return <div style={{ color:"#B8892A", fontSize:"0.82rem", paddingTop:20 }}>No reviews yet — be the first!</div>;
-  const visible = showAll ? reviews : reviews.slice(0, 3);
+  const visible = reviews.slice(0, 3);
   return (
     <div>
       <div style={{ display:"flex", flexDirection:"column", gap:18 }}>
-        {visible.map((r:any,i:number) => (
-          <div key={r.id||i} style={{ padding:"18px 20px", background:"rgba(255,255,255,0.02)", border:"1px solid rgba(212,164,34,0.08)", borderRadius:4 }}>
-            <div style={{ color:"#D4A422", fontSize:"0.78rem", marginBottom:8, letterSpacing:2 }}>{"★".repeat(r.rating||5)}<span style={{color:"rgba(212,164,34,0.25)"}}>{"★".repeat(5-(r.rating||5))}</span></div>
-            <p style={{ fontSize:"0.84rem", color:"#E2C99A", lineHeight:1.75, marginBottom:12, fontStyle:"italic" }}>"{r.review}"</p>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-              <span style={{ fontSize:"0.78rem", fontWeight:500, color:"#FFFFFF" }}>{r.name}</span>
-              {r.property_ref && <span style={{ fontSize:"0.65rem", color:"#B8892A" }}>{r.property_ref}</span>}
-            </div>
-          </div>
-        ))}
+        {visible.map((r:any,i:number) => <ReviewCard key={r.id||i} r={r} i={i} />)}
       </div>
-      {reviews.length > 3 && (
-        <button
-          onClick={() => setShowAll(v => !v)}
-          style={{
-            marginTop:22, width:"100%", padding:"12px 0",
-            background:"transparent", border:"1px solid rgba(212,164,34,0.3)",
-            color:"#F0C355", fontFamily:"'Jost',sans-serif", fontSize:"0.75rem",
-            letterSpacing:"0.18em", textTransform:"uppercase", cursor:"pointer",
-            borderRadius:2, transition:"all 0.25s",
-          }}
-          onMouseEnter={e=>{(e.target as HTMLElement).style.background="rgba(212,164,34,0.08)";(e.target as HTMLElement).style.borderColor="rgba(212,164,34,0.6)";}}
-          onMouseLeave={e=>{(e.target as HTMLElement).style.background="transparent";(e.target as HTMLElement).style.borderColor="rgba(212,164,34,0.3)";}}
-        >
-          {showAll ? "Show Less ↑" : `View All ${reviews.length} Reviews ↓`}
-        </button>
-      )}
+      <button
+        onClick={() => setModalOpen(true)}
+        style={{
+          marginTop:22, width:"100%", padding:"12px 0",
+          background:"transparent", border:"1px solid rgba(212,164,34,0.3)",
+          color:"#F0C355", fontFamily:"'Jost',sans-serif", fontSize:"0.75rem",
+          letterSpacing:"0.18em", textTransform:"uppercase", cursor:"pointer",
+          borderRadius:2, transition:"all 0.25s",
+        }}
+        onMouseEnter={e=>{(e.target as HTMLElement).style.background="rgba(212,164,34,0.08)";(e.target as HTMLElement).style.borderColor="rgba(212,164,34,0.6)";}}
+        onMouseLeave={e=>{(e.target as HTMLElement).style.background="transparent";(e.target as HTMLElement).style.borderColor="rgba(212,164,34,0.3)";}}
+      >
+        View All {reviews.length} Reviews →
+      </button>
+      {modalOpen && <AllReviewsModal reviews={reviews} onClose={() => setModalOpen(false)} />}
     </div>
   );
 }
