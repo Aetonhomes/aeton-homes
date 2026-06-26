@@ -208,12 +208,7 @@ export default function Nav({ content }: { content: Record<string, string> }) {
             </span>
             +254 728 683 027
           </a>
-          <a href="https://wa.me/254728683027" target="_blank" rel="noopener" style={{ display: "flex", alignItems: "center", gap: 10, color: "#E2C99A", textDecoration: "none", fontSize: "0.82rem", marginBottom: 12 }}>
-            <span style={{ width: 32, height: 32, background: "rgba(212,164,34,0.08)", border: "1px solid rgba(212,164,34,0.2)", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <svg viewBox="0 0 32 32" fill="#D4A422" width="14" height="14"><path d="M16 2C8.27 2 2 8.27 2 16c0 2.44.64 4.73 1.76 6.72L2 30l7.44-1.74A13.9 13.9 0 0 0 16 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm6.29 19.47c-.34-.17-2.02-.99-2.33-1.1-.31-.12-.54-.17-.77.17-.23.34-.88 1.1-1.08 1.33-.2.23-.4.25-.74.08-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.08-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59l-.66-.01c-.23 0-.6.08-.91.4s-1.2 1.17-1.2 2.85c0 1.68 1.23 3.31 1.4 3.54.17.23 2.41 3.68 5.84 5.16.82.35 1.45.56 1.95.72.82.26 1.57.22 2.16.13.66-.1 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.31-.22-.65-.39z" /></svg>
-            </span>
-            WhatsApp Us
-          </a>
+
         </div>
 
         {/* Bottom CTA in mobile drawer */}
@@ -242,25 +237,7 @@ export default function Nav({ content }: { content: Record<string, string> }) {
         ↑
       </button>
 
-      {/* Floating WhatsApp button */}
-      <a href="https://wa.me/254728683027?text=Hello%20Aeton%20Homes%2C%20I%27m%20interested%20in%20a%20property."
-        target="_blank" rel="noopener" title="Chat on WhatsApp"
-        style={{
-          position: "fixed", bottom: 20, right: 20, zIndex: 800,
-          width: 48, height: 48, borderRadius: "50%",
-          background: "#25D366",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
-          transition: "transform 0.2s, box-shadow 0.2s",
-          textDecoration: "none",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.1)"; e.currentTarget.style.boxShadow = "0 6px 28px rgba(37,211,102,0.6)"; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(37,211,102,0.4)"; }}
-      >
-        <svg viewBox="0 0 32 32" fill="white" width="24" height="24">
-          <path d="M16 2C8.27 2 2 8.27 2 16c0 2.44.64 4.73 1.76 6.72L2 30l7.44-1.74A13.9 13.9 0 0 0 16 30c7.73 0 14-6.27 14-14S23.73 2 16 2zm6.29 19.47c-.34-.17-2.02-.99-2.33-1.1-.31-.12-.54-.17-.77.17-.23.34-.88 1.1-1.08 1.33-.2.23-.4.25-.74.08-.34-.17-1.44-.53-2.74-1.69-1.01-.9-1.7-2.01-1.9-2.35-.2-.34-.02-.52.15-.69.15-.15.34-.4.51-.6.17-.2.23-.34.34-.57.11-.23.06-.43-.03-.6-.08-.17-.77-1.85-1.05-2.54-.28-.67-.56-.58-.77-.59l-.66-.01c-.23 0-.6.08-.91.4s-1.2 1.17-1.2 2.85c0 1.68 1.23 3.31 1.4 3.54.17.23 2.41 3.68 5.84 5.16.82.35 1.45.56 1.95.72.82.26 1.57.22 2.16.13.66-.1 2.02-.82 2.3-1.62.29-.8.29-1.48.2-1.62-.08-.14-.31-.22-.65-.39z" />
-        </svg>
-      </a>
+
 
       <style>{`
         @media (max-width: 768px) {

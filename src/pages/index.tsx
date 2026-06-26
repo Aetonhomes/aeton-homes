@@ -560,11 +560,11 @@ export default function Index() {
               ))}
             </div>
 
-            <a href="https://wa.me/254728683027?text=Hello%20Aeton%20Homes%2C%20I%27d%20like%20to%20enquire%20about%20a%20property."
-              target="_blank" rel="noopener"
-              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"13px 28px", borderRadius:2, marginTop:32, textDecoration:"none", fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase" }}>
-              WhatsApp Us →
-            </a>
+            <button
+              onClick={() => document.querySelector<HTMLInputElement>("#contact input[placeholder='Your name']")?.focus()}
+              style={{ display:"inline-flex", alignItems:"center", gap:10, background:"linear-gradient(135deg,#D4A422,#F0C355)", color:"#0E0101", padding:"13px 28px", borderRadius:2, marginTop:32, fontSize:"0.8rem", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", border:"none", cursor:"pointer", fontFamily:"'Jost',sans-serif" }}>
+              Send Us a Message →
+            </button>
 
             {/* SEO-friendly area text */}
             <div style={{ marginTop:40, padding:"20px 22px", background:"rgba(212,164,34,0.04)", border:"1px solid rgba(212,164,34,0.1)", borderRadius:4 }}>

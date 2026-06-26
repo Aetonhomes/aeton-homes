@@ -446,8 +446,16 @@ img { max-width: 100%; height: auto; }
   .ah-main-content > div { padding: 12px 10px !important; }
 }
 
-/* ── Modal image mobile ── */
-@media (max-width: 700px) {
-  .ah-modal-main-img { max-height: 60vw !important; width: 100% !important; object-fit: cover !important; }
-  .ah-modal-img-wrap { max-height: 62vw; overflow: hidden; }
+/* ── Modal image — always show full image, no cropping ── */
+.ah-modal-main-img {
+  width: 100%;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  display: block;
+  background: #050000;
+}
+.ah-modal-img-wrap {
+  max-height: none !important;
+  overflow: visible !important;
 }
