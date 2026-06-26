@@ -19,34 +19,16 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://aetonhomes.co.ke/#why</loc>
+    <loc>https://aetonhomes.co.ke/#about</loc>
     <lastmod>2026-06-26</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://aetonhomes.co.ke/#process</loc>
-    <lastmod>2026-06-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://aetonhomes.co.ke/#testimonials</loc>
     <lastmod>2026-06-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://aetonhomes.co.ke/#reviews</loc>
-    <lastmod>2026-06-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://aetonhomes.co.ke/#team</loc>
-    <lastmod>2026-06-26</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://aetonhomes.co.ke/#contact</loc>
@@ -55,9 +37,93 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aetonhomes.co.ke/videos</loc>
+    <loc>https://aetonhomes.co.ke/#faq</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Property: Own a premium 1 bedroom apartment at Westlands -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-1</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782466581/aeton-homes/hk6ppvnug1gr1b1yryei.jpg</image:loc>
+      <image:title>1 Bedroom Apartment for Sale in Westlands Nairobi — KES 6.9M</image:title>
+      <image:caption>Premium 1 bedroom apartment in Westlands, Nairobi. Pool, gym, rooftop lounge. From KES 6.9M</image:caption>
+    </image:image>
+  </url>
+  <!-- Property: A New Standard of Luxury Living in Kileleshwa (1BR) -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-3</loc>
     <lastmod>2026-06-26</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782467542/aeton-homes/ghtclle0g7ukcavakf7t.jpg</image:loc>
+      <image:title>1 Bedroom Luxury Apartment in Kileleshwa Nairobi — From KES 6.8M</image:title>
+      <image:caption>1BR luxury residence in Kileleshwa with rooftop infinity pool, gym, sauna. From KES 6.8M</image:caption>
+    </image:image>
+  </url>
+  <!-- Property: Where Prestige Meets Modern Living (2BR Kileleshwa) -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-4</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782467890/aeton-homes/k2ubzwmw4fcjb886jysm.jpg</image:loc>
+      <image:title>2 Bedroom Luxury Apartment in Kileleshwa Nairobi — KES 13.7M</image:title>
+      <image:caption>2BR luxury apartment in Kileleshwa, Nairobi. Padel court, infinity pool, co-working. KES 13.7M</image:caption>
+    </image:image>
+  </url>
+  <!-- Property: Where Prestige Meets Modern Living (3BR Kileleshwa) -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-5</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782468151/aeton-homes/mbzwt9c0es3ro6albe3d.jpg</image:loc>
+      <image:title>3 Bedroom Luxury Apartment in Kileleshwa Nairobi — KES 17.1M</image:title>
+      <image:caption>Spacious 3BR residence in Kileleshwa with premium finishes and world-class amenities. KES 17.1M</image:caption>
+    </image:image>
+  </url>
+  <!-- Property: Luxury Living at Its Finest (3BR Kileleshwa 163sqm) -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-6</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782468864/aeton-homes/veu5dej7qrttoufkmvaz.jpg</image:loc>
+      <image:title>Signature 3 Bedroom Luxury Residence in Kileleshwa Nairobi — KES 20.3M</image:title>
+      <image:caption>163 SQM signature 3BR home in Kileleshwa with rooftop pool, sauna, padel court. KES 20.3M</image:caption>
+    </image:image>
+  </url>
+  <!-- Property: Live in a community (1BR Westlands) -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-7</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782469694/aeton-homes/amvd2zazmdy3e01uxgiy.jpg</image:loc>
+      <image:title>1 Bedroom Luxury Apartment Westlands Nairobi — KES 9.3M</image:title>
+      <image:caption>1BR 68 SQM luxury apartment in Westlands Nairobi. Twin tower development with panoramic views. KES 9.3M</image:caption>
+    </image:image>
+  </url>
+  <!-- Property: An Icon of Modern Luxury (2BR Westlands) -->
+  <url>
+    <loc>https://aetonhomes.co.ke/#property-8</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dx2zpeg2b/image/upload/v1782469958/aeton-homes/pedbvyjzhuadlnmrmtlx.jpg</image:loc>
+      <image:title>2 Bedroom + DSQ Luxury Apartment Westlands Nairobi — KES 16.5M</image:title>
+      <image:caption>2BR+DSQ 146 SQM luxury apartment in Westlands. Smart home, face recognition, rooftop lounge. KES 16.5M</image:caption>
+    </image:image>
   </url>
 </urlset>
